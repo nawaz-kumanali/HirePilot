@@ -1,0 +1,19 @@
+.section-sub-headline {
+  color: var(--sub-text-color);
+  font-size: 1.2rem;
+  max-width: 600px;
+  margin: 0 auto 10px;
+  line-height: 1.6;
+  text-align: center;
+
+  /* --- Responsive Scaling --- */
+  @media (max-width: 768px) {
+    font-size: 1.1rem;
+    max-width: 90%;
+    line-height: 1.5;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 1rem;
+  }
+}

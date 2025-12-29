@@ -1,0 +1,38 @@
+:root {
+  --theme-color-primary: #a855f7;
+  --theme-color-secondary: #6366f1;
+  --theme-color-light: #f8fafc;
+  --text-color-light: #f8fafc;
+  --text-color-dark-shadow: rgba(0, 0, 0, 0.3);
+  --text-color-dark: #1e293b;
+  --text-color-light-shadow: rgba(255, 255, 255, 0.3);
+  --sub-text-color: #64748b
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Inter, system-ui, Arial, sans-serif;
+    background: black;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%) !important;
+
+  color: #111827;
+  overflow-x: hidden;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+
+html {
+
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

@@ -1,0 +1,30 @@
+.section-headline {
+  font-size: 3rem; // Base size for mobile/small screens
+  font-weight: 800;
+  color: var(--text-color-dark);
+  margin: 15px 0;
+  letter-spacing: -1px;
+  line-height: 1.1;
+
+  /* --- Gradient Span --- */
+  .text-gradient {
+    background: linear-gradient(
+      90deg,
+      var(--theme-color-secondary) 0%,
+      var(--theme-color-primary) 100%
+    );
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block; 
+  }
+
+  /* --- Responsive Typography --- */
+  @media (min-width: 768px) {
+    font-size: 3.5rem;
+  }
+
+  @media (min-width: 1024px) {
+    font-size: 4rem;
+  }
+}

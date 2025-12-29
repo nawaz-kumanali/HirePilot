@@ -1,0 +1,37 @@
+/* Scoped under the primary container for the Logo */
+.logo-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  /* --- Icon Style & Animation --- */
+  .logo-icon {
+    color: var(--theme-color-primary);
+    animation: bounce 2s ease-in-out infinite;
+  }
+
+  /* --- Text Gradient Style --- */
+  .logo-text {
+    font-size: 1.3rem;
+    font-weight: 900;
+    background: linear-gradient(
+      135deg,
+      var(--theme-color-primary),
+      var(--theme-color-secondary)
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: -0.02em;
+  }
+}
+
+/* --- Global Animation Keyframes --- */
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
