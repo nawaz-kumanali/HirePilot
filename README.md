@@ -1,73 +1,98 @@
-# React + TypeScript + Vite
+# HirePilot
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**HirePilot** is a career-training platform designed to help candidates **become interview-ready before applying for jobs**.
 
-Currently, two official plugins are available:
+Unlike traditional job portals that focus only on listings, HirePilot combines **job discovery, structured training, and interview preparation**—so users apply with confidence, not guesswork.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+🔗 **Live Website:** https://hire-pilot.vercel.app/
 
-## React Compiler
+---
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## What HirePilot Offers
 
-## Expanding the ESLint configuration
+HirePilot supports candidates across the **entire interview-preparation journey**:
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### 1. Job Discovery
+Explore job opportunities across roles, domains, and experience levels—similar to traditional job portals, but integrated with preparation workflows.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### 2. Video-Based Training
+Learn through **structured video courses** designed for specific roles and career paths, helping users build the right skills before applying.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### 3. AI-Powered Mock Interviews
+Practice real interview scenarios using AI-driven interviews that simulate:
+- Technical rounds  
+- Behavioral interviews  
+- Role-specific questioning  
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+### 4. Roadmaps & Guided Preparation
+Follow **clear career roadmaps** that outline:
+- Skills to learn  
+- Topics to master  
+- Preparation sequence  
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+No more random learning—everything is goal-driven.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### 5. Interview Questions & Practice Material
+Prepare using curated interview questions:
+- Beginner to advanced levels  
+- Role-specific focus  
+- Designed for real interview expectations  
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+### 6. Feedback & Improvement
+Receive actionable feedback to identify:
+- Strengths  
+- Weak areas  
+- Skill gaps to close before applying  
+
+---
+
+## Why HirePilot Is Different
+
+Most platforms answer:
+> *“Where can I apply?”*
+
+HirePilot answers:
+> **“Am I truly ready to get selected?”**
+
+### Key Differentiators
+- Interview-readiness first approach  
+- Jobs + training + interviews in one platform  
+- Structured preparation instead of scattered resources  
+- Confidence-driven application flow  
+
+---
+
+## Who HirePilot Is For
+
+- Students preparing for their first job  
+- Developers switching roles or domains  
+- Professionals upskilling for better opportunities  
+- Anyone tired of applying without interview success  
+
+---
+
+## Core Experience Highlights
+
+- Clean, modern, distraction-free UI  
+- Guided onboarding and preparation flow  
+- Training-first, outcome-focused design  
+- Career-centric learning experience  
+
+---
+
+## Vision
+
+HirePilot aims to help users:
+- Train smarter  
+- Prepare with clarity  
+- Interview with confidence  
+- Apply only when ready  
+
+> **Train Smarter. Interview Better. Apply Confidently.**
+
+---
+
+## Authors
+
+**Niyaj Kumanali**  
+**Nawaj Kumanali**
