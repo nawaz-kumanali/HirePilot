@@ -1,6 +1,6 @@
 import { MapPin, DollarSign, Clock, TrendingUp, Briefcase, Star, Bookmark, BookmarkCheck } from 'lucide-react';
 import type Job from '../../../types/job';
-import './JobCard.scss';
+import './jobCard.scss';
 
 interface JobCardProps {
     job: Job;

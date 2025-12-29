@@ -1,5 +1,5 @@
 import { Briefcase } from 'lucide-react';
-import './EmptyState.scss';
+import './emptyState.scss';
 
 interface EmptyStateProps {
     title?: string;
