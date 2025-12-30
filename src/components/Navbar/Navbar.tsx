@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Rocket, Home, Briefcase, BookOpen, BarChart3,
   Settings, LogOut, Menu, X, ChevronDown, Bell,
@@ -10,6 +10,8 @@ import { Link, useNavigate } from "react-router-dom";
 import AuthService from "../../api/auth";
 import { useAppDispatch } from "../../store/hooks";
 import { authActions } from "../../store/auth/auth.slice";
+import { getUserMenuState } from "../../utility/userMenu";
+import { userMenuActions } from "../../store/UserMenu/usermenu.slice";
 
 const NAV_ITEMS = [
   { label: "Home", path: "/", icon: Home },
@@ -21,12 +23,11 @@ const NAV_ITEMS = [
 
 export default function Navbar() {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
-  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
 
-
-
+  const isUserMenuOpen = getUserMenuState();
   const isAuthenticated = AuthService.getAuthenticationState();
+
   const userName = "Nawaz Kumanali";
   const userEmail = "iamnawazahmad777@gmail.com";
   const notifications = 3;
@@ -36,8 +37,33 @@ export default function Navbar() {
 
   const handleNavigation = (path: string) => {
     setIsMobileOpen(false);
-    window.location.href = path;
+
+
+    requestAnimationFrame(() => {
+      navigate(path);
+    });
   };
+
+  const handleUserMenuStatus = () => {
+    dispatch(userMenuActions.toggleUserMenu())
+  }
+
+  const menuRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        isUserMenuOpen &&
+        menuRef.current &&
+        !menuRef.current.contains(event.target as Node)
+      ) {
+        dispatch(userMenuActions.closeUserMenu())
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [isUserMenuOpen, dispatch])
 
   const userInitials = userName
     .split(" ")
@@ -126,10 +152,10 @@ export default function Navbar() {
               </Link>
 
               {/* User Avatar & Dropdown */}
-              <div className="user-menu">
+              <div className="user-menu" ref={menuRef}>
                 <button
                   className="avatar-btn"
-                  onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                  onClick={handleUserMenuStatus}
                   title={userName}
                 >
                   <div className="avatar-content">
@@ -151,28 +177,28 @@ export default function Navbar() {
                       </div>
                     </div>
                     <hr className="dropdown-divider" />
-                    <Link to="/profile" className="dropdown-item">
+                    <Link to="/profile" className="dropdown-item" onClick={handleUserMenuStatus}>
                       <Home size={16} />
                       <span>My Profile</span>
                     </Link>
-                    <Link to="/training" className="dropdown-item">
+                    <Link to="/training" className="dropdown-item" onClick={handleUserMenuStatus}>
                       <BookOpen size={16} />
                       <span>My Training</span>
                     </Link>
-                    <Link to="/interview" className="dropdown-item">
+                    <Link to="/interview" className="dropdown-item" onClick={handleUserMenuStatus}>
                       <Zap size={16} />
                       <span>My Interviews</span>
                     </Link>
-                    <Link to="/dashboard" className="dropdown-item">
+                    <Link to="/dashboard" className="dropdown-item" onClick={handleUserMenuStatus}>
                       <BarChart3 size={16} />
                       <span>My Dashboard</span>
                     </Link>
 
-                    <Link to="/messages" className="dropdown-item">
+                    <Link to="/messages" className="dropdown-item" onClick={handleUserMenuStatus}>
                       <MessageSquare size={16} />
                       <span>Messages</span>
                     </Link>
-                    <Link to="/settings" className="dropdown-item">
+                    <Link to="/settings" className="dropdown-item" onClick={handleUserMenuStatus}>
                       <Settings size={16} />
                       <span>Settings</span>
                     </Link>
@@ -180,6 +206,7 @@ export default function Navbar() {
                     <button className="dropdown-item logout-item" onClick={() => {
                       setTimeout(() => {
                         dispatch(authActions.logout());
+                        handleUserMenuStatus()
                         navigate("/")
                       }, 1000);
                     }}>

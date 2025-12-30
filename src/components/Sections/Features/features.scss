@@ -37,25 +37,6 @@
     text-align: center;
     margin-bottom: 80px;
 
-    h2 {
-      font-size: 3rem;
-      font-weight: 800;
-      margin: 20px 0;
-      letter-spacing: -1px;
-      color: #1e293b;
-
-      @media (max-width: 768px) {
-        font-size: 2.2rem;
-      }
-    }
-
-    p {
-      color: #64748b;
-      max-width: 600px;
-      margin: 0 auto;
-      font-size: 1.1rem;
-      line-height: 1.6;
-    }
 
     .features-badge {
       display: inline-flex;
@@ -73,13 +54,6 @@
     }
   }
 
-  /* --- Shared Gradient Utility --- */
-  .text-gradient {
-    background: linear-gradient(135deg, var(--theme-color-secondary) 0%, var(--theme-color-primary) 100%);
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
 
   /* --- Grid Layout --- */
   .feature-grid {

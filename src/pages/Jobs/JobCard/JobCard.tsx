@@ -11,12 +11,17 @@ interface JobCardProps {
 const JobCard = ({ job, onSave, onOpen }: JobCardProps) => {
     // Helper for Type Badges
     const getTypeStyles = (type: Job['type']) => {
-        const styles: Record<string, { bg: string; color: string }> = {
+        const styles: Record<Job["type"], { bg: string; color: string }> = {
             'Full-time': { bg: '#eef2ff', color: '#6366f1' },
+            'Part-time': { bg: '#ecfeff', color: '#0891b2' },
             'Contract': { bg: '#fffbeb', color: '#d97706' },
-            'Remote': { bg: '#f0fdfa', color: '#0d9488' },
+            'Freelance': { bg: '#f0f9ff', color: '#0284c7' },
             'Internship': { bg: '#fdf2f8', color: '#db2777' },
+            'Temporary': { bg: '#fefce8', color: '#ca8a04' },
+            'Remote': { bg: '#f0fdfa', color: '#0d9488' },
             'Hybrid': { bg: '#f5f3ff', color: '#7c3aed' },
+            'On-site': { bg: '#f1f5f9', color: '#334155' },
+            'Volunteer': { bg: '#ecfdf5', color: '#059669' },
         };
         return styles[type] || { bg: '#f8fafc', color: '#64748b' };
     };
@@ -30,7 +35,7 @@ const JobCard = ({ job, onSave, onOpen }: JobCardProps) => {
                         <h3 className="jc-title">{job.title}</h3>
                         <span className="jc-company">{job.company}</span>
                     </div>
-                    <button 
+                    <button
                         className={`jc-save-btn ${job.saved ? 'is-saved' : ''}`}
                         onClick={(e) => { e.stopPropagation(); onSave(job.id); }}
                     >
@@ -61,11 +66,11 @@ const JobCard = ({ job, onSave, onOpen }: JobCardProps) => {
                 {/* Bottom Section: Tags & Rating */}
                 <div className="jc-footer">
                     <div className="jc-tags">
-                        <span 
-                            className="jc-badge" 
-                            style={{ 
-                                backgroundColor: getTypeStyles(job.type).bg, 
-                                color: getTypeStyles(job.type).color 
+                        <span
+                            className="jc-badge"
+                            style={{
+                                backgroundColor: getTypeStyles(job.type).bg,
+                                color: getTypeStyles(job.type).color
                             }}
                         >
                             <Briefcase size={12} /> {job.type}
@@ -78,11 +83,11 @@ const JobCard = ({ job, onSave, onOpen }: JobCardProps) => {
                     <div className="jc-rating">
                         <div className="jc-stars">
                             {[...Array(5)].map((_, i) => (
-                                <Star 
-                                    key={i} 
-                                    size={14} 
-                                    fill={job.rating >= i + 1 ? "#6366f1" : "none"} 
-                                    color={job.rating >= i + 1 ? "#6366f1" : "#e2e8f0"} 
+                                <Star
+                                    key={i}
+                                    size={14}
+                                    fill={job.rating >= i + 1 ? "#6366f1" : "none"}
+                                    color={job.rating >= i + 1 ? "#6366f1" : "#e2e8f0"}
                                 />
                             ))}
                         </div>
@@ -90,7 +95,7 @@ const JobCard = ({ job, onSave, onOpen }: JobCardProps) => {
                     </div>
                 </div>
             </div>
-            
+
             <div className="jc-action-bar">
                 <span>View position details</span>
                 <div className="jc-arrow">→</div>

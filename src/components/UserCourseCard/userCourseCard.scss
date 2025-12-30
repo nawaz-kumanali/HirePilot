@@ -1,0 +1,201 @@
+    .user-course-card {
+        background: white;
+        border-radius: 24px;
+        overflow: hidden;
+        border: 1px solid #e2e8f0;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+
+        &:hover {
+            transform: translateY(-12px);
+            box-shadow: 0 24px 48px rgba(0, 0, 0, 0.12);
+            border-color: #cbd5e1;
+
+            .image-wrapper img {
+                transform: scale(1.08);
+            }
+            .play-overlay {
+                opacity: 1;
+            }
+        }
+
+        &.active {
+            box-shadow: 0 24px 48px rgba(0, 0, 0, 0.12);
+        }
+
+        .image-wrapper {
+            position: relative;
+            height: 160px;
+            overflow: hidden;
+
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                transition: transform 0.4s;
+            }
+
+            .gradient-overlay {
+                position: absolute;
+                inset: 0;
+                background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.3) 100%);
+            }
+
+            .play-overlay {
+                position: absolute;
+                inset: 0;
+                background: rgba(15, 23, 42, 0.5);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                opacity: 0;
+                transition: opacity 0.3s;
+                backdrop-filter: blur(4px);
+            }
+
+            .category-badge {
+                position: absolute;
+                top: 12px;
+                right: 12px;
+                background: white;
+                color: #6366f1;
+                padding: 6px 12px;
+                border-radius: 99px;
+                font-size: 0.75rem;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+                animation: slideDown 0.3s ease-out;
+            }
+        }
+
+        .card-content {
+            padding: 16px 28px;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+
+            .card-meta {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 14px;
+                gap: 8px;
+
+                .lesson-badge {
+                    background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+                    padding: 6px 12px;
+                    border-radius: 8px;
+                    font-size: 0.75rem;
+                    font-weight: 700;
+                    text-transform: uppercase;
+                    color: #475569;
+                }
+
+                .rating-tag {
+                    display: flex;
+                    align-items: center;
+                    gap: 6px;
+                    font-weight: 700;
+                    font-size: 0.9rem;
+                    color: #0f172a;
+
+                    .student-count {
+                        color: #64748b;
+                        font-weight: 500;
+                        font-size: 0.8rem;
+                        margin-left: 4px;
+                    }
+                }
+            }
+
+            .course-title {
+                font-size: 1.15rem;
+                font-weight: 800;
+                margin-bottom: 8px;
+                line-height: 1.4;
+                color: #0f172a;
+            }
+
+            .instructor-name {
+                color: #64748b;
+                font-size: 0.9rem;
+                margin-bottom: 16px;
+                font-weight: 500;
+            }
+
+            .course-meta-info {
+                display: flex;
+                gap: 16px;
+                padding-bottom: 16px;
+                border-bottom: 1px solid #f1f5f9;
+                font-size: 0.9rem;
+                color: #475569;
+
+                .meta-item {
+                    display: flex;
+                    align-items: center;
+                    gap: 6px;
+                    font-weight: 500;
+                }
+            }
+
+            .progress-section {
+                margin-top: auto;
+                padding-top: 16px;
+
+                .progress-header {
+                    display: flex;
+                    justify-content: space-between;
+                    font-size: 0.75rem;
+                    font-weight: 700;
+                    margin-bottom: 8px;
+                    text-transform: uppercase;
+                    color: #475569;
+
+                    .progress-percentage {
+                        color: var(--theme-color-primary);
+                    }
+                }
+
+                .progress-track {
+                    height: 8px;
+                    background: #f1f5f9;
+                    border-radius: 6px;
+                    overflow: hidden;
+                    margin-bottom: 16px;
+
+                    .progress-fill {
+                        height: 100%;
+                        border-radius: 6px;
+                        transition: width 0.6s ease-out;
+                        background: linear-gradient(90deg, var(--theme-color-primary) 0%, #6366f1 100%);
+                    }
+                }
+            }
+
+            .card-button {
+                background: linear-gradient(135deg, var(--theme-color-primary) 0%, #6366f1 100%);
+                color: white;
+                border: none;
+                padding: 12px 20px;
+                border-radius: 12px;
+                font-weight: 700;
+                cursor: pointer;
+                transition: all 0.3s;
+                font-size: 0.9rem;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+
+                &:hover {
+                    transform: translateX(4px);
+                    box-shadow: 0 8px 20px rgba(168, 85, 247, 0.3);
+                }
+            }
+        }
+    }

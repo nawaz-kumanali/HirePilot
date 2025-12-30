@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import {
-  PlayCircle,
   BookOpen,
   Trophy,
   Clock,
@@ -11,7 +10,6 @@ import {
   Target,
   X,
   Flame,
-  Award,
   TrendingUp,
   Sparkles
 } from 'lucide-react';
@@ -19,6 +17,7 @@ import {
 import './training.scss'
 import type { UserCourse } from '../../types/course';
 import courses from '../../data/courses';
+import CourseCard from '../../components/UserCourseCard/UserCourseCard';
 
 type StatCardProps = {
   Icon: any,
@@ -118,7 +117,7 @@ const Training = () => {
           {courses.map((course: UserCourse) => (
             <article
               key={course.id}
-              className={`course-card ${hoveredCard === course.id ? 'active' : ''}`}
+              className={`${hoveredCard === course.id ? 'active' : ''}`}
               onMouseEnter={() => setHoveredCard(course.id)}
               onMouseLeave={() => setHoveredCard(null)}
               onClick={() => {
@@ -126,51 +125,8 @@ const Training = () => {
                 setIsDialogOpen(true);
               }}
             >
-              <div className="image-wrapper">
-                <img src={course.image} alt={course.title} loading="lazy" />
-                <div className="gradient-overlay"></div>
-                <div className="play-overlay">
-                  <PlayCircle size={56} color="white" strokeWidth={1.5} />
-                </div>
-                <div className="category-badge">{course.category}</div>
-              </div>
+              <CourseCard {...course} />
 
-              <div className="card-content">
-                <div className="card-meta">
-                  <span className="lesson-badge">{course.lessons} lessons</span>
-                  <div className="rating-tag">
-                    <Star size={14} fill="#f59e0b" stroke="none" />
-                    <span>{course.rating}</span>
-                    <span className="student-count">({course.students})</span>
-                  </div>
-                </div>
-
-                <h3 className="course-title">{course.title}</h3>
-                <p className="instructor-name">by {course.instructor}</p>
-
-                <div className="course-meta-info">
-                  <span className="meta-item">
-                    <Clock size={14} />
-                    {course.duration}
-                  </span>
-                  <span className="meta-item">
-                    <Award size={14} />
-                    Certificate
-                  </span>
-                </div>
-
-                <div className="progress-section">
-                  <div className="progress-header">
-                    <span className="progress-label">Progress</span>
-                    <span className="progress-percentage">{course.progress}%</span>
-                  </div>
-                  <div className="progress-track">
-                    <div className="progress-fill" style={{ width: `${course.progress}%` }}></div>
-                  </div>
-                </div>
-
-                <button className="card-button">Continue →</button>
-              </div>
             </article>
           ))}
         </div>

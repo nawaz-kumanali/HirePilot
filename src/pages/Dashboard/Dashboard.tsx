@@ -13,6 +13,7 @@ import {
 import './dashboard.scss'
 import { Link } from 'react-router-dom'
 import courses from '../../data/courses'
+import UserCourseCard from '../../components/UserCourseCard/UserCourseCard'
 
 const Dashboard: React.FC = () => {
   const statCards = [
@@ -26,7 +27,7 @@ const Dashboard: React.FC = () => {
   return (
     <main className="dashboard-container">
       <div className="content-wrapper">
-        
+
         {/* TOP HEADER */}
         <header className="hero-header">
           <div className="welcome-text">
@@ -34,9 +35,9 @@ const Dashboard: React.FC = () => {
             <p>You've completed 75% of your weekly goal. Keep it up!</p>
           </div>
           <Link to={"/training"} >
-          <button className="primary-cta">
-            Continue Learning <ArrowRight size={18} />
-          </button>
+            <button className="primary-cta">
+              Continue Learning <ArrowRight size={18} />
+            </button>
           </Link>
         </header>
 
@@ -66,7 +67,7 @@ const Dashboard: React.FC = () => {
 
         {/* MAIN BODY GRID */}
         <div className="main-layout-grid">
-          
+
           {/* LEFT: Goals Progress */}
           <section className="glass-card section-container">
             <div className="section-header">
@@ -80,12 +81,12 @@ const Dashboard: React.FC = () => {
                     <span className="goal-percent">{item.progress}%</span>
                   </div>
                   <div className="progress-bar-bg">
-                    <div 
-                      className="progress-bar-fill" 
-                      style={{ 
+                    <div
+                      className="progress-bar-fill"
+                      style={{
                         width: `${item.progress}%`,
                         backgroundColor: item.progress < 40 ? '#ef4444' : item.progress < 70 ? '#f59e0b' : 'var(--theme-color-primary)'
-                      }} 
+                      }}
                     />
                   </div>
                 </div>
@@ -118,28 +119,13 @@ const Dashboard: React.FC = () => {
         <section className="courses-section">
           <div className="section-title-row">
             <h3>In-Progress Courses</h3>
-            <button className="text-link">Browse all <ArrowRight size={14} /></button>
+            <Link to={'/courses'} >
+              <button className="text-link">Browse all <ArrowRight size={14} /></button>
+            </Link>
           </div>
           <div className="courses-grid">
             {courses.map(course => (
-              <div key={course.id} className="course-card">
-                <div className="course-thumb">
-                  <img src={course.image} alt={course.title} />
-                  <span className="course-tag">{course.status}</span>
-                </div>
-                <div className="course-content">
-                  <h4>{course.title}</h4>
-                  <div className="course-stats">
-                    <span>{course.lessons} lessons</span>
-                    <span className="dot">•</span>
-                    <span>{course.progress}% done</span>
-                  </div>
-                  <div className="course-progress-mini">
-                    <div className="mini-fill" style={{ width: `${course.progress}%` }}></div>
-                  </div>
-                  <button className="course-btn">Resume Lesson</button>
-                </div>
-              </div>
+              <UserCourseCard {...course} key={course.id} />
             ))}
           </div>
         </section>

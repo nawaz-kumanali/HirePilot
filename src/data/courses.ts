@@ -6,7 +6,7 @@ const courses = [
         lessons: 16,
         status: 'Almost Done',
         instructor: 'Alex Rivera',
-        image: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc51?w=400&q=80',
+        image: 'https://unsplash.com/photos/someone-is-drawing-on-a-tablet-at-their-desk-vhZ8K5Np9mk',
         rating: 4.8,
         duration: '24h 30m',
         category: 'Backend',

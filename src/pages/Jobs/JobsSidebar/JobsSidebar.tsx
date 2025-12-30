@@ -35,9 +35,9 @@ const JobsSidebar = ({
   return (
     <>
       {/* Mobile Backdrop */}
-      <div 
-        className={`jobs-sidebar-backdrop ${mobileOpen ? 'visible' : ''}`} 
-        onClick={onMobileClose} 
+      <div
+        className={`jobs-sidebar-backdrop ${mobileOpen ? 'visible' : ''}`}
+        onClick={onMobileClose}
       />
 
       <aside className={`jobs-filter-sidebar ${mobileOpen ? 'open' : ''}`}>
@@ -59,26 +59,26 @@ const JobsSidebar = ({
         </div>
 
         <div className="jobs-filter-body">
-          <FilterGroup 
-            label="Job Type" 
-            value={filterType} 
-            onChange={onFilterTypeChange} 
+          <FilterGroup
+            label="Job Type"
+            value={filterType}
+            onChange={onFilterTypeChange}
             options={jobTypes}
             icon="💼"
           />
-          
-          <FilterGroup 
-            label="Experience Level" 
-            value={filterLevel} 
-            onChange={onFilterLevelChange} 
+
+          <FilterGroup
+            label="Experience Level"
+            value={filterLevel}
+            onChange={onFilterLevelChange}
             options={jobLevels}
             icon="📊"
           />
-          
-          <FilterGroup 
-            label="Location" 
-            value={filterLocation} 
-            onChange={onFilterLocationChange} 
+
+          <FilterGroup
+            label="Location"
+            value={filterLocation}
+            onChange={onFilterLocationChange}
             options={locations}
             icon="📍"
           />
@@ -110,8 +110,8 @@ const FilterGroup = ({ label, value, onChange, options, icon }: FilterGroupProps
       {label}
     </label>
     <div className="jobs-select-wrapper">
-      <select 
-        value={value} 
+      <select
+        value={value}
         onChange={(e) => onChange(e.target.value)}
         className="jobs-custom-select"
       >

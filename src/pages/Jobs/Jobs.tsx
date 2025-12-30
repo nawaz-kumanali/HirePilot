@@ -79,8 +79,7 @@ const Jobs = () => {
             </h1>
 
             <p className="jobs-subtitle">
-              Discover amazing opportunities and advance your career with HirePilot's
-              curated job board for developers.
+              Discover amazing opportunities and advance your career with HirePilot's curated job board for developers.
             </p>
           </div>
         </header>

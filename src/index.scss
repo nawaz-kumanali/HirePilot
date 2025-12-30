@@ -35,3 +35,15 @@ html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+
+.gradient-text {
+  background: linear-gradient(90deg,
+      var(--theme-color-primary) 0%,
+      var(--theme-color-secondary) 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+  animation: shimmer 3s ease-in-out infinite;
+}
