@@ -1,12 +1,12 @@
 import React from 'react'
-import { Mail, MapPin, Facebook, Twitter, Linkedin, Github, Heart } from 'lucide-react'
+import { Mail, MapPin, Linkedin, Github, Heart } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import './footer.scss'
 import Logo from '../Logo/Logo'
 
 const socialLinks = [
-    { icon: Facebook, label: 'Facebook', to: 'https://facebook.com' },
-    { icon: Twitter, label: 'Twitter', to: 'https://twitter.com' },
+    // { icon: Facebook, label: 'Facebook', to: 'https://facebook.com' },
+    // { icon: Twitter, label: 'Twitter', to: 'https://twitter.com' },
     { icon: Linkedin, label: 'LinkedIn', to: 'https://linkedin.com/in/nawaj-kumanali' },
     { icon: Github, label: 'GitHub', to: 'https://github.com/nawaz-kumanali' },
 ]
@@ -46,7 +46,7 @@ const Footer: React.FC = () => {
                             <li><Link to="/">Home</Link></li>
                             <li><Link to="/jobs">Job Board</Link></li>
                             <li><Link to="/interview">Mock Prep</Link></li>
-                            <li><Link to="/training">Courses</Link></li>
+                            <li><Link to="/courses">Courses</Link></li>
                         </ul>
                     </div>
 

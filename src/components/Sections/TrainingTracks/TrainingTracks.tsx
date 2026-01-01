@@ -1,9 +1,7 @@
-import React from 'react';
-import { Terminal, Code, Layers, BarChart, Settings, ArrowRight} from 'lucide-react';
+import { Terminal, Code, Layers, BarChart, Settings} from 'lucide-react';
 import './trainingTracks.scss';
-import SectionHeadline from '../SectionHeadline/SectionHeadline';
-import SectionEyebrow from '../SectionEyebrow/SectionEyebrow';
-import SectionSubHeadline from '../SectionSubHeadline/SectionSubHeadline';
+import VisualHeader from '../../VisualHeader/VisualHeader';
+import TTCard from './TTCard/TTCard';
 
 const trainingTracksData = [
   {
@@ -51,39 +49,12 @@ const TrainingTracks = () => {
     <section className="tracks-section">
       <div className="tracks-container">
         <header className="tracks-header">
-          <SectionEyebrow text="Career Paths" />
-          <SectionHeadline text="Specialized" gradient_text="Training Tracks" />
-          <SectionSubHeadline text="Industry-validated curriculums designed to turn beginners into job-ready engineers." />
+          <VisualHeader badge='Career Paths' title='Specialized' gradient_title='Training Tracks' subtitle='Industry-validated curriculums designed to turn beginners into job-ready engineers.' />
         </header>
 
         <div className="tracks-grid">
-          {trainingTracksData.map((track) => (
-            <div
-              key={track.id}
-              className="track-card"
-              style={{ '--accent-color': track.color } as React.CSSProperties}
-            >
-              {track.tag && (
-                <span className={`track-tag ${track.tag.toLowerCase().replace(' ', '-')}`}>
-                  {track.tag}
-                </span>
-              )}
-
-              <div className="track-icon-container">
-                <div className="track-icon-glow"></div>
-                {track.icon}
-              </div>
-
-              <div className="track-body">
-                <h3 className="track-card-title">{track.title}</h3>
-                <p className="track-card-desc">{track.desc}</p>
-              </div>
-
-              <div className="track-card-footer">
-                <span className="track-cta">View Track</span>
-                <ArrowRight className="track-arrow" size={18} />
-              </div>
-            </div>
+          {trainingTracksData.map((track, index) => (
+              <TTCard {...track} key={index}/>
           ))}
         </div>
       </div>

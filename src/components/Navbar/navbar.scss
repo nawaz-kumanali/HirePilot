@@ -460,6 +460,7 @@
         box-shadow: 0 10px 24px rgba(168, 85, 247, 0.4);
       }
     }
+
   }
 
   /* --- Mobile Components --- */
@@ -491,78 +492,16 @@
 
   .mobile-sidebar {
     position: fixed;
-    top: 70px;
+    top: 0px;
     left: 0;
     width: 280px;
-    height: calc(100vh - 70px);
+    height:100%;
     background: white;
     display: flex;
     flex-direction: column;
     z-index: 1000;
     animation: slideLeft 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     overflow-y: auto;
-
-    .sidebar-header {
-      padding: 20px;
-      border-bottom: 1px solid #e2e8f0;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .logo-box {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-weight: 800;
-      color: #0f172a;
-    }
-
-    .logo-icon {
-      color: var(--theme-color-primary);
-    }
-
-    .logo-text {
-      background: linear-gradient(135deg, var(--theme-color-primary), var(--theme-color-secondary));
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .sidebar-close-btn {
-      background: none;
-      border: none;
-      color: #64748b;
-      cursor: pointer;
-
-      &:hover {
-        color: var(--theme-color-primary);
-        background: #f1f5f9;
-      }
-    }
-
-    .mobile-search {
-      padding: 16px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      background: #f8fafc;
-      border-bottom: 1px solid #e2e8f0;
-      margin: 8px 12px 0;
-      border-radius: 12px;
-
-      svg {
-        color: #cbd5e1;
-      }
-
-      .search-input {
-        border: none;
-        background: none;
-        outline: none;
-        font-size: 0.9rem;
-        color: #64748b;
-      }
-    }
 
     .mobile-nav-list {
       list-style: none;
@@ -594,22 +533,6 @@
           }
         }
       }
-    }
-
-    .mobile-user-info {
-      padding: 16px 20px;
-      display: flex;
-      gap: 12px;
-      align-items: center;
-      background: #f8fafc;
-      border-radius: 12px;
-      margin: 0 12px 8px;
-    }
-
-    .sidebar-divider {
-      height: 1px;
-      background: #e2e8f0;
-      margin: 16px 0;
     }
 
     .sidebar-footer {
@@ -675,7 +598,7 @@
     }
 
     .mobile-sidebar {
-      width: 100%;
+      width: 70%;
     }
 
     .user-profile-wrapper {

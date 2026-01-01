@@ -1,5 +1,6 @@
 :root {
   --theme-color-primary: #a855f7;
+  --theme-color-primary: #a855f7;
   --theme-color-secondary: #6366f1;
   --theme-color-light: #f8fafc;
   --text-color-light: #f8fafc;
@@ -44,6 +45,5 @@ html {
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  display: inline-block;
   animation: shimmer 3s ease-in-out infinite;
 }

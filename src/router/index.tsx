@@ -10,6 +10,7 @@ import Training from "../pages/Training/Traning";
 import Profile from "../pages/Profile/Profile";
 import Setting from "../pages/Setting/Setting";
 import Courses from "../pages/Courses/Courses";
+import NotFound from "../pages/NotFound/NotFound";
 
 export const router = createBrowserRouter([
   {
@@ -55,13 +56,14 @@ export const router = createBrowserRouter([
         path: "/signin",
         element: <SignIn />,
       },
-      {
-        path: "*",
-        element: <Home />
-      }
+
     ]
 
 
+  },
+  {
+    path: "*",
+    element: <NotFound />
   }
 
 ]);

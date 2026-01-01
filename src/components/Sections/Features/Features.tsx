@@ -1,9 +1,8 @@
 // Structure remains the same as your previous version
 import { Mic, BarChart3, Target, LineChart } from "lucide-react";
 import "./features.scss";
-import SectionEyebrow from "../SectionEyebrow/SectionEyebrow";
-import SectionHeadline from "../SectionHeadline/SectionHeadline";
-import SectionSubHeadline from "../SectionSubHeadline/SectionSubHeadline";
+import FeatureCard from "./FeatureCard/FeatureCard";
+import VisualHeader from "../../VisualHeader/VisualHeader";
 
 const features = [
   {
@@ -33,23 +32,12 @@ const Features = () => {
     <section className="features-section">
       <div className="features-container">
         <div className="features-header">
-          <SectionEyebrow text="Core Capabilities" />
-          <SectionHeadline text="Everything you need to" gradient_text="succeed." />
-          <SectionSubHeadline text="HirePilot combines advanced AI with proven coaching methods to turn your weaknesses into your greatest strengths." />
+          <VisualHeader badge="Core Capabilities" title="Everything you need to" gradient_title="succeed." subtitle="HirePilot combines advanced AI with proven coaching methods to turn your weaknesses into your greatest strengths." />
         </div>
 
         <div className="feature-grid">
           {features.map((feature, index) => (
-            <div key={index} className="feature-card">
-              <div className="card-border-gradient"></div>
-              <div className="feature-card-inner">
-                <div className="feature-icon-box">
-                  {feature.icon}
-                </div>
-                <h3>{feature.title}</h3>
-                <p>{feature.desc}</p>
-              </div>
-            </div>
+            <FeatureCard {...feature} key={index} />
           ))}
         </div>
       </div>

@@ -95,134 +95,136 @@ export default function Navbar() {
         {/* Action Buttons */}
         <div className="navbar-actions">
           {/* Notifications */}
-          {isAuthenticated &&
-            <div className="notification-wrapper desktop-only">
-              <button
-                className="notification-btn"
-                onClick={() => setIsNotificationOpen(!isNotificationOpen)}
-              >
-                <Bell size={20} />
-                {notifications > 0 && <span className="notification-badge">{notifications}</span>}
-              </button>
-
-              {isNotificationOpen && (
-                <div className="notification-dropdown">
-                  <div className="dropdown-header">
-                    <h3>Notifications</h3>
-                    <button className="close-btn" onClick={() => setIsNotificationOpen(false)}>
-                      <X size={18} />
-                    </button>
-                  </div>
-                  <div className="notification-item">
-                    <div className="notification-dot"></div>
-                    <div>
-                      <p className="notification-title">New job matching your profile!</p>
-                      <p className="notification-time">5 minutes ago</p>
-                    </div>
-                  </div>
-                  <div className="notification-item">
-                    <div className="notification-dot"></div>
-                    <div>
-                      <p className="notification-title">You have a new message</p>
-                      <p className="notification-time">2 hours ago</p>
-                    </div>
-                  </div>
-                  <div className="notification-item">
-                    <div className="notification-dot"></div>
-                    <div>
-                      <p className="notification-title">Course recommendation for you</p>
-                      <p className="notification-time">1 day ago</p>
-                    </div>
-                  </div>
-                  <div className="notification-footer">
-                    <Link to="/notifications" className="view-all">View All</Link>
-                  </div>
-                </div>
-              )}
-            </div>
-          }
-
-          {isAuthenticated ? (
-            <div className="user-profile-wrapper">
-              <Link to={"/training"}>
-                <button className="btn-training desktop-only">
-                  <Rocket size={18} />
-                  <span>Start Training</span>
-                </button>
-              </Link>
-
-              {/* User Avatar & Dropdown */}
-              <div className="user-menu" ref={menuRef}>
+          {isAuthenticated ?
+            <>
+              <div className="notification-wrapper desktop-only">
                 <button
-                  className="avatar-btn"
-                  onClick={handleUserMenuStatus}
-                  title={userName}
+                  className="notification-btn"
+                  onClick={() => setIsNotificationOpen(!isNotificationOpen)}
                 >
-                  <div className="avatar-content">
-                    {userInitials}
-                  </div>
-                  <ChevronDown size={14} className={`chevron ${isUserMenuOpen ? 'open' : ''}`} />
+                  <Bell size={20} />
+                  {notifications > 0 && <span className="notification-badge">{notifications}</span>}
                 </button>
 
-                {/* User Dropdown */}
-                {isUserMenuOpen && (
-                  <div className="user-dropdown">
+                {isNotificationOpen && (
+                  <div className="notification-dropdown">
                     <div className="dropdown-header">
-                      <div className="user-info">
-                        <div className="user-avatar-large">{userInitials}</div>
-                        <div>
-                          <p className="user-name">{userName}</p>
-                          <p className="user-email">{userEmail}</p>
-                        </div>
+                      <h3>Notifications</h3>
+                      <button className="close-btn" onClick={() => setIsNotificationOpen(false)}>
+                        <X size={18} />
+                      </button>
+                    </div>
+                    <div className="notification-item">
+                      <div className="notification-dot"></div>
+                      <div>
+                        <p className="notification-title">New job matching your profile!</p>
+                        <p className="notification-time">5 minutes ago</p>
                       </div>
                     </div>
-                    <hr className="dropdown-divider" />
-                    <Link to="/profile" className="dropdown-item" onClick={handleUserMenuStatus}>
-                      <Home size={16} />
-                      <span>My Profile</span>
-                    </Link>
-                    <Link to="/training" className="dropdown-item" onClick={handleUserMenuStatus}>
-                      <BookOpen size={16} />
-                      <span>My Training</span>
-                    </Link>
-                    <Link to="/interview" className="dropdown-item" onClick={handleUserMenuStatus}>
-                      <Zap size={16} />
-                      <span>My Interviews</span>
-                    </Link>
-                    <Link to="/dashboard" className="dropdown-item" onClick={handleUserMenuStatus}>
-                      <BarChart3 size={16} />
-                      <span>My Dashboard</span>
-                    </Link>
-
-                    <Link to="/messages" className="dropdown-item" onClick={handleUserMenuStatus}>
-                      <MessageSquare size={16} />
-                      <span>Messages</span>
-                    </Link>
-                    <Link to="/settings" className="dropdown-item" onClick={handleUserMenuStatus}>
-                      <Settings size={16} />
-                      <span>Settings</span>
-                    </Link>
-                    <hr className="dropdown-divider" />
-                    <button className="dropdown-item logout-item" onClick={() => {
-                      setTimeout(() => {
-                        dispatch(authActions.logout());
-                        handleUserMenuStatus()
-                        navigate("/")
-                      }, 1000);
-                    }}>
-                      <LogOut size={16} />
-                      <span>Sign Out</span>
-                    </button>
+                    <div className="notification-item">
+                      <div className="notification-dot"></div>
+                      <div>
+                        <p className="notification-title">You have a new message</p>
+                        <p className="notification-time">2 hours ago</p>
+                      </div>
+                    </div>
+                    <div className="notification-item">
+                      <div className="notification-dot"></div>
+                      <div>
+                        <p className="notification-title">Course recommendation for you</p>
+                        <p className="notification-time">1 day ago</p>
+                      </div>
+                    </div>
+                    <div className="notification-footer">
+                      <Link to="/notifications" className="view-all">View All</Link>
+                    </div>
                   </div>
                 )}
               </div>
-            </div>
-          ) : (
-            <div className="auth-buttons desktop-only">
-              <Link to="/signin" className="btn-signin">Sign In</Link>
-              <Link to="/signup" className="btn-signup">Sign Up</Link>
-            </div>
-          )}
+              <div className="user-profile-wrapper">
+                <Link to={"/training"}>
+                  <button className="btn-training desktop-only">
+                    <Rocket size={18} />
+                    <span>Start Training</span>
+                  </button>
+                </Link>
+
+                {/* User Avatar & Dropdown */}
+                <div className="user-menu" ref={menuRef}>
+                  <button
+                    className="avatar-btn"
+                    onClick={handleUserMenuStatus}
+                    title={userName}
+                  >
+                    <div className="avatar-content">
+                      {userInitials}
+                    </div>
+                    <ChevronDown size={14} className={`chevron ${isUserMenuOpen ? 'open' : ''}`} />
+                  </button>
+
+                  {/* User Dropdown */}
+                  {isUserMenuOpen && (
+                    <div className="user-dropdown">
+                      <div className="dropdown-header">
+                        <div className="user-info">
+                          <div className="user-avatar-large">{userInitials}</div>
+                          <div>
+                            <p className="user-name">{userName}</p>
+                            <p className="user-email">{userEmail}</p>
+                          </div>
+                        </div>
+                      </div>
+                      <hr className="dropdown-divider" />
+                      <Link to="/profile" className="dropdown-item" onClick={handleUserMenuStatus}>
+                        <Home size={16} />
+                        <span>My Profile</span>
+                      </Link>
+                      <Link to="/training" className="dropdown-item" onClick={handleUserMenuStatus}>
+                        <BookOpen size={16} />
+                        <span>My Training</span>
+                      </Link>
+                      <Link to="/interview" className="dropdown-item" onClick={handleUserMenuStatus}>
+                        <Zap size={16} />
+                        <span>My Interviews</span>
+                      </Link>
+                      <Link to="/dashboard" className="dropdown-item" onClick={handleUserMenuStatus}>
+                        <BarChart3 size={16} />
+                        <span>My Dashboard</span>
+                      </Link>
+
+                      <Link to="/messages" className="dropdown-item" onClick={handleUserMenuStatus}>
+                        <MessageSquare size={16} />
+                        <span>Messages</span>
+                      </Link>
+                      <Link to="/settings" className="dropdown-item" onClick={handleUserMenuStatus}>
+                        <Settings size={16} />
+                        <span>Settings</span>
+                      </Link>
+                      <hr className="dropdown-divider" />
+                      <button className="dropdown-item logout-item" onClick={() => {
+                        setTimeout(() => {
+                          dispatch(authActions.logout());
+                          handleUserMenuStatus()
+                          navigate("/")
+                        }, 1000);
+                      }}>
+                        <LogOut size={16} />
+                        <span>Sign Out</span>
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+            </>
+            :
+            <>
+              <div className="auth-buttons desktop-only">
+                <Link to="/signin" className="btn-signin">Sign In</Link>
+                <Link to="/signup" className="btn-signup">Sign Up</Link>
+              </div>
+            </>
+          }
 
           {/* Mobile Menu Toggle */}
           <button
@@ -233,70 +235,41 @@ export default function Navbar() {
             {isMobileOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
-      </div>
+      </div >
 
       {/* Mobile Sidebar Overlay */}
-      {isMobileOpen && (
-        <div className="mobile-overlay" onClick={() => setIsMobileOpen(false)}>
-          <aside className="mobile-sidebar" onClick={(e) => e.stopPropagation()}>
-            <div className="sidebar-header">
-              <div className="logo-box">
-                <Rocket size={20} className="logo-icon" />
-                <span className="logo-text">HirePilot.</span>
+      {
+        isMobileOpen && (
+          <div className="mobile-overlay" onClick={() => setIsMobileOpen(false)} ref={menuRef}>
+            <aside className="mobile-sidebar" onClick={(e) => e.stopPropagation()}>
+              {/* Mobile Nav */}
+              <ul className="mobile-nav-list">
+                {NAV_ITEMS.map((item) => {
+                  const Icon = item.icon;
+                  return (
+                    <li key={item.label} onClick={() => handleNavigation(item.path)}>
+                      <Icon size={20} />
+                      <span>{item.label}</span>
+                    </li>
+                  );
+                })}
+              </ul>
+
+              {/* Sidebar Footer */}
+              <div className="sidebar-footer">
+                {!isAuthenticated && (
+                  <>
+                    <Link to="/signin" className="btn-signin sidebar-link" onClick={() => setIsMobileOpen(false)}>Sign In</Link>
+                    <Link to="/signup" className="btn-signup sidebar-link" onClick={() => setIsMobileOpen(false)}>Sign Up</Link>
+                  </>
+                )}
               </div>
-              <button
-                className="sidebar-close-btn"
-                onClick={() => setIsMobileOpen(false)}
-              >
-                <X size={24} />
-              </button>
-            </div>
 
-            {/* Mobile Nav */}
-            <ul className="mobile-nav-list">
-              {NAV_ITEMS.map((item) => {
-                const Icon = item.icon;
-                return (
-                  <li key={item.label} onClick={() => handleNavigation(item.path)}>
-                    <Icon size={20} />
-                    <span>{item.label}</span>
-                  </li>
-                );
-              })}
-            </ul>
 
-            {/* Mobile User Info */}
-            {isAuthenticated && (
-              <>
-                <div className="sidebar-divider"></div>
-                <div className="mobile-user-info">
-                  <div className="user-avatar-large">{userInitials}</div>
-                  <div>
-                    <p className="user-name">{userName}</p>
-                    <p className="user-email-small">{userEmail}</p>
-                  </div>
-                </div>
-              </>
-            )}
-
-            {/* Sidebar Footer */}
-            <div className="sidebar-footer">
-              {isAuthenticated ? (
-                <>
-                  <Link to="/profile" className="sidebar-link">My Profile</Link>
-                  <Link to="/settings" className="sidebar-link">Settings</Link>
-                  <button className="btn-logout">Sign Out</button>
-                </>
-              ) : (
-                <>
-                  <Link to="/signin" className="btn-signin">Sign In</Link>
-                  <Link to="/signup" className="btn-signup">Sign Up</Link>
-                </>
-              )}
-            </div>
-          </aside>
-        </div>
-      )}
-    </header>
+            </aside>
+          </div>
+        )
+      }
+    </header >
   );
 }
