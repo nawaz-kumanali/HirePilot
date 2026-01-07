@@ -2,7 +2,6 @@ import { useState } from 'react';
 import {
   Video,
   Clock,
-  CheckCircle,
   Calendar,
   Users,
   TrendingUp,
@@ -10,12 +9,12 @@ import {
   Target,
   ArrowRight,
   X,
-  Zap,
   Award,
   Sparkles
 } from 'lucide-react';
 
 import './interview.scss'
+import VisualHeader from '../../components/VisualHeader/VisualHeader';
 const Interview = () => {
   const [activeTab, setActiveTab] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -75,41 +74,10 @@ const Interview = () => {
 
   return (
     <div className="interview-wrapper">
-      <div className="interview-background"></div>
       <div className="interview-container">
         {/* Dashboard Header */}
         <header className="interview-header">
-          <div className="interview-header-info">
-            <div className="interview-header-badge">
-              <Sparkles size={16} /> Ready to ace it?
-            </div>
-            <h1 className="interview-main-title">Interview Prep Hub</h1>
-            <p className="interview-main-subtitle">Master your next technical round with AI-driven insights and personalized feedback.</p>
-          </div>
-
-          <div className="interview-stats-row">
-            <div className="interview-stat-pill">
-              <div className="interview-icon-box purple"><Target size={20} /></div>
-              <div className="interview-stat-content">
-                <span className="interview-stat-num">3</span>
-                <span className="interview-stat-desc">Upcoming</span>
-              </div>
-            </div>
-            <div className="interview-stat-pill">
-              <div className="interview-icon-box green"><CheckCircle size={20} /></div>
-              <div className="interview-stat-content">
-                <span className="interview-stat-num">12</span>
-                <span className="interview-stat-desc">Completed</span>
-              </div>
-            </div>
-            <div className="interview-stat-pill">
-              <div className="interview-icon-box blue"><Zap size={20} /></div>
-              <div className="interview-stat-content">
-                <span className="interview-stat-num">92%</span>
-                <span className="interview-stat-desc">Success Rate</span>
-              </div>
-            </div>
-          </div>
+            <VisualHeader badge="Ready to ace it?" title="Interview Prep Hub" gradient_title="with AI" subtitle="Master your next technical round with AI-driven insights and personalized feedback." />
         </header>
 
         {/* Navigation Tabs */}

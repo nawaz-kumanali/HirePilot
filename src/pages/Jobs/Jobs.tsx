@@ -61,20 +61,11 @@ const Jobs = () => {
 
   const activeFilters = [filterType, filterLevel, filterLocation].filter(f => f !== '').length;
 
-  
-
-
-    console.log(mobileFiltersOpen)
-
   return (
     <main className="jobs-page-wrapper" >
       <div className="jobs-container" >
         <header className="jobs-header-container">
-          <div className="header-visual-bg"></div>
-
-          <div className="header-content">
-            <VisualHeader badge='New opportunities added today' title='Find Your' gradient_title='Dream Job' subtitle="Discover amazing opportunities and advance your career with HirePilot's curated job board for developers."/>
-          </div>
+          <VisualHeader badge='New opportunities added today' title='Find Your' gradient_title='Dream Job' subtitle="Discover amazing opportunities and advance your career with HirePilot's curated job board for developers." />
         </header>
 
         <div className="jobs-layout">
@@ -101,12 +92,12 @@ const Jobs = () => {
             {/* List Toolbar */}
             <div className="list-toolbar">
               <div className="result-stats">
-                <Filter size={18} strokeWidth={2.5} className="stats-icon" onClick={() => setMobileFiltersOpen(prev => !prev)}/>
-                
+                <Filter size={18} strokeWidth={2.5} className="stats-icon" onClick={() => setMobileFiltersOpen(prev => !prev)} />
+
                 <p className="stats-text">
                   Showing <span>{filteredJobs.length}</span> available position{filteredJobs.length !== 1 ? 's' : ''}
                 </p>
-                
+
               </div>
 
               <div className="toolbar-actions">

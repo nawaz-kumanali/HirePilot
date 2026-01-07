@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { Filter, Zap, BookOpen, TrendingUp, Award } from 'lucide-react';
 import './courses.scss';
 import Training from '../Training/Traning';
-import AuthService from '../../api/auth';
 import VisualHeader from '../../components/VisualHeader/VisualHeader';
 import SearchBar from '../../components/SearchBar/SearchBar';
 import CourseCard from './CourseCard/CourseCard';
@@ -10,12 +9,10 @@ import EmptyState from '../../components/EmptyState/EmptyState';
 
 
 const Courses = () => {
-  const [activeTab, setActiveTab] = useState('all');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState('popular');
 
-  const isAuthenticated = AuthService.getAuthenticationState();
 
   const courses = [
     {
@@ -119,29 +116,6 @@ const Courses = () => {
 
   return (
     <div className="courses-wrapper">
-      {/* Tabs Section */}
-      {isAuthenticated &&
-        <section className="courses-tabs">
-          <div className="tabs-container">
-            <button
-              className={`tab-btn ${activeTab === 'all' ? 'active' : ''}`}
-              onClick={() => setActiveTab('all')}
-            >
-              Explore Courses
-            </button>
-            <button
-              className={`tab-btn ${activeTab === 'my-courses' ? 'active' : ''}`}
-              onClick={() => setActiveTab('my-courses')}
-            >
-              My Courses
-            </button>
-          </div>
-        </section>
-      }
-
-      {/* EXPLORE COURSES TAB */}
-      {activeTab === 'all' && (
-        <>
           {/* Hero Section */}
           <section className="courses-hero">
             <div className="courses-hero-content">
@@ -198,15 +172,6 @@ const Courses = () => {
               )}
             </div>
           </section>
-        </>
-      )}
-
-      {/* MY COURSES TAB */}
-      {activeTab === 'my-courses' && (
-        <section className="my-courses-section">
-          <Training />
-        </section>
-      )}
     </div>
   );
 };

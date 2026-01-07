@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 import {
-    Bell, Lock, User, Palette, Mail, Shield,
-    LogOut, Trash2, ChevronRight, Check, AlertTriangle,
+    Bell, User, Palette, Mail, Shield,
+    ChevronRight, Check, AlertTriangle,
     Save, Volume2, X, AlertCircle
 } from 'lucide-react';
 
 import './setting.scss'
+import Profile from './Profile/Profile';
 
 const SettingsPage = () => {
-    const [activeSection, setActiveSection] = useState('account');
+    const [activeSection, setActiveSection] = useState('profile');
     const [deleteDialog, setDeleteDialog] = useState(false);
     const [logoutConfirm, setLogoutConfirm] = useState(false);
     const [successMessage, setSuccessMessage] = useState('');
@@ -16,9 +17,6 @@ const SettingsPage = () => {
     // Account Settings
     const [accountSettings, setAccountSettings] = useState({
         email: 'iamnawazahmad777@gmail.com',
-        username: 'nawaz.dev',
-        language: 'en',
-        timezone: 'UTC+5:30',
     });
 
     const Trophy = () => <Bell size={18} />;
@@ -86,11 +84,15 @@ const SettingsPage = () => {
         compactMode: false,
     });
 
-    // Security Settings
-    const [twoFactor, setTwoFactor] = useState(false);
-    const [sessionTimeout, setSessionTimeout] = useState(30);
+
 
     const settingSections = [
+        {
+            id: 'profile',
+            title: 'Profile',
+            description: 'Manage your profile',
+            icon: User,
+        },
         {
             id: 'account',
             title: 'Account Settings',
@@ -114,13 +116,7 @@ const SettingsPage = () => {
             title: 'Appearance',
             description: 'Customize interface',
             icon: Palette,
-        },
-        {
-            id: 'security',
-            title: 'Security',
-            description: 'Advanced options',
-            icon: Lock,
-        },
+        }
     ];
 
     const handleNotificationToggle = (id: string) => {
@@ -164,15 +160,6 @@ const SettingsPage = () => {
     return (
         <div className="settings-wrapper">
             <div className="settings-container">
-
-                {/* Header */}
-                <div className="settings-header">
-                    <div className="settings-header-content">
-                        <h1 className="settings-title">Settings & Preferences</h1>
-                        <p className="settings-subtitle">Manage your account, notifications, and security settings</p>
-                    </div>
-                </div>
-
                 {/* Success Alert */}
                 {successMessage && (
                     <div className="settings-alert settings-alert-success">
@@ -221,6 +208,12 @@ const SettingsPage = () => {
                     {/* Content Panel */}
                     <div className="settings-content-panel">
 
+                        {
+                            activeSection === 'profile' && (
+                                <Profile />
+                            )
+                        }
+
                         {/* Account Settings */}
                         {activeSection === 'account' && (
                             <div className="settings-section">
@@ -238,48 +231,6 @@ const SettingsPage = () => {
                                             value={accountSettings.email}
                                             onChange={(e) => setAccountSettings({ ...accountSettings, email: e.target.value })}
                                         />
-                                    </div>
-
-                                    <div className="settings-form-group">
-                                        <label className="settings-label">Username</label>
-                                        <input
-                                            type="text"
-                                            className="settings-input"
-                                            value={accountSettings.username}
-                                            onChange={(e) => setAccountSettings({ ...accountSettings, username: e.target.value })}
-                                        />
-                                    </div>
-
-                                    <div className="settings-form-grid">
-                                        <div className="settings-form-group">
-                                            <label className="settings-label">Language</label>
-                                            <select
-                                                className="settings-input settings-select"
-                                                value={accountSettings.language}
-                                                onChange={(e) => setAccountSettings({ ...accountSettings, language: e.target.value })}
-                                            >
-                                                <option value="en">English</option>
-                                                <option value="es">Spanish</option>
-                                                <option value="fr">French</option>
-                                                <option value="de">German</option>
-                                                <option value="zh">Chinese</option>
-                                            </select>
-                                        </div>
-
-                                        <div className="settings-form-group">
-                                            <label className="settings-label">Timezone</label>
-                                            <select
-                                                className="settings-input settings-select"
-                                                value={accountSettings.timezone}
-                                                onChange={(e) => setAccountSettings({ ...accountSettings, timezone: e.target.value })}
-                                            >
-                                                <option value="UTC-8">UTC-8 (Pacific)</option>
-                                                <option value="UTC-5">UTC-5 (Eastern)</option>
-                                                <option value="UTC">UTC (London)</option>
-                                                <option value="UTC+1">UTC+1 (Central Europe)</option>
-                                                <option value="UTC+5:30">UTC+5:30 (India)</option>
-                                            </select>
-                                        </div>
                                     </div>
 
                                     <button className="settings-btn settings-btn-primary" onClick={handleSaveSettings}>
@@ -455,75 +406,6 @@ const SettingsPage = () => {
                                         <Save size={18} />
                                         Save Changes
                                     </button>
-                                </div>
-                            </div>
-                        )}
-
-                        {/* Security */}
-                        {activeSection === 'security' && (
-                            <div className="settings-section">
-                                <div className="settings-section-header">
-                                    <h2>Security Settings</h2>
-                                    <p>Manage your account security</p>
-                                </div>
-
-                                <div className="settings-security">
-                                    <div className="settings-security-item">
-                                        <div className="settings-security-text">
-                                            <div className="settings-security-title">Two-Factor Authentication</div>
-                                            <div className="settings-security-desc">Add an extra layer of security to your account</div>
-                                        </div>
-                                        <label className="settings-toggle">
-                                            <input
-                                                type="checkbox"
-                                                checked={twoFactor}
-                                                onChange={(e) => setTwoFactor(e.target.checked)}
-                                            />
-                                            <span className="settings-toggle-slider"></span>
-                                        </label>
-                                    </div>
-
-                                    <div className="settings-security-timeout">
-                                        <label className="settings-label">Session Timeout: {sessionTimeout} minutes</label>
-                                        <input
-                                            type="range"
-                                            min="5"
-                                            max="120"
-                                            step="5"
-                                            value={sessionTimeout}
-                                            onChange={(e) => setSessionTimeout(parseInt(e.target.value))}
-                                            className="settings-slider"
-                                        />
-                                        <div className="settings-timeout-marks">
-                                            <span>5m</span>
-                                            <span>30m</span>
-                                            <span>1h</span>
-                                            <span>2h</span>
-                                        </div>
-                                    </div>
-
-                                    <div className="settings-danger-zone">
-                                        <h3 className="settings-danger-title">⚠️ Danger Zone</h3>
-                                        <p className="settings-danger-desc">Irreversible actions that may impact your account</p>
-
-                                        <div className="settings-danger-actions">
-                                            <button
-                                                className="settings-btn settings-btn-warning"
-                                                onClick={() => setLogoutConfirm(true)}
-                                            >
-                                                <LogOut size={18} />
-                                                Logout from All Devices
-                                            </button>
-
-                                            <button
-                                                className="settings-btn settings-btn-danger"
-                                                onClick={() => setDeleteDialog(true)}
-                                            >
-                                                <Trash2 size={18} />
-                                                Delete Account
-                                            </button>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                         )}

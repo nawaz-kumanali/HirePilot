@@ -105,33 +105,6 @@
     flex-shrink: 0;
   }
 
-  .btn-training {
-    background: white;
-    border: 2px solid var(--theme-color-primary);
-    color: var(--theme-color-primary);
-    padding: 10px 20px;
-    border-radius: 12px;
-    font-weight: 700;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    font-size: 0.9rem;
-
-    &:hover {
-      background: linear-gradient(135deg, var(--theme-color-primary), var(--theme-color-secondary));
-      color: var(--text-color-light);
-      border-color: transparent;
-      transform: translateY(-3px);
-      box-shadow: 0 10px 24px rgba(168, 85, 247, 0.4);
-    }
-
-    &:active {
-      transform: translateY(-1px);
-    }
-  }
 
   /* --- Notifications Section --- */
   .notification-wrapper {
@@ -155,8 +128,7 @@
         border-color: var(--theme-color-primary);
         color: var(--theme-color-primary);
         background: rgba(168, 85, 247, 0.08);
-        transform: translateY(-2px);
-        box-shadow: 0 6px 16px rgba(168, 85, 247, 0.15);
+        box-shadow: 0 0px 12px rgba(168, 85, 247, 0.15);
       }
     }
 
@@ -297,24 +269,25 @@
     .avatar-btn {
       background: linear-gradient(135deg, var(--theme-color-primary), var(--theme-color-secondary));
       border: none;
-      border-radius: 12px;
+      border-radius: 50%;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 8px;
-      padding: 8px 12px;
+      padding: 2px;
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      width: 44px;
+      height: 44px;
 
       &:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 10px 24px rgba(168, 85, 247, 0.4);
+        box-shadow: 0 0px 12px rgba(168, 85, 247, 0.4);
       }
     }
 
     .avatar-content {
-      width: 36px;
-      height: 36px;
-      border-radius: 10px;
+
+      height: 100%;
+      width: 100%;
+      border-radius: 50%;
       background: white;
       color: var(--theme-color-primary);
       display: flex;
@@ -322,6 +295,7 @@
       justify-content: center;
       font-weight: 800;
       font-size: 0.9rem;
+      overflow: hidden;
     }
 
     .chevron {
@@ -360,6 +334,8 @@
       font-weight: 800;
       font-size: 1rem;
       box-shadow: 0 4px 12px rgba(168, 85, 247, 0.2);
+      overflow: hidden;
+      border: 2px solid var(--theme-color-primary);
     }
 
     .user-name {
@@ -495,7 +471,7 @@
     top: 0px;
     left: 0;
     width: 280px;
-    height:100%;
+    height: 100%;
     background: white;
     display: flex;
     flex-direction: column;

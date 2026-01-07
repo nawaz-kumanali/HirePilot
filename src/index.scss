@@ -16,14 +16,11 @@
   box-sizing: border-box;
 }
 
-body, html {
+body,
+html {
   font-family: Inter, system-ui, Arial, sans-serif;
-  background: black;
-  // background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%) !important;
-  background: radial-gradient(circle at 20% 50%, rgba(168, 85, 247, 0.08) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(99, 102, 241, 0.08) 0%, transparent 50%) !important;
+  background: linear-gradient(135deg, #f5f3ff 0%, #faf5ff 100%);
   color: #111827;
-  overflow-x: hidden;
 }
 
 a {
@@ -31,12 +28,9 @@ a {
   color: inherit;
 }
 
-
-html {
-
-  scroll-behavior: smooth;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+img {
+  width: 100%;
+  height: 100%;
 }
 
 
@@ -48,4 +42,32 @@ html {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   animation: shimmer 3s ease-in-out infinite;
+}
+
+
+
+
+
+// Option 5: Luxury Lavender Scrollbar (Premium)
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: linear-gradient(180deg, #f5f0ff 0%, #faf7ff 100%);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #e9d5ff 0%, #c4b5fd 100%);
+  border-radius: 5px;
+  border: 1px solid #ddd6fe;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #d8bfd8 0%, #a78bfa 100%);
+}
+
+::-webkit-scrollbar-thumb:active {
+  background: linear-gradient(180deg, #c4b5fd 0%, #a855f7 100%);
 }

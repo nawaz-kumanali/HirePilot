@@ -9,9 +9,9 @@ $slate-200: #e2e8f0;
 
 .jobs-page-wrapper {
   min-height: 100vh;
-  padding: 40px 0 80px;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  padding: 40px 0 40px;
   position: relative;
+  
 
   &::before {
     content: '';
@@ -39,13 +39,7 @@ $slate-200: #e2e8f0;
     position: relative;
     text-align: center;
 
-    .header-content {
-      position: relative;
-      z-index: 2;
-      max-width: 800px;
-      margin: 0 auto;
-      animation: fadeInUp 0.8s ease-out;
-    }
+
 
     .jobs-subtitle {
       font-size: 1.1rem;

@@ -7,7 +7,6 @@ import Dashboard from "../pages/Dashboard/Dashboard";
 import SignUp from "../pages/SignUp/SignUp";
 import SignIn from "../pages/SignIn/SignIn";
 import Training from "../pages/Training/Traning";
-import Profile from "../pages/Profile/Profile";
 import Setting from "../pages/Setting/Setting";
 import Courses from "../pages/Courses/Courses";
 import NotFound from "../pages/NotFound/NotFound";
@@ -41,12 +40,8 @@ export const router = createBrowserRouter([
         element: <Dashboard />,
       },
       {
-        path: "/settings",
-        element: <Setting />,
-      },
-      {
         path: "/profile",
-        element: <Profile />,
+        element: <Setting />,
       },
       {
         path: "/signup",

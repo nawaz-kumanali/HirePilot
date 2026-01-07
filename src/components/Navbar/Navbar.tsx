@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import {
-  Rocket, Home, Briefcase, BookOpen, BarChart3,
-  Settings, LogOut, Menu, X, ChevronDown, Bell,
+  Home, Briefcase, BookOpen, BarChart3,
+  LogOut, Menu, X, Bell,
   MessageSquare, Zap
 } from "lucide-react";
 import Logo from "../Logo/Logo";
@@ -12,6 +12,7 @@ import { useAppDispatch } from "../../store/hooks";
 import { authActions } from "../../store/auth/auth.slice";
 import { getUserMenuState } from "../../utility/userMenu";
 import { userMenuActions } from "../../store/UserMenu/usermenu.slice";
+import profileImg from '../../assets/Nawaz_profile_IMG.jpg'
 
 const NAV_ITEMS = [
   { label: "Home", path: "/", icon: Home },
@@ -142,12 +143,6 @@ export default function Navbar() {
                 )}
               </div>
               <div className="user-profile-wrapper">
-                <Link to={"/training"}>
-                  <button className="btn-training desktop-only">
-                    <Rocket size={18} />
-                    <span>Start Training</span>
-                  </button>
-                </Link>
 
                 {/* User Avatar & Dropdown */}
                 <div className="user-menu" ref={menuRef}>
@@ -157,9 +152,9 @@ export default function Navbar() {
                     title={userName}
                   >
                     <div className="avatar-content">
-                      {userInitials}
+                      {profileImg ? <img src={profileImg} alt="profile Img" /> : userInitials}
                     </div>
-                    <ChevronDown size={14} className={`chevron ${isUserMenuOpen ? 'open' : ''}`} />
+                    {/* <ChevronDown size={14} className={`chevron ${isUserMenuOpen ? 'open' : ''}`} /> */}
                   </button>
 
                   {/* User Dropdown */}
@@ -167,7 +162,7 @@ export default function Navbar() {
                     <div className="user-dropdown">
                       <div className="dropdown-header">
                         <div className="user-info">
-                          <div className="user-avatar-large">{userInitials}</div>
+                          <div className="user-avatar-large">{profileImg ? <img src={profileImg} alt="profile Img" /> : userInitials}</div>
                           <div>
                             <p className="user-name">{userName}</p>
                             <p className="user-email">{userEmail}</p>
@@ -195,10 +190,6 @@ export default function Navbar() {
                       <Link to="/messages" className="dropdown-item" onClick={handleUserMenuStatus}>
                         <MessageSquare size={16} />
                         <span>Messages</span>
-                      </Link>
-                      <Link to="/settings" className="dropdown-item" onClick={handleUserMenuStatus}>
-                        <Settings size={16} />
-                        <span>Settings</span>
                       </Link>
                       <hr className="dropdown-divider" />
                       <button className="dropdown-item logout-item" onClick={() => {
