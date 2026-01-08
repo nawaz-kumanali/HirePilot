@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Filter, Zap, BookOpen, TrendingUp, Award } from 'lucide-react';
 import './courses.scss';
-import Training from '../Training/Traning';
 import VisualHeader from '../../components/VisualHeader/VisualHeader';
 import SearchBar from '../../components/SearchBar/SearchBar';
 import CourseCard from './CourseCard/CourseCard';
