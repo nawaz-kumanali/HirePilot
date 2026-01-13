@@ -1,6 +1,6 @@
 import React from 'react';
 import { Clock, BookOpen, ChevronRight } from 'lucide-react';
-import './usercoursecard.scss';
+import './usercoursecard.scss'
 
 interface UserCourseCardProps {
     id: number;
