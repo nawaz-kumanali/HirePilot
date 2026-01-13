@@ -7,11 +7,13 @@ function App() {
 
  
   return (
-    <>
+    <div className='app-wrapper'>
       <Navbar />
+      <div className="app-content">
       <Outlet />
+      </div>
       <Footer />
-    </>
+    </div>
   )
 }
 

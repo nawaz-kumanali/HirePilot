@@ -6,12 +6,14 @@ import Jobs from "../pages/Jobs/Jobs";
 import Dashboard from "../pages/Dashboard/Dashboard";
 import SignUp from "../pages/SignUp/SignUp";
 import SignIn from "../pages/SignIn/SignIn";
-import Training from "../pages/Training/Traning";
 import Courses from "../pages/Courses/Courses";
 import CoursePage from "../pages/Courses/Course/Course";
 import NotFound from "../pages/NotFound/NotFound";
 import Profile from "../pages/Profile/Profile";
 import ProtectedRoute from "../components/ProtectedRoute/ProtectedRoute";
+import Notifications from "../pages/Notifications/Notifications";
+import Messages from "../pages/Messages/Messages";
+import Training from "../pages/Training/Traning";
 
 export const router = createBrowserRouter([
   {
@@ -71,6 +73,22 @@ export const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <Profile />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/notifications",
+        element: (
+          <ProtectedRoute>
+            <Notifications />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/messages",
+        element: (
+          <ProtectedRoute>
+            <Messages />
           </ProtectedRoute>
         ),
       },
