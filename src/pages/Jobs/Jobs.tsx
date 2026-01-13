@@ -1,4 +1,6 @@
 import { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAppSelector } from '../../store/hooks';
 import './jobs.scss';
 import type Job from '../../types/job';
 import { jobList } from '../../data/jobs';
@@ -22,6 +24,8 @@ const Jobs = () => {
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
   const [openDialog, setOpenDialog] = useState(false);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const navigate = useNavigate();
+  const isAuthenticated = useAppSelector(state => state.auth.isAuthenticated);
 
   // Dynamic Options derived from data
   const jobTypes = useMemo(() => Array.from(new Set(jobList.map(j => j.type))), []);
@@ -48,6 +52,10 @@ const Jobs = () => {
 
 
   const handleOpenJob = (job: Job) => {
+    if (!isAuthenticated) {
+      navigate('/signin');
+      return;
+    }
     setSelectedJob(job);
     setOpenDialog(true);
   };

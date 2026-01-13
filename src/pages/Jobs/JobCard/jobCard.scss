@@ -335,9 +335,3 @@
   }
 }
 
-/* ===== ANIMATIONS ===== */
-@keyframes popIn {
-  0% { opacity: 0; transform: scale(0.8) rotate(-15deg); }
-  50% { transform: scale(1.2) rotate(5deg); }
-  100% { opacity: 1; transform: scale(1) rotate(0); }
-}

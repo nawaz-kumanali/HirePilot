@@ -14,5 +14,24 @@ export interface UserCourse {
 
 
 export interface Course {
-  
+    id: string;
+    title: string;
+    description: string;
+    category: 'web-dev' | 'data-science' | 'design' | 'mobile' | 'ai-ml';
+    instructor: string;
+    instructorImage?: string;
+    students: number;
+    rating: number;
+    reviews: number;
+    duration: string;
+    level: 'Beginner' | 'Intermediate' | 'Advanced';
+    price: number;
+    originalPrice?: number;
+    image: string;
+    icon?: React.ElementType;
+    bestseller?: boolean;
+    modules?: number;
+    lessons?: number;
+    language?: string;
+    subtitle?: string;
 }

@@ -8,7 +8,7 @@ import Logo from "../Logo/Logo";
 import './navbar.scss'
 import { Link, useNavigate } from "react-router-dom";
 import AuthService from "../../api/auth";
-import { useAppDispatch } from "../../store/hooks";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { authActions } from "../../store/auth/auth.slice";
 import { getUserMenuState } from "../../utility/userMenu";
 import { userMenuActions } from "../../store/UserMenu/usermenu.slice";
@@ -29,8 +29,7 @@ export default function Navbar() {
   const isUserMenuOpen = getUserMenuState();
   const isAuthenticated = AuthService.getAuthenticationState();
 
-  const userName = "Nawaz Kumanali";
-  const userEmail = "iamnawazahmad777@gmail.com";
+  const currentUser = useAppSelector(state => state.currentUser);
   const notifications = 3;
 
   const dispatch = useAppDispatch();
@@ -66,7 +65,7 @@ export default function Navbar() {
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [isUserMenuOpen, dispatch])
 
-  const userInitials = userName
+  const userInitials = (currentUser.firstName + " " + currentUser.lastName)
     .split(" ")
     .map(n => n.charAt(0))
     .join("");
@@ -149,7 +148,7 @@ export default function Navbar() {
                   <button
                     className="avatar-btn"
                     onClick={handleUserMenuStatus}
-                    title={userName}
+                    title={currentUser.firstName + " " + currentUser.lastName}
                   >
                     <div className="avatar-content">
                       {profileImg ? <img src={profileImg} alt="profile Img" /> : userInitials}
@@ -164,8 +163,8 @@ export default function Navbar() {
                         <div className="user-info">
                           <div className="user-avatar-large">{profileImg ? <img src={profileImg} alt="profile Img" /> : userInitials}</div>
                           <div>
-                            <p className="user-name">{userName}</p>
-                            <p className="user-email">{userEmail}</p>
+                            <p className="user-name">{currentUser.firstName + " " + currentUser.lastName}</p>
+                            <p className="user-email">{currentUser.email}</p>
                           </div>
                         </div>
                       </div>

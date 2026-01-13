@@ -76,30 +76,3 @@
     }
 }
 
-/* --- Animation --- */
-@keyframes sparkle {
-
-    0%,
-    100% {
-        opacity: 0.4;
-        transform: scale(1) rotate(0deg);
-    }
-
-    50% {
-        opacity: 1;
-        transform: scale(1.25) rotate(10deg);
-        filter: drop-shadow(0 0 6px var(--theme-color-secondary));
-    }
-}
-
-@keyframes pulse {
-
-    0%,
-    100% {
-        opacity: 1;
-    }
-
-    50% {
-        opacity: 0.6;
-    }
-}

@@ -8,8 +8,10 @@ import SignUp from "../pages/SignUp/SignUp";
 import SignIn from "../pages/SignIn/SignIn";
 import Training from "../pages/Training/Traning";
 import Courses from "../pages/Courses/Courses";
+import CoursePage from "../pages/Courses/Course/Course";
 import NotFound from "../pages/NotFound/NotFound";
 import Profile from "../pages/Profile/Profile";
+import ProtectedRoute from "../components/ProtectedRoute/ProtectedRoute";
 
 export const router = createBrowserRouter([
   {
@@ -19,29 +21,58 @@ export const router = createBrowserRouter([
         path: "/",
         element: <Home />,
       },
+      // Protected routes
       {
         path: "/jobs",
         element: <Jobs />,
       },
       {
         path: "/training",
-        element: <Training />,
+        element: (
+          <ProtectedRoute>
+            <Training />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "/courses",
-        element: <Courses />,
+        element: (
+          <ProtectedRoute>
+            <Courses />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/courses/:id",
+        element: (
+          <ProtectedRoute>
+            <CoursePage />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "/interview",
-        element: <Interview />,
+        element: (
+          <ProtectedRoute>
+            <Interview />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "/dashboard",
-        element: <Dashboard />,
+        element: (
+          <ProtectedRoute>
+            <Dashboard />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "/profile",
-        element: <Profile />,
+        element: (
+          <ProtectedRoute>
+            <Profile />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "/signup",

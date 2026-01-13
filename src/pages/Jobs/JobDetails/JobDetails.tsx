@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
-import { X, Briefcase, Building2, Rocket, MapPin, Clock, DollarSign, Users, Star } from 'lucide-react';
+import { X, Briefcase, Building2, Rocket, MapPin, Clock, DollarSign, Users, Star, Sparkles } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import './jobDetails.scss'
 import type Job from '../../../types/job';
 
@@ -11,6 +12,8 @@ interface JobDetailsProps {
 }
 
 const JobDetails: React.FC<JobDetailsProps> = ({ open, job, onClose }) => {
+  const navigate = useNavigate();
+
   useEffect(() => {
     if (open) {
       document.body.style.overflow = 'hidden';
@@ -20,6 +23,11 @@ const JobDetails: React.FC<JobDetailsProps> = ({ open, job, onClose }) => {
   }, [open]);
 
   if (!open || !job) return null;
+
+  const handleStartAIInterview = () => {
+    onClose();
+    navigate('/interview', { state: { job } });
+  };
 
   return (
     <div className="job-detail-overlay" onClick={onClose}>
@@ -107,6 +115,10 @@ const JobDetails: React.FC<JobDetailsProps> = ({ open, job, onClose }) => {
         <div className="job-detail-footer">
           <button className="job-detail-btn-secondary" onClick={onClose}>
             Close
+          </button>
+          <button className="job-detail-btn-ai" onClick={handleStartAIInterview}>
+            <Sparkles size={18} />
+            AI Interview
           </button>
           <button className="job-detail-btn-primary">
             <Rocket size={18} />
