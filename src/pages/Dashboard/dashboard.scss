@@ -16,6 +16,11 @@
         flex-wrap: wrap;
         gap: 24px;
 
+        @media (max-width: 768px) {
+            margin-bottom: 32px;
+            gap: 16px;
+        }
+
         .welcome-text {
             h1 {
                 font-size: 2.5rem;
@@ -23,9 +28,18 @@
                 color: var(--text-primary);
                 margin-bottom: 8px;
 
+                @media (max-width: 768px) {
+                    font-size: 1.85rem;
+                }
+
+                @media (max-width: 480px) {
+                    font-size: 1.6rem;
+                }
+
                 .gradient-span {
                     background: linear-gradient(90deg, var(--theme-color-primary), var(--theme-color-secondary));
                     -webkit-background-clip: text;
+                    background-clip: text;
                     -webkit-text-fill-color: transparent;
                 }
             }
@@ -34,6 +48,10 @@
                 color: var(--text-secondary);
                 font-size: 1.1rem;
                 font-weight: 500;
+
+                @media (max-width: 768px) {
+                    font-size: 0.95rem;
+                }
             }
         }
 

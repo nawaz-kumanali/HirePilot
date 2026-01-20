@@ -3,6 +3,18 @@
   display: flex;
   align-items: center;
   gap: 10px;
+  padding: 8px 16px;
+  background: var(--card-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px var(--shadow-sm);
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px var(--shadow-md);
+    border-color: var(--theme-color-primary);
+  }
 
   /* --- Icon Style & Animation --- */
   .logo-icon {
@@ -11,17 +23,14 @@
 
   /* --- Text Gradient Style --- */
   .logo-text {
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     font-weight: 900;
-    background: linear-gradient(
-      135deg,
-      var(--theme-color-primary),
-      var(--theme-color-secondary)
-    );
+    background: linear-gradient(135deg,
+        var(--theme-color-primary),
+        var(--theme-color-secondary));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     letter-spacing: -0.02em;
   }
 }
-

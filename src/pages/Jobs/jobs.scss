@@ -38,6 +38,11 @@ $slate-200: #e2e8f0;
   .jobs-header-container {
     position: relative;
     text-align: center;
+    padding: 40px 16px;
+
+    @media (max-width: 768px) {
+      padding: 24px 12px;
+    }
 
 
 
@@ -61,6 +66,10 @@ $slate-200: #e2e8f0;
     align-items: start;
     margin-top: 24px;
     position: relative;
+
+    @media (max-width: 1024px) {
+      display: block; // Prevent flex gap issues on mobile
+    }
   }
 
   .jobs-list-container {
@@ -104,14 +113,19 @@ $slate-200: #e2e8f0;
       align-items: center;
       gap: 8px;
       padding: 10px 18px;
-      background: white;
-      border: 2px solid $slate-200;
+      background: var(--card-bg);
+      border: 1.5px solid var(--glass-border);
       border-radius: 12px;
-      color: $slate-900;
+      color: var(--text-primary);
       font-weight: 700;
       font-size: 0.9rem;
       cursor: pointer;
+      box-shadow: var(--shadow-sm);
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+      @media (max-width: 1024px) {
+        display: flex;
+      }
 
       &:hover {
         background: rgba(var(--theme-primary-rgb), 0.05);
@@ -150,17 +164,13 @@ $slate-200: #e2e8f0;
 
   /* ===== RESPONSIVE ===== */
   @media (max-width: 1024px) {
-    .jobs-layout {
-      grid-template-columns: 1fr;
-      grid-template-areas: "list";
-    }
-
     .mobile-filter-trigger {
       display: flex;
     }
 
     .jobs-container {
-      gap: 32px;
+      padding: 0 16px;
+      gap: 24px;
     }
   }
 

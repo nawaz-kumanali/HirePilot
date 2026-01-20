@@ -2,7 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import {
   Home, Briefcase, BookOpen, BarChart3,
   LogOut, Menu, X, Bell,
-  MessageSquare, Zap} from "lucide-react";
+  MessageSquare, Zap
+} from "lucide-react";
 import Logo from "../Logo/Logo";
 import './navbar.scss'
 import { Link, useNavigate } from "react-router-dom";
@@ -93,10 +94,11 @@ export default function Navbar() {
 
         {/* Action Buttons */}
         <div className="navbar-actions">
+          <ThemeToggle />
           {/* Notifications */}
           {isAuthenticated ?
             <>
-              <div className="notification-wrapper desktop-only">
+              <div className="notification-wrapper">
                 <button
                   className="notification-btn"
                   onClick={() => setIsNotificationOpen(!isNotificationOpen)}
@@ -106,7 +108,7 @@ export default function Navbar() {
                 </button>
 
                 {isNotificationOpen && (
-                  <div className="notification-dropdown">
+                  <div className="notification-dropdown dropdown-responsive">
                     <div className="dropdown-header">
                       <h3>Notifications</h3>
                       <button className="close-btn" onClick={() => setIsNotificationOpen(false)}>
@@ -141,7 +143,6 @@ export default function Navbar() {
                 )}
               </div>
               <div className="user-profile-wrapper">
-                  <ThemeToggle />
 
 
                 {/* User Avatar & Dropdown */}
@@ -159,7 +160,7 @@ export default function Navbar() {
 
                   {/* User Dropdown */}
                   {isUserMenuOpen && (
-                    <div className="user-dropdown">
+                    <div className="user-dropdown dropdown-responsive">
                       <div className="dropdown-header">
                         <div className="user-info">
                           <div className="user-avatar-large">{profileImg ? <img src={profileImg} alt="profile Img" /> : userInitials}</div>

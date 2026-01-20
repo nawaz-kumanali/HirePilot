@@ -5,12 +5,19 @@
   z-index: 500;
   align-self: flex-start;
 
+  @media (max-width: 1024px) {
+    position: absolute;
+    width: 0;
+    height: 0;
+    overflow: visible;
+  }
+
   .jobs-sidebar-backdrop {
     position: fixed;
     inset: 0;
     background: rgba(15, 23, 42, 0.4);
     backdrop-filter: blur(4px);
-    z-index: 99;
+    z-index: 0;
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.3s ease;
@@ -61,7 +68,7 @@
       height: 100vh !important;
       max-height: none !important;
       border-radius: 0 !important;
-      width: 320px !important;
+      width: 270px !important;
       background: var(--card-bg) !important;
 
       &.open {

@@ -594,13 +594,28 @@
       display: none;
     }
 
-    .notification-dropdown {
+    .notification-dropdown,
+    .user-dropdown {
       width: calc(100vw - 32px);
-      right: -8px;
+      left: 16px;
+      right: 16px;
     }
 
-    .user-dropdown {
-      width: calc(100vw - 79px);
+    .dropdown-responsive {
+      position: fixed !important;
+      top: 75px !important;
+      max-width: none !important;
+    }
+
+    .notification-wrapper .notification-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+    }
+
+    .avatar-btn {
+      width: 40px !important;
+      height: 40px !important;
     }
   }
 }

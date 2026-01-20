@@ -33,9 +33,13 @@
   /* HERO SECTION */
   .courses-hero {
     position: relative;
-    padding: 100px 20px 160px;
+    padding: 60px 20px 100px;
     text-align: center;
     z-index: 10;
+
+    @media (max-width: 768px) {
+      padding: 40px 16px 80px;
+    }
 
     .courses-hero-content {
       max-width: 1000px;
@@ -127,15 +131,21 @@
 
       .sort-dropdown {
         position: relative;
-        min-width: 220px;
+        flex: 1;
+        min-width: 140px;
+        max-width: 300px;
         display: flex;
         align-items: center;
         background: var(--input-bg);
         border-radius: 12px;
-        padding: 0px 24px;
+        padding: 0px 16px;
         border: 1px solid var(--input-border);
         transition: all 0.3s ease;
-        max-height: 50px;
+        max-height: 48px;
+
+        @media (max-width: 480px) {
+          min-width: 100%;
+        }
 
         &:hover {
           background: var(--card-bg);
