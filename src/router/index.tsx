@@ -12,7 +12,6 @@ import NotFound from "../pages/NotFound/NotFound";
 import Profile from "../pages/Profile/Profile";
 import ProtectedRoute from "../components/ProtectedRoute/ProtectedRoute";
 import AuthRoute from "../components/ProtectedRoute/AuthRoute";
-import RootRoute from "../components/ProtectedRoute/RootRoute";
 import Notifications from "../pages/Notifications/Notifications";
 import Messages from "../pages/Messages/Messages";
 import Training from "../pages/Training/Training";

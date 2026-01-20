@@ -5,7 +5,7 @@ import SearchBar from '../../components/SearchBar/SearchBar';
 import CourseCard from './CourseCard/CourseCard';
 import EmptyState from '../../components/EmptyState/EmptyState';
 import { COURSES } from '../../data/courses';
-import { ChevronDown, Sparkles, Filter } from 'lucide-react';
+import { ChevronDown, Filter } from 'lucide-react';
 import { motion, AnimatePresence, type Variants } from 'framer-motion';
 import Pagination from '../../components/Pagination/Pagination';
 

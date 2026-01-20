@@ -2,8 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import {
   Home, Briefcase, BookOpen, BarChart3,
   LogOut, Menu, X, Bell,
-  MessageSquare, Zap, Sun, Moon
-} from "lucide-react";
+  MessageSquare, Zap} from "lucide-react";
 import Logo from "../Logo/Logo";
 import './navbar.scss'
 import { Link, useNavigate } from "react-router-dom";

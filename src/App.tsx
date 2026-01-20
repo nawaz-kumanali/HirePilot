@@ -11,25 +11,10 @@ function App() {
   useEffect(() => {
     const applyTheme = (currentMode: typeof mode) => {
       let isDark = currentMode === 'dark';
-      if (currentMode === 'auto') {
-        isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      }
-
       document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
     };
 
     applyTheme(mode);
-
-    // Listen for system theme changes if in 'auto' mode
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    const listener = () => {
-      if (mode === 'auto') {
-        applyTheme('auto');
-      }
-    };
-
-    mediaQuery.addEventListener('change', listener);
-    return () => mediaQuery.removeEventListener('change', listener);
   }, [mode]);
 
   return (
