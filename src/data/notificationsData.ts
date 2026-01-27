@@ -1,6 +1,6 @@
 export interface Notification {
     id: string;
-    type: 'job' | 'message' | 'course' | 'system';
+    type: 'job' | 'message' | 'system';
     title: string;
     description: string;
     time: string;
@@ -29,15 +29,6 @@ export const notificationsData: Notification[] = [
     },
     {
         id: '3',
-        type: 'course',
-        title: 'Course recommendation for you',
-        description: 'Based on your interest in System Design, we recommend "Advanced Microservices Architecture".',
-        time: '1 day ago',
-        isRead: true,
-        link: '/courses'
-    },
-    {
-        id: '4',
         type: 'system',
         title: 'Interview scheduled',
         description: 'Your interview with Design Studio is confirmed for Dec 30, 2025 at 3:30 PM.',
@@ -53,14 +44,5 @@ export const notificationsData: Notification[] = [
         time: '3 days ago',
         isRead: true,
         link: '/jobs'
-    },
-    {
-        id: '6',
-        type: 'course',
-        title: 'Course completed!',
-        description: 'Congratulations on finishing "React Advanced Concepts". Your certificate is ready.',
-        time: '1 week ago',
-        isRead: true,
-        link: '/profile'
     }
 ];

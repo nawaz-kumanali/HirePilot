@@ -1,5 +1,4 @@
 import { 
-  Play, 
   TrendingUp, 
   CheckCircle, 
   BrainCircuit
@@ -50,11 +49,6 @@ const Hero = () => {
 
           {/* CTA buttons */}
           <div className="hero-cta-group">
-            <Link to={'/courses'} className="no-underline">
-              <button className="btn btn-secondary btn-large">
-                Start Training <Play size={20} fill="currentColor" />
-              </button>
-            </Link>
             <Link to='/jobs' className="no-underline">
               <button className="btn btn-transparent btn-large">
                 Browse Jobs

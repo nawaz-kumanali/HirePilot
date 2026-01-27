@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Bell, Briefcase, MessageSquare, BookOpen, Settings, CheckCircle2, Trash2, RotateCcw } from 'lucide-react';
+import { Bell, Briefcase, MessageSquare, Settings, CheckCircle2, Trash2, RotateCcw } from 'lucide-react';
 import VisualHeader from '../../components/VisualHeader/VisualHeader';
 import { notificationsData } from '../../data/notificationsData';
 import type { Notification } from '../../data/notificationsData';
@@ -72,7 +72,6 @@ const Notifications: React.FC = () => {
     const iconMap: Record<Notification['type'], React.ReactNode> = {
       job: <Briefcase {...props} className="icon-job" />,
       message: <MessageSquare {...props} className="icon-message" />,
-      course: <BookOpen {...props} className="icon-course" />,
       system: <Settings {...props} className="icon-system" />,
     };
     return iconMap[type] || <Bell {...props} />;
@@ -92,7 +91,7 @@ const Notifications: React.FC = () => {
           badge={`Activity Feed • ${stats.unread} New`}
           title="Stay Updated"
           gradient_title="with Alerts"
-          subtitle="Manage your notifications, track job updates, and course progress in one place."
+          subtitle="Manage your notifications and track job updates in one place."
         />
 
         {/* Controls */}

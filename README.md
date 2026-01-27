@@ -15,16 +15,13 @@ HirePilot supports candidates across the **entire interview-preparation journey*
 ### 1. Job Discovery
 Explore job opportunities across roles, domains, and experience levels—similar to traditional job portals, but integrated with preparation workflows.
 
-### 2. Video-Based Training
-Learn through **structured video courses** designed for specific roles and career paths, helping users build the right skills before applying.
-
-### 3. AI-Powered Mock Interviews
+### 2. AI-Powered Mock Interviews
 Practice real interview scenarios using AI-driven interviews that simulate:
 - Technical rounds  
 - Behavioral interviews  
 - Role-specific questioning  
 
-### 4. Roadmaps & Guided Preparation
+### 3. Roadmaps & Guided Preparation
 Follow **clear career roadmaps** that outline:
 - Skills to learn  
 - Topics to master  
@@ -32,13 +29,13 @@ Follow **clear career roadmaps** that outline:
 
 No more random learning—everything is goal-driven.
 
-### 5. Interview Questions & Practice Material
+### 4. Interview Questions & Practice Material
 Prepare using curated interview questions:
 - Beginner to advanced levels  
 - Role-specific focus  
 - Designed for real interview expectations  
 
-### 6. Feedback & Improvement
+### 5. Feedback & Improvement
 Receive actionable feedback to identify:
 - Strengths  
 - Weak areas  

@@ -1,6 +1,6 @@
 import React from 'react';
 import { User } from 'lucide-react';
-import Card from '../../../../components/ui/Card/Card';
+import Card from '../../../components/ui/Card/Card';
 import './aboutMe.scss';
 
 interface AboutMeProps {

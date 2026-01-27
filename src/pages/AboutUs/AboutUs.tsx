@@ -61,7 +61,7 @@ const AboutUs: React.FC = () => {
                         <div className="feature-item glass-panel">
                             <Rocket size={24} className="feature-icon" />
                             <h3>Career Acceleration</h3>
-                            <p>Fast-track your career with curated courses and real-time job matching.</p>
+                            <p>Fast-track your career with real-time job matching.</p>
                         </div>
                     </div>
                 </section>

@@ -26,7 +26,7 @@ const PrivacyPolicy: React.FC = () => {
                     <h2>2. Information We Collect</h2>
                     <p>
                         We collect personal information that you provide to us such as name, email address, and professional background when you register on the platform.
-                        We also collect data through your interactions with our AI tools, mock interviews, and courses to improve your experience.
+                        We also collect data through your interactions with our AI tools, and mock interviews to improve your experience.
                     </p>
                 </section>
 

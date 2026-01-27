@@ -27,20 +27,6 @@
     gap: 32px;
   }
 
-  /* --- Logo --- */
-  .navbar-logo {
-    flex-shrink: 0;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    text-decoration: none;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-
-    &:hover {
-      transform: scale(1.05);
-      filter: drop-shadow(0 4px 8px rgba(168, 85, 247, 0.15));
-    }
-  }
 
   /* --- Desktop Navigation --- */
   .navbar-nav-desktop {
@@ -49,6 +35,7 @@
     align-items: center;
     flex: 1;
     max-width: 500px;
+    justify-content: center;
 
     .nav-link {
       text-decoration: none;

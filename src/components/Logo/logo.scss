@@ -10,12 +10,6 @@
   box-shadow: 0 4px 12px var(--shadow-sm);
   transition: all 0.3s ease;
 
-  &:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 6px 16px var(--shadow-md);
-    border-color: var(--theme-color-primary);
-  }
-
   /* --- Icon Style & Animation --- */
   .logo-icon {
     color: var(--theme-color-primary);

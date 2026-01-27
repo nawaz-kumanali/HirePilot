@@ -30,13 +30,6 @@ const NotificationsBadge : React.FC<NotificationsBadgeProps> = ({setIsNotificati
                     <p className="notification-time">2 hours ago</p>
                 </div>
             </div>
-            <div className="notification-item">
-                <div className="notification-dot"></div>
-                <div>
-                    <p className="notification-title">Course recommendation for you</p>
-                    <p className="notification-time">1 day ago</p>
-                </div>
-            </div>
             <div className="notification-footer">
                 <Link to="/notifications" className="view-all">View All</Link>
             </div>

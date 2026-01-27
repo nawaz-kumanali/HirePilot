@@ -1,4 +1,4 @@
-import { ArrowLeft, Home, Zap } from 'lucide-react';
+import { ArrowLeft, Home } from 'lucide-react';
 import './notfound.scss';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -61,12 +61,6 @@ const NotFound = () => {
                   <Home size={24} />
                 </div>
                 <span>Home</span>
-              </Link>
-              <Link to="/courses" className="suggestion-link">
-                <div className="suggestion-icon-wrapper">
-                  <Zap size={24} />
-                </div>
-                <span>Courses</span>
               </Link>
               <Link to="/dashboard" className="suggestion-link">
                 <div className="suggestion-icon-wrapper">

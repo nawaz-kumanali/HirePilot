@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import {
-  Home, Briefcase, BookOpen, BarChart3,
+  Home, Briefcase, 
   LogOut, Menu, X, Bell,
   MessageSquare, Zap
 } from "lucide-react";
@@ -19,7 +19,6 @@ import NotificationsBadge from "../NotificationsBadge/NotificationsBadge";
 const NAV_ITEMS = [
   { label: "Home", path: "/", icon: Home },
   { label: "Jobs", path: "/jobs", icon: Briefcase },
-  { label: "Courses", path: "/courses", icon: BookOpen },
   { label: "AI Interview", path: "/interview", icon: Zap },
 ];
 
@@ -145,17 +144,9 @@ export default function Navbar() {
                         <Home size={16} />
                         <span>My Profile</span>
                       </Link>
-                      <Link to="/training" className="dropdown-item" onClick={handleUserMenuStatus}>
-                        <BookOpen size={16} />
-                        <span>My Training</span>
-                      </Link>
                       <Link to="/interview" className="dropdown-item" onClick={handleUserMenuStatus}>
                         <Zap size={16} />
                         <span>My Interviews</span>
-                      </Link>
-                      <Link to="/dashboard" className="dropdown-item" onClick={handleUserMenuStatus}>
-                        <BarChart3 size={16} />
-                        <span>My Dashboard</span>
                       </Link>
 
                       <Link to="/messages" className="dropdown-item" onClick={handleUserMenuStatus}>
