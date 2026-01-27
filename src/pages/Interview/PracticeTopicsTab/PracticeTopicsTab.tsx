@@ -13,9 +13,10 @@ interface PracticeTopic {
 
 interface PracticeTopicsTabProps {
   topics: PracticeTopic[];
+  onStartTraining: (interview: any) => void;
 }
 
-const PracticeTopicsTab = ({ topics }: PracticeTopicsTabProps) => {
+const PracticeTopicsTab = ({ topics, onStartTraining }: PracticeTopicsTabProps) => {
   return (
     <div className="interview-grid-layout">
       {topics.map((topic) => (
@@ -48,7 +49,14 @@ const PracticeTopicsTab = ({ topics }: PracticeTopicsTabProps) => {
               </span>
               <span className="interview-duration-text">⏱️ {topic.duration}</span>
             </div>
-            <button className="interview-continue-btn">
+            <button
+              className="interview-continue-btn"
+              onClick={() => onStartTraining({
+                position: topic.title,
+                company: 'Practice Session',
+                topics: [topic.category, topic.title]
+              })}
+            >
               Continue <ArrowRight size={14} />
             </button>
           </div>

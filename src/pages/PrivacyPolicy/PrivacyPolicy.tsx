@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import './privacyPolicy.scss';
+import VisualHeader from '../../components/VisualHeader/VisualHeader';
 
 const PrivacyPolicy: React.FC = () => {
     useEffect(() => {
@@ -8,16 +9,24 @@ const PrivacyPolicy: React.FC = () => {
 
     return (
         <div className="legal-page privacy-policy">
+            {/* Background elements */}
+            <div className="bg-glow-1"></div>
+            <div className="bg-glow-2"></div>
+
             <div className="legal-header">
-                <h1 className="gradient-text">Privacy Policy</h1>
-                <p className="last-updated">Last Updated: January 2026</p>
+                <VisualHeader
+                    badge="Legal"
+                    title="Privacy"
+                    gradient_title="Policy"
+                    subtitle="Learn how we protect and manage your data at HirePilot."
+                />
             </div>
 
             <div className="legal-content glass-panel">
                 <section>
                     <h2>1. Introduction</h2>
                     <p>
-                        Welcome to HirePilot ("we," "our," or "us"). We are committed to protecting your personal information and your right to privacy.
+                        Welcome to HirePilot. We are committed to protecting your personal information and your right to privacy.
                         If you have any questions or concerns about our policy, or our practices with regards to your personal information, please contact us.
                     </p>
                 </section>

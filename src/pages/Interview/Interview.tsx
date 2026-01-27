@@ -28,6 +28,12 @@ interface InterviewSession {
 const Interview = () => {
   const location = useLocation();
   const [activeTab, setActiveTab] = useState(0);
+
+  // Dynamic State for Interviews and Topics
+  const [upcomingInterviewsList] = useState(upcomingInterviews);
+  const [completedInterviewsList, setCompletedInterviewsList] = useState(completedInterviews);
+  const [prepTopicsList, setPrepTopicsList] = useState(prepTopics);
+
   const [session, setSession] = useState<InterviewSession>({
     isActive: false,
     interview: null,
@@ -75,12 +81,44 @@ const Interview = () => {
     }));
   };
 
+  const handleFinishSession = (report: any) => {
+    const newCompletedInterview = {
+      id: Date.now(),
+      title: `${report.position} Interview`,
+      company: report.company,
+      position: report.position,
+      date: report.date,
+      time: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
+      duration: '15 mins',
+      interviewer: 'AI Interviewer',
+      status: 'completed' as const,
+      difficulty: 'Medium' as const, // We can make this dynamic later
+      topics: session.interview?.topics || [],
+      score: report.overallScore,
+      feedback: report.feedback,
+    };
+
+    setCompletedInterviewsList(prev => [newCompletedInterview, ...prev]);
+
+    // Optionally update topic progress here
+    if (session.interview?.topics) {
+      setPrepTopicsList(prev => prev.map(topic => {
+        const matches = session.interview?.topics.some(t => topic.title.toLowerCase().includes(t.toLowerCase()) || topic.category.toLowerCase().includes(t.toLowerCase()));
+        if (matches && topic.completed < topic.total) {
+          return { ...topic, completed: topic.completed + 1 };
+        }
+        return topic;
+      }));
+    }
+  };
+
   if (session.isActive && session.interview) {
     return (
       <TrainingSession
         session={session as any}
         onClose={handleCloseSession}
         onUpdate={handleSessionUpdate}
+        onFinish={handleFinishSession}
       />
     );
   }
@@ -102,18 +140,19 @@ const Interview = () => {
         <div className="interview-tab-content">
           {activeTab === 0 && (
             <UpcomingInterviewsTab
-              interviews={upcomingInterviews}
+              interviews={upcomingInterviewsList}
               onStartTraining={handleStartTraining}
             />
           )}
           {activeTab === 1 && (
             <CompletedInterviewsTab
-              interviews={completedInterviews}
+              interviews={completedInterviewsList as any}
             />
           )}
           {activeTab === 2 && (
             <PracticeTopicsTab
-              topics={prepTopics}
+              topics={prepTopicsList}
+              onStartTraining={handleStartTraining}
             />
           )}
         </div>

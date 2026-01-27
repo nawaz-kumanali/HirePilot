@@ -1,7 +1,7 @@
 import { useRef, useEffect, useState } from 'react';
-import { X, Send, Loader, Sparkles, User, Mic, MicOff, Video, VideoOff, Volume2, VolumeX, Award, CheckCircle, TrendingUp, ChevronRight } from 'lucide-react';
+import { X, Send, Loader, Sparkles, User, Mic, MicOff, Video, VideoOff, Volume2, VolumeX, Award, CheckCircle, TrendingUp, ChevronRight, Timer, Lightbulb } from 'lucide-react';
 import './trainingSession.scss';
-import { generateAIQuestion, getPerformanceReport } from '../aiHelpers';
+import { generateAIQuestion, getPerformanceReport, generateRealTimeInsight } from '../../../utility/aiHelpers';
 import { getAiStream } from '../../../utility/HandleAi';
 
 import type { TrainingInterview } from '../../../types/interview';
@@ -30,9 +30,12 @@ interface TrainingSessionProps {
   };
   onClose: () => void;
   onUpdate: (messages: Message[], isLoading: boolean) => void;
+  onFinish?: (report: any) => void;
 }
 
-const TrainingSession = ({ session, onClose, onUpdate }: TrainingSessionProps) => {
+const SESSION_DURATION = 15 * 60; // 15 minutes in seconds
+
+const TrainingSession = ({ session, onClose, onUpdate, onFinish }: TrainingSessionProps) => {
   const [userInput, setUserInput] = useState('');
   const [isListening, setIsListening] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
@@ -42,9 +45,36 @@ const TrainingSession = ({ session, onClose, onUpdate }: TrainingSessionProps) =
   const [isFinishing, setIsFinishing] = useState(false);
   const [report, setReport] = useState<PerformanceReport | null>(null);
 
+  // Timer State
+  const [timeLeft, setTimeLeft] = useState(SESSION_DURATION);
+  const isTimerPaused = false; // Placeholder for future pause logic
+
+  // Real-time Insight State
+  const [insight, setInsight] = useState<string | null>(null);
+  const [isInsightVisible, setIsInsightVisible] = useState(false);
+
   const videoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const recognitionRef = useRef<any>(null);
+  const initializationStarted = useRef(false);
+  const [isLocalLoading, setIsLocalLoading] = useState(false);
+
+  // --- Timer Logic ---
+  useEffect(() => {
+    if (!session.isActive || isTimerPaused || timeLeft <= 0 || report) return;
+
+    const interval = setInterval(() => {
+      setTimeLeft(prev => prev - 1);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [session.isActive, isTimerPaused, timeLeft, report]);
+
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
 
   // --- Camera Setup ---
   const startCamera = async () => {
@@ -82,12 +112,9 @@ const TrainingSession = ({ session, onClose, onUpdate }: TrainingSessionProps) =
       recognitionRef.current.interimResults = true;
 
       recognitionRef.current.onresult = (event: any) => {
-        let interimTranscript = '';
         for (let i = event.resultIndex; i < event.results.length; ++i) {
           if (event.results[i].isFinal) {
             setUserInput(prev => prev + event.results[i][0].transcript + ' ');
-          } else {
-            interimTranscript += event.results[i][0].transcript;
           }
         }
       };
@@ -119,25 +146,27 @@ const TrainingSession = ({ session, onClose, onUpdate }: TrainingSessionProps) =
   const speak = (text: string) => {
     if (!isAudioEnabled) return;
 
-    // Stop any current speech
     window.speechSynthesis.cancel();
-
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.onstart = () => setIsSpeaking(true);
     utterance.onend = () => setIsSpeaking(false);
-
-    // Clean up text for better speaking (remove markdown)
     const cleanText = text.replace(/\*\*|\#\#/g, '');
     utterance.text = cleanText;
-
     window.speechSynthesis.speak(utterance);
+  };
+
+  const showInsight = (text: string) => {
+    setInsight(text);
+    setIsInsightVisible(true);
+    setTimeout(() => setIsInsightVisible(false), 8000);
   };
 
   const handleSendMessage = async () => {
     const trimmedInput = userInput.trim();
-    if (!trimmedInput || session.isLoading) return;
+    if (!trimmedInput || session.isLoading || isLocalLoading) return;
 
-    if (isListening) recognitionRef.current.stop();
+    setIsLocalLoading(true);
+    if (isListening) recognitionRef.current?.stop();
 
     const userMsg: Message = { id: `u-${Date.now()}`, role: 'user', content: trimmedInput, timestamp: new Date() };
     const aiMsgId = `ai-${Date.now()}`;
@@ -147,53 +176,69 @@ const TrainingSession = ({ session, onClose, onUpdate }: TrainingSessionProps) =
     onUpdate(currentMessages, true);
     setUserInput('');
 
+    // --- Generate Real-time Insight ---
+    generateRealTimeInsight(trimmedInput, session.interview.position).then(tip => {
+      if (tip) showInsight(tip);
+    });
+
     try {
-      let chatHistory = session.messages
+      let chatHistory = currentMessages.slice(0, -1) // All except new placeholder
         .filter(m => m.id !== 'msg-intro')
         .map(m => ({
           role: m.role === 'ai' ? 'model' as const : 'user' as const,
           parts: [{ text: m.content }]
         }));
 
-      let finalPrompt = trimmedInput;
-      if (chatHistory.length > 0 && chatHistory[0].role === 'model') {
-        const firstQuestion = chatHistory.shift();
-        finalPrompt = `Context: You previously asked: "${firstQuestion?.parts[0].text}". \nMy Answer: ${trimmedInput}`;
-      }
+      const prompt = `Based on my answer: "${trimmedInput}", ask the next relevant interview question.`;
 
-      const stream = await getAiStream(finalPrompt, chatHistory);
+      const stream = await getAiStream(prompt, chatHistory);
       let accumulatedText = "";
+      let lastUpdate = 0;
 
       for await (const chunk of stream) {
         accumulatedText += chunk.text();
-        onUpdate(
-          currentMessages.map(m => m.id === aiMsgId ? { ...m, content: accumulatedText } : m),
-          true
-        );
+        const now = Date.now();
+        if (now - lastUpdate > 100) { // Throttle updates to 10fps
+          onUpdate(
+            currentMessages.map(m => m.id === aiMsgId ? { ...m, content: accumulatedText } : m),
+            true
+          );
+          lastUpdate = now;
+        }
       }
 
       onUpdate(
         currentMessages.map(m => m.id === aiMsgId ? { ...m, content: accumulatedText } : m),
         false
       );
-
-      // Speak the AI response
+      setIsLocalLoading(false);
       speak(accumulatedText);
 
     } catch (error) {
       console.error("Stream Error:", error);
-      onUpdate([...session.messages, userMsg], false);
+      onUpdate(currentMessages.filter(m => m.id !== aiMsgId), false);
+      setIsLocalLoading(false);
     }
   };
 
   const handleFinishInterview = async () => {
     setIsFinishing(true);
     try {
-      const result = await getPerformanceReport(session.messages, session.interview.position);
-      setReport(result);
+      const finalReport = await getPerformanceReport(session.messages, session.interview.position);
+      setReport(finalReport);
+
+      if (onFinish) {
+        onFinish({
+          ...finalReport,
+          position: session.interview.position,
+          company: session.interview.company,
+          date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+          messages: session.messages
+        });
+      }
     } catch (error) {
       console.error("Finish Error:", error);
-      onClose(); // Fallback to close
+      onClose();
     } finally {
       setIsFinishing(false);
     }
@@ -215,7 +260,8 @@ const TrainingSession = ({ session, onClose, onUpdate }: TrainingSessionProps) =
     speak(introText);
 
     try {
-      const question = await generateAIQuestion(session.interview);
+      // Pass the current state to generate the first question
+      const question = await generateAIQuestion({ interview: session.interview, messages: [intro] });
       const firstQuestion: Message = {
         id: `msg-${Date.now()}`,
         role: 'ai',
@@ -223,8 +269,6 @@ const TrainingSession = ({ session, onClose, onUpdate }: TrainingSessionProps) =
         timestamp: new Date(),
       };
       onUpdate([intro, firstQuestion], false);
-
-      // Speak the first question after a short delay
       setTimeout(() => speak(question), 1000);
     } catch (error) {
       onUpdate([intro], false);
@@ -232,10 +276,11 @@ const TrainingSession = ({ session, onClose, onUpdate }: TrainingSessionProps) =
   };
 
   useEffect(() => {
-    if (session.isActive && session.messages.length === 0) {
+    if (session.isActive && session.messages.length === 0 && !initializationStarted.current) {
+      initializationStarted.current = true;
       initializeSession();
     }
-  }, [session.isActive]);
+  }, [session.isActive, session.messages.length]);
 
   const toggleMute = () => {
     if (streamRef.current) {
@@ -258,8 +303,8 @@ const TrainingSession = ({ session, onClose, onUpdate }: TrainingSessionProps) =
           <div className="report-card">
             <header className="report-header">
               <Award className="award-icon" />
-              <h1>Interview Performance Report</h1>
-              <p>Great job completing your session for <strong>{session.interview.position}</strong></p>
+              <h1>Performance Report</h1>
+              <p>Great job! You navigated a high-fidelity simulation for <strong>{session.interview.position}</strong>.</p>
             </header>
 
             <div className="score-grid">
@@ -288,12 +333,12 @@ const TrainingSession = ({ session, onClose, onUpdate }: TrainingSessionProps) =
             </div>
 
             <div className="feedback-section">
-              <h3><TrendingUp size={18} /> Analysis</h3>
+              <h3><TrendingUp size={18} /> Critical Analysis</h3>
               <p>{report.feedback}</p>
             </div>
 
             <div className="tips-section">
-              <h3><CheckCircle size={18} /> Improvement Tips</h3>
+              <h3><CheckCircle size={18} /> Targeted Improvement Tips</h3>
               <ul>
                 {report.tips.map((tip, i) => (
                   <li key={i}><ChevronRight size={14} /> {tip}</li>
@@ -301,7 +346,7 @@ const TrainingSession = ({ session, onClose, onUpdate }: TrainingSessionProps) =
               </ul>
             </div>
 
-            <button className="done-btn" onClick={onClose}>Finish & Save</button>
+            <button className="done-btn" onClick={onClose}>Finish & Save Session</button>
           </div>
         </div>
       </div>
@@ -315,18 +360,26 @@ const TrainingSession = ({ session, onClose, onUpdate }: TrainingSessionProps) =
         <header className="video-header">
           <div className="interview-info">
             <div className="live-pill">
-              <span className="dot"></span> LIVE INTERVIEW
+              <span className="dot pulse"></span> LIVE INTERVIEW
             </div>
             <h1>{session.interview.position}</h1>
-            <p>{session.interview.company}</p>
+            <p className="company-name">{session.interview.company}</p>
           </div>
+
+          <div className="timer-display glass-panel">
+            <Timer size={18} className={timeLeft < 60 ? 'warning' : ''} />
+            <span className={`time ${timeLeft < 60 ? 'warning' : ''}`}>
+              {formatTime(timeLeft)}
+            </span>
+          </div>
+
           <div className="header-actions">
             {session.messages.length > 2 && (
-              <button className="finish-btn" onClick={handleFinishInterview} disabled={isFinishing}>
-                {isFinishing ? <Loader className="spin" size={18} /> : "Finish Interview"}
+              <button className="finish-btn highlight" onClick={handleFinishInterview} disabled={isFinishing}>
+                {isFinishing ? <Loader className="spin" size={18} /> : "Finish Now"}
               </button>
             )}
-            <button className="exit-btn" onClick={onClose} title="Exit Interview">
+            <button className="exit-btn" onClick={onClose} title="Exit Session">
               <X size={20} />
             </button>
           </div>
@@ -337,16 +390,28 @@ const TrainingSession = ({ session, onClose, onUpdate }: TrainingSessionProps) =
           {/* AI Interviewer View */}
           <div className="video-card ai-view">
             <div className={`ai-avatar-container ${isSpeaking ? 'speaking' : ''}`}>
+              {session.isLoading && <div className="thinking-pulse"></div>}
               <div className="ai-visual">
-                <Sparkles size={60} className="ai-icon" />
+                <Sparkles size={80} className={`ai-icon ${isSpeaking ? 'active' : ''}`} />
                 <div className="waves">
-                  <span></span><span></span><span></span>
+                  <span></span><span></span><span></span><span></span><span></span>
                 </div>
               </div>
               <div className="ai-label">AI Interviewer</div>
             </div>
 
-            {/* Last AI Message Overlay */}
+            {/* AI Insight Popup */}
+            {isInsightVisible && (
+              <div className="ai-insight-toast">
+                <Lightbulb size={20} className="light-icon" />
+                <div className="insight-text">
+                  <span className="insight-label">AI HINT</span>
+                  <p>{insight}</p>
+                </div>
+              </div>
+            )}
+
+            {/* Subtitles */}
             {session.messages.filter(m => m.role === 'ai').length > 0 && (
               <div className="ai-subtitle-overlay">
                 <p>{session.messages.filter(m => m.role === 'ai').slice(-1)[0].content}</p>
@@ -359,11 +424,14 @@ const TrainingSession = ({ session, onClose, onUpdate }: TrainingSessionProps) =
             <video ref={videoRef} autoPlay playsInline muted className={isVideoOff ? 'hidden' : ''} />
             {isVideoOff && (
               <div className="camera-off-placeholder">
-                <User size={64} />
-                <p>Camera is Off</p>
+                <User size={80} />
+                <p>Camera Signal Lost</p>
               </div>
             )}
-            <div className="user-label">You {isMuted && '(Muted)'}</div>
+            <div className="user-label">
+              <span className="name">You</span>
+              {isMuted && <MicOff size={14} className="muted-icon" />}
+            </div>
           </div>
         </div>
 
@@ -382,18 +450,20 @@ const TrainingSession = ({ session, onClose, onUpdate }: TrainingSessionProps) =
           </div>
 
           <div className="input-group">
-            <div className="input-wrapper">
+            <div className="input-wrapper glass-panel">
               <input
                 type="text"
                 value={userInput}
                 onChange={(e) => setUserInput(e.target.value)}
-                placeholder={isListening ? "Listening..." : "Type or use voice..."}
+                placeholder={isListening ? "Listening to your response..." : "Type your answer or speak..."}
                 onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
               />
               <button
                 className={`voice-btn ${isListening ? 'listening' : ''}`}
                 onClick={toggleListening}
+                title="Voice Input"
               >
+                <div className={`mic-ring ${isListening ? 'active' : ''}`}></div>
                 <Mic size={18} />
               </button>
             </div>
@@ -402,7 +472,7 @@ const TrainingSession = ({ session, onClose, onUpdate }: TrainingSessionProps) =
               onClick={handleSendMessage}
               disabled={!userInput.trim() || session.isLoading}
             >
-              {session.isLoading ? <Loader className="spin" size={20} /> : <Send size={20} />}
+              {session.isLoading ? <Loader className="spin" size={22} /> : <Send size={22} />}
             </button>
           </div>
         </footer>
@@ -412,3 +482,4 @@ const TrainingSession = ({ session, onClose, onUpdate }: TrainingSessionProps) =
 };
 
 export default TrainingSession;
+

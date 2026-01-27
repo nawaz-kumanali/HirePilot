@@ -6,7 +6,7 @@ const AuthRoute = ({ children }: { children: JSX.Element }) => {
     const isAuthenticated = useAppSelector(state => state.auth.isAuthenticated);
 
     if (isAuthenticated) {
-        return <Navigate to="/dashboard" replace />;
+        return <Navigate to="/" replace />;
     }
 
     return children;

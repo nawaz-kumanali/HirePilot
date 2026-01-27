@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import '../PrivacyPolicy/privacyPolicy.scss'; // Reusing shared legal styles
+import VisualHeader from '../../components/VisualHeader/VisualHeader';
 
 const TermsConditions: React.FC = () => {
     useEffect(() => {
@@ -8,9 +9,17 @@ const TermsConditions: React.FC = () => {
 
     return (
         <div className="legal-page terms-conditions">
+            {/* Background elements */}
+            <div className="bg-glow-1"></div>
+            <div className="bg-glow-2"></div>
+
             <div className="legal-header">
-                <h1 className="gradient-text">Terms & Conditions</h1>
-                <p className="last-updated">Last Updated: January 2026</p>
+                <VisualHeader
+                    badge="Legal"
+                    title="Terms &"
+                    gradient_title="Conditions"
+                    subtitle="Understanding our agreement and the rules of the HirePilot platform."
+                />
             </div>
 
             <div className="legal-content glass-panel">
