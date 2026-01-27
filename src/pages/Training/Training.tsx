@@ -4,21 +4,18 @@ import {
     BookOpen,
     Award,
     TrendingUp,
-    Search,
-    Filter,
     ArrowRight,
     PlayCircle,
     X,
     Star,
-    Users
+    Play
 } from 'lucide-react';
 import './training.scss';
 import { USER_COURSES } from '../../data/usercourses';
 import CourseCard from '../../components/UserCourseCard/UserCourseCard';
 import { Link } from 'react-router-dom';
-import ProgressBar from '../../components/ui/ProgressBar/ProgressBar';
-import Button from '../../components/ui/Button/Button';
 import Card from '../../components/ui/Card/Card';
+import { motion, AnimatePresence } from 'framer-motion';
 
 type StatCardProps = {
     Icon: any,
@@ -44,119 +41,154 @@ const Training: React.FC = () => {
     };
 
     return (
-        <main className="training-page">
+        <main className="training-container">
+            <div className="background-animation"></div>
+
             <header className="training-header">
-                <div className="header-info">
-                    <h1>Your <span className="gradient-text">Learning Hub</span></h1>
-                    <p>Track your progress and continue your skill development journey.</p>
-                </div>
-                <div className="header-actions">
-                    <div className="search-box">
-                        <Search size={18} />
-                        <input type="text" placeholder="Search courses..." />
+                <div className="header-text">
+                    <div className="greeting-badge">
+                        <TrendingUp size={14} />
+                        <span>Continuous Learning</span>
                     </div>
-                    <button className="filter-btn">
-                        <Filter size={18} />
-                    </button>
+                    <h1 className="welcome-title">
+                        Your <span className="gradient-text">Learning Hub</span>
+                    </h1>
+                    <p className="welcome-subtitle">
+                        Pick up where you left off and accelerate your career with AI-driven training.
+                    </p>
+                </div>
+
+                <div className="stats-bar">
+                    {statItems.map((card, i) => (
+                        <Card key={i} className="stat-card">
+                            <div className="stat-icon-wrapper" style={{ backgroundColor: `${card.color}15`, color: card.color }}>
+                                <card.Icon size={22} />
+                            </div>
+                            <div className="stat-content">
+                                <span className="stat-value">{card.value}</span>
+                                <span className="stat-label">{card.label}</span>
+                            </div>
+                        </Card>
+                    ))}
                 </div>
             </header>
 
-            <section className="stats-grid">
-                {statItems.map((card, i) => (
-                    <Card key={i} className="stat-item">
-                        <div className="icon-wrapper" style={{ backgroundColor: `${card.color}15`, color: card.color }}>
-                            <card.Icon size={24} />
-                        </div>
-                        <div className="stat-info">
-                            <h3>{card.value}</h3>
-                            <span className="label">{card.label}</span>
-                        </div>
-                    </Card>
-                ))}
-            </section>
-
-            <section className="courses-section">
-                <div className="section-title-bar">
+            <section className="section-container">
+                <div className="section-title-row">
                     <div className="title-left">
-                        <h2>Continue Learning</h2>
-                        <p className="section-subtext">Pick up where you left off</p>
+                        <h2 className="section-heading">Continue Learning</h2>
+                        <p className="section-subtext">Resume your recent courses</p>
                     </div>
-                    <Link to="/courses" >
-                        <Button variant="ghost" iconRight={<ArrowRight size={16} />}>
-                            Browse All Courses
-                        </Button>
+                    <Link to="/courses" className="text-link">
+                        Browse All Courses <ArrowRight size={18} />
                     </Link>
                 </div>
 
-                <div className="courses-grid">
+                <div className="course-grid">
                     {USER_COURSES.map(course => (
-                        <div key={course.id} onClick={() => openCourseDetails(course)}>
+                        <motion.div
+                            key={course.id}
+                            onClick={() => openCourseDetails(course)}
+                            whileHover={{ y: -5 }}
+                            transition={{ duration: 0.3 }}
+                        >
                             <CourseCard {...course} />
-                        </div>
+                        </motion.div>
                     ))}
                 </div>
             </section>
 
-            {isDialogOpen && selectedCourse && (
-                <div className="course-detail-modal-overlay" onClick={() => setIsDialogOpen(false)}>
-                    <Card className="course-detail-modal-content" onClick={(e: any) => e.stopPropagation()}>
-                        <button className="course-detail-modal-close-icon" onClick={() => setIsDialogOpen(false)}>
-                            <X size={24} />
-                        </button>
+            <AnimatePresence>
+                {isDialogOpen && selectedCourse && (
+                    <div className="course-detail-modal-overlay" onClick={() => setIsDialogOpen(false)}>
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.9 }}
+                            className="course-detail-modal-content"
+                            onClick={(e: any) => e.stopPropagation()}
+                        >
+                            <button className="course-detail-modal-close-icon" onClick={() => setIsDialogOpen(false)}>
+                                <X size={20} />
+                            </button>
 
-                        <div className="course-detail-modal-inner">
-                            <div className="course-detail-modal-hero">
-                                <img src={selectedCourse.image} alt="" className="course-detail-modal-hero-img" />
-                                <div className="course-detail-modal-hero-overlay">
-                                    <div className="badge-row">
-                                        <span className="category-badge">{selectedCourse.category}</span>
-                                        <div className="rating-badge">
-                                            <Star size={14} fill="#f59e0b" color="#f59e0b" />
-                                            <span>{selectedCourse.rating}</span>
+                            <div className="course-detail-modal-inner">
+                                <div className="course-detail-modal-hero">
+                                    <img src={selectedCourse.image} alt="" className="course-detail-modal-hero-img" />
+                                    <div className="course-detail-modal-hero-overlay"></div>
+                                    <span className="course-detail-modal-hero-badge">{selectedCourse.category}</span>
+                                </div>
+
+                                <div className="course-detail-modal-details">
+                                    <h2 className="course-detail-modal-title">{selectedCourse.title}</h2>
+
+                                    <div className="course-detail-modal-instructor">
+                                        <img
+                                            src={selectedCourse.instructorImage || `https://api.dicebear.com/7.x/avataaars/svg?seed=${selectedCourse.instructor}`}
+                                            alt={selectedCourse.instructor}
+                                            className="instructor-avatar"
+                                        />
+                                        <div>
+                                            <p className="instructor-label">Instructor</p>
+                                            <p className="instructor-detail">{selectedCourse.instructor}</p>
                                         </div>
                                     </div>
-                                    <h2>{selectedCourse.title}</h2>
-                                    <div className="instructor-info">
-                                        <Users size={16} />
-                                        <span>By {selectedCourse.instructor}</span>
+
+                                    <div className="course-detail-modal-stats-grid">
+                                        <div className="course-detail-modal-stat">
+                                            <Clock size={16} />
+                                            <div>
+                                                <span className="stat-label-small">Duration</span>
+                                                <p>{selectedCourse.duration}</p>
+                                            </div>
+                                        </div>
+                                        <div className="course-detail-modal-stat">
+                                            <PlayCircle size={16} />
+                                            <div>
+                                                <span className="stat-label-small">Lessons</span>
+                                                <p>{selectedCourse.lessons} lessons</p>
+                                            </div>
+                                        </div>
+                                        <div className="course-detail-modal-stat">
+                                            <Star size={16} />
+                                            <div>
+                                                <span className="stat-label-small">Rating</span>
+                                                <p>{selectedCourse.rating}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="course-detail-modal-progress">
+                                        <div className="progress-header">
+                                            <span>Your Progress</span>
+                                            <span>{selectedCourse.progress}%</span>
+                                        </div>
+                                        <div className="progress-track">
+                                            <div
+                                                className="progress-fill"
+                                                style={{ width: `${selectedCourse.progress}%` }}
+                                            ></div>
+                                        </div>
+                                    </div>
+
+                                    <p className="course-detail-modal-desc">
+                                        Continue your learning journey! You're currently at lesson {Math.floor((selectedCourse.lessons * selectedCourse.progress) / 100)} of {selectedCourse.lessons}. Great progress so far!
+                                    </p>
+
+                                    <div className="course-detail-modal-actions">
+                                        <button className="secondary-button" onClick={() => setIsDialogOpen(false)}>
+                                            Back
+                                        </button>
+                                        <button className="primary-button">
+                                            Resume Lesson <Play size={18} fill="currentColor" />
+                                        </button>
                                     </div>
                                 </div>
                             </div>
-
-                            <div className="course-detail-modal-body">
-                                <div className="course-detail-modal-stats">
-                                    <div className="modal-stat">
-                                        <Clock size={18} />
-                                        <span>{selectedCourse.duration}</span>
-                                    </div>
-                                    <div className="modal-stat">
-                                        <PlayCircle size={18} />
-                                        <span>{selectedCourse.lessons} lessons</span>
-                                    </div>
-                                </div>
-
-                                <ProgressBar
-                                    progress={selectedCourse.progress}
-                                    showLabel
-                                    label="Your Progress"
-                                    className="course-detail-modal-progress"
-                                />
-
-                                <p className="course-detail-modal-desc">
-                                    Continue your learning journey! You're currently at lesson {Math.floor((selectedCourse.lessons * selectedCourse.progress) / 100)} of {selectedCourse.lessons}. Great progress so far!
-                                </p>
-
-                                <div className="course-detail-modal-actions">
-                                    <Button variant="secondary" onClick={() => setIsDialogOpen(false)}>Close</Button>
-                                    <Button variant="primary" iconRight={<ArrowRight size={18} />} className="course-detail-modal-button">
-                                        Resume Lesson
-                                    </Button>
-                                </div>
-                            </div>
-                        </div>
-                    </Card>
-                </div>
-            )}
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
         </main>
     );
 };
