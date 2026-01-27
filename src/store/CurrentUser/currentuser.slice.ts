@@ -14,7 +14,36 @@ const initialState: CurrentUserState = {
     linkedin: 'https://linkedin.com/in/nawaj-kumanali',
     github: 'https://github.com/nawaz-kumanali',
     twitter: 'https://twitter.com/nawaz_kumanali',
-
+    experience: [
+        {
+            company: 'TechFlow Systems',
+            role: 'Senior Full Stack Developer',
+            period: 'Jan 2022 - Present',
+            description: 'Leading the development of highly scalable microservices and real-time data visualizers.'
+        },
+        {
+            company: 'Digital Wave',
+            role: 'Frontend Engineer',
+            period: 'Jun 2019 - Dec 2021',
+            description: 'Specialized in building high-performance Vue and React applications for enterprise clients.'
+        }
+    ],
+    skills: [
+        { name: 'React', level: 'Expert', category: 'Frontend' },
+        { name: 'TypeScript', level: 'Expert', category: 'Language' },
+        { name: 'Node.js', level: 'Advanced', category: 'Backend' },
+        { name: 'PostgreSQL', level: 'Advanced', category: 'Database' },
+        { name: 'AWS', level: 'Intermediate', category: 'DevOps' },
+        { name: 'System Design', level: 'Advanced', category: 'Architecture' },
+    ],
+    readiness: [
+        { label: 'Technical Depth', score: 85, icon: 'Zap', color: '#6366f1' },
+        { label: 'Communication', score: 92, icon: 'Activity', color: '#10b981' },
+        { label: 'System Design', score: 65, icon: 'Shield', color: '#f59e0b' },
+        { label: 'Behavioral', score: 88, icon: 'Target', color: '#ec4899' },
+    ],
+    interviewsCount: 12,
+    successRate: 92,
 }
 
 const currentUserSlice = createSlice({

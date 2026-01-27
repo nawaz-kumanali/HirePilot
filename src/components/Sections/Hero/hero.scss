@@ -3,7 +3,7 @@
 /* Main wrapper with gradient and overflow control */
 .hero-wrapper {
   position: relative;
-  min-height: 90vh;
+  min-height: calc(100vh - 70px);
   display: flex;
   align-items: center;
   background: var(--background-color);

@@ -10,7 +10,7 @@ import { motion, AnimatePresence, type Variants } from 'framer-motion';
 import Pagination from '../../components/Pagination/Pagination';
 
 const CATEGORIES = ['All', 'Web Dev', 'Data Science', 'Design', 'AI/ML'];
-const ITEMS_PER_PAGE = 6;
+const ITEMS_PER_PAGE = 8;
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },

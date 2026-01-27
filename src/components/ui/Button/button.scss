@@ -1,0 +1,93 @@
+.hp-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-weight: 700;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    border: none;
+    outline: none;
+    white-space: nowrap;
+
+    &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+
+    .icon-left,
+    .icon-right {
+        display: flex;
+        align-items: center;
+    }
+
+    /* Variants */
+    &-primary {
+        background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+        color: white;
+        box-shadow: 0 4px 12px rgba(var(--theme-primary-rgb), 0.25);
+
+        &:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(var(--theme-primary-rgb), 0.35);
+        }
+
+        &:active:not(:disabled) {
+            transform: translateY(0);
+        }
+    }
+
+    &-secondary {
+        background: var(--card-bg);
+        color: var(--text-main);
+        border: 1px solid var(--card-border);
+
+        &:hover:not(:disabled) {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: rgba(var(--theme-primary-rgb), 0.05);
+        }
+    }
+
+    &-ghost {
+        background: transparent;
+        color: var(--text-muted);
+
+        &:hover:not(:disabled) {
+            background: rgba(var(--theme-primary-rgb), 0.08);
+            color: var(--accent);
+        }
+    }
+
+    &-danger {
+        background: rgba(239, 68, 68, 0.1);
+        color: #ef4444;
+
+        &:hover:not(:disabled) {
+            background: #ef4444;
+            color: white;
+        }
+    }
+
+    /* Sizes */
+    &-sm {
+        padding: 6px 12px;
+        font-size: 0.8rem;
+        border-radius: 8px;
+    }
+
+    &-md {
+        padding: 12px 20px;
+        font-size: 0.95rem;
+    }
+
+    &-lg {
+        padding: 16px 28px;
+        font-size: 1.1rem;
+    }
+
+    &-full {
+        width: 100%;
+    }
+}

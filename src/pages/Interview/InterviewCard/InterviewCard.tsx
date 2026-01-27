@@ -1,4 +1,5 @@
 import { Calendar, Clock, ArrowRight } from 'lucide-react';
+import Badge from '../../../components/ui/Badge/Badge';
 import './interviewCard.scss';
 import type { Interview } from '../../../types/interview';
 
@@ -14,10 +15,12 @@ const InterviewCard = ({ interview, onStartTraining }: InterviewCardProps) => {
         <div className="interview-card">
             <div className="interview-card-top">
                 <div className="interview-card-badges">
-                    <span className={`interview-status-badge ${status}`}>{status}</span>
-                    <span className={`interview-difficulty-badge ${difficulty.toLowerCase()}`}>
+                    <Badge variant={status === 'upcoming' ? 'info' : 'success'} className={status}>
+                        {status}
+                    </Badge>
+                    <Badge variant="secondary" className={difficulty.toLowerCase()}>
                         {difficulty}
-                    </span>
+                    </Badge>
                 </div>
                 <span className="interview-company-tag">{company}</span>
             </div>
@@ -38,9 +41,9 @@ const InterviewCard = ({ interview, onStartTraining }: InterviewCardProps) => {
 
             <div className="interview-topics">
                 {topics.map((topic, idx) => (
-                    <span key={idx} className="interview-topic-tag">
+                    <Badge key={idx} variant="ghost" size="sm" className="interview-topic-tag">
                         {topic}
-                    </span>
+                    </Badge>
                 ))}
             </div>
 

@@ -2,8 +2,7 @@ import {
   Play, 
   TrendingUp, 
   CheckCircle, 
-  BrainCircuit, 
-  Trophy 
+  BrainCircuit
 } from 'lucide-react';
 import { Link } from "react-router-dom";
 import "./hero.scss";
@@ -20,12 +19,6 @@ const Hero = () => {
 
       <div className="hero-container">
         <div className="hero-content">
-          {/* Trust badge */}
-          <div className="hero-badge">
-            <Trophy className="hero-badge-icon" size={18} />
-            <span>AI-Powered Interview Training</span>
-          </div>
-
           {/* Main headline */}
           <h1 className="hero-title">
             Train Smarter.

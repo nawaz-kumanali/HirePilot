@@ -14,6 +14,7 @@ import { getUserMenuState } from "../../utility/userMenu";
 import { userMenuActions } from "../../store/UserMenu/usermenu.slice";
 import profileImg from '../../assets/Nawaz_profile_IMG.jpg'
 import ThemeToggle from "../ThemeToggle/ThemeToggle";
+import NotificationsBadge from "../NotificationsBadge/NotificationsBadge";
 
 const NAV_ITEMS = [
   { label: "Home", path: "/", icon: Home },
@@ -59,11 +60,14 @@ export default function Navbar() {
       ) {
         dispatch(userMenuActions.closeUserMenu())
       }
+      else if (isNotificationOpen && menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsNotificationOpen(false)
+      }
     }
 
     document.addEventListener('mousedown', handleClickOutside)
     return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [isUserMenuOpen, dispatch])
+  }, [isUserMenuOpen, dispatch, isNotificationOpen])
 
   const userInitials = (currentUser.firstName + " " + currentUser.lastName)
     .split(" ")
@@ -93,7 +97,7 @@ export default function Navbar() {
 
 
         {/* Action Buttons */}
-        <div className="navbar-actions">
+        <div className="navbar-actions" ref={menuRef}>
           <ThemeToggle />
           {/* Notifications */}
           {isAuthenticated ?
@@ -106,42 +110,8 @@ export default function Navbar() {
                   <Bell size={20} />
                   {notifications > 0 && <span className="notification-badge">{notifications}</span>}
                 </button>
-
-                {isNotificationOpen && (
-                  <div className="notification-dropdown dropdown-responsive">
-                    <div className="dropdown-header">
-                      <h3>Notifications</h3>
-                      <button className="close-btn" onClick={() => setIsNotificationOpen(false)}>
-                        <X size={18} />
-                      </button>
-                    </div>
-                    <div className="notification-item">
-                      <div className="notification-dot"></div>
-                      <div>
-                        <p className="notification-title">New job matching your profile!</p>
-                        <p className="notification-time">5 minutes ago</p>
-                      </div>
-                    </div>
-                    <div className="notification-item">
-                      <div className="notification-dot"></div>
-                      <div>
-                        <p className="notification-title">You have a new message</p>
-                        <p className="notification-time">2 hours ago</p>
-                      </div>
-                    </div>
-                    <div className="notification-item">
-                      <div className="notification-dot"></div>
-                      <div>
-                        <p className="notification-title">Course recommendation for you</p>
-                        <p className="notification-time">1 day ago</p>
-                      </div>
-                    </div>
-                    <div className="notification-footer">
-                      <Link to="/notifications" className="view-all">View All</Link>
-                    </div>
-                  </div>
-                )}
               </div>
+              {isNotificationOpen && <NotificationsBadge setIsNotificationOpen={setIsNotificationOpen} />}
               <div className="user-profile-wrapper">
 
 

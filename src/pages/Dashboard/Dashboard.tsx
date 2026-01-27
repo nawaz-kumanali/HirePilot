@@ -14,6 +14,9 @@ import './dashboard.scss'
 import { Link } from 'react-router-dom'
 import { USER_COURSES } from '../../data/usercourses'
 import UserCourseCard from '../../components/UserCourseCard/UserCourseCard'
+import ProgressBar from '../../components/ui/ProgressBar/ProgressBar'
+import Button from '../../components/ui/Button/Button'
+import Card from '../../components/ui/Card/Card'
 
 const Dashboard: React.FC = () => {
     const statCards = [
@@ -35,16 +38,16 @@ const Dashboard: React.FC = () => {
                         <p>You've completed 75% of your weekly goal. Keep it up!</p>
                     </div>
                     <Link to={"/training"} >
-                        <button className="primary-cta">
-                            Continue Learning <ArrowRight size={18} />
-                        </button>
+                        <Button variant="primary" iconRight={<ArrowRight size={18} />} size="lg">
+                            Continue Learning
+                        </Button>
                     </Link>
                 </header>
 
                 {/* STATS SECTION */}
                 <section className="stats-grid">
                     {statCards.map(card => (
-                        <div key={card.id} className="glass-card stat-item">
+                        <Card key={card.id} className="stat-item clickable">
                             <div className="stat-top">
                                 <div className="icon-wrapper" style={{ backgroundColor: `${card.color}15`, color: card.color }}>
                                     {card.icon}
@@ -61,7 +64,7 @@ const Dashboard: React.FC = () => {
                                     {card.change}% vs last week
                                 </span>
                             </div>
-                        </div>
+                        </Card>
                     ))}
                 </section>
 
@@ -69,33 +72,26 @@ const Dashboard: React.FC = () => {
                 <div className="main-layout-grid">
 
                     {/* LEFT: Goals Progress */}
-                    <section className="glass-card section-container">
+                    <Card className="section-container">
                         <div className="section-header">
                             <h3>Learning Goals Progress</h3>
                         </div>
                         <div className="goals-list">
                             {USER_COURSES.map(item => (
                                 <div key={item.id} className="goal-row">
-                                    <div className="goal-info">
-                                        <span>{item.title}</span>
-                                        <span className="goal-percent">{item.progress}%</span>
-                                    </div>
-                                    <div className="progress-bar-bg">
-                                        <div
-                                            className="progress-bar-fill"
-                                            style={{
-                                                width: `${item.progress}%`,
-                                                backgroundColor: item.progress < 40 ? '#ef4444' : item.progress < 70 ? '#f59e0b' : 'var(--theme-color-primary)'
-                                            }}
-                                        />
-                                    </div>
+                                    <ProgressBar
+                                        progress={item.progress}
+                                        showLabel
+                                        label={item.title}
+                                        color={item.progress < 40 ? '#ef4444' : item.progress < 70 ? '#f59e0b' : 'var(--theme-color-primary)'}
+                                    />
                                 </div>
                             ))}
                         </div>
-                    </section>
+                    </Card>
 
                     {/* RIGHT: Recent Activity Snippet */}
-                    <section className="glass-card section-container">
+                    <Card className="section-container">
                         <div className="section-header">
                             <h3>Next Milestone</h3>
                         </div>
@@ -111,8 +107,7 @@ const Dashboard: React.FC = () => {
                                 <div className="milestone-fill" style={{ width: '88%' }}></div>
                             </div>
                         </div>
-                    </section>
-
+                    </Card>
                 </div>
 
                 {/* COURSES SECTION */}

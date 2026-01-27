@@ -6,6 +6,24 @@ import {
   PlayCircle, Globe, Award, Shield, ChevronRight
 } from 'lucide-react';
 import './course.scss';
+import { motion, type Variants } from 'framer-motion';
+
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.1 }
+  }
+};
+
+const itemVariants: Variants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: "easeOut" }
+  }
+};
 
 const CoursePage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -22,15 +40,24 @@ const CoursePage: React.FC = () => {
   }
 
   return (
-    <div className="course-details-wrapper">
+    <motion.div
+      className="course-details-wrapper"
+      initial="hidden"
+      animate="visible"
+      variants={containerVariants}
+    >
       <header className="course-details-header">
         <div className="header-container">
-          <button className="back-btn" onClick={() => navigate('/courses')}>
+          <motion.button
+            className="back-btn"
+            onClick={() => navigate('/courses')}
+            variants={itemVariants}
+          >
             <ArrowLeft size={20} /> Back to Courses
-          </button>
+          </motion.button>
 
           <div className="header-grid">
-            <div className="header-info">
+            <motion.div className="header-info" variants={itemVariants}>
               <div className="category-pill">{course.category}</div>
               <h1 className="course-title">{course.title}</h1>
               <p className="course-subtitle">{course.subtitle || course.description.substring(0, 100) + '...'}</p>
@@ -55,13 +82,13 @@ const CoursePage: React.FC = () => {
                 <img src={course.instructorImage} alt={course.instructor} className="instructor-avatar" />
                 <span>Created by <span className="instructor-name">{course.instructor}</span></span>
               </div>
-            </div>
+            </motion.div>
           </div>
         </div>
       </header>
 
       <div className="course-details-container">
-        <main className="course-main-content">
+        <motion.main className="course-main-content" variants={itemVariants}>
           <section className="course-section">
             <h3>What you'll learn</h3>
             <div className="learning-grid">
@@ -106,9 +133,9 @@ const CoursePage: React.FC = () => {
               ))}
             </div>
           </section>
-        </main>
+        </motion.main>
 
-        <aside className="course-sticky-sidebar">
+        <motion.aside className="course-sticky-sidebar" variants={itemVariants}>
           <div className="enroll-card">
             <div className="course-preview">
               <img src={course.image} alt={course.title} />
@@ -141,9 +168,9 @@ const CoursePage: React.FC = () => {
               </div>
             </div>
           </div>
-        </aside>
+        </motion.aside>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

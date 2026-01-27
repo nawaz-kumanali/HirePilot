@@ -15,6 +15,9 @@ import AuthRoute from "../components/ProtectedRoute/AuthRoute";
 import Notifications from "../pages/Notifications/Notifications";
 import Messages from "../pages/Messages/Messages";
 import Training from "../pages/Training/Training";
+import AboutUs from "../pages/AboutUs/AboutUs";
+import PrivacyPolicy from "../pages/PrivacyPolicy/PrivacyPolicy";
+import TermsConditions from "../pages/TermsConditions/TermsConditions";
 
 export const router = createBrowserRouter([
   {
@@ -109,6 +112,18 @@ export const router = createBrowserRouter([
             <Messages />
           </ProtectedRoute>
         ),
+      },
+      {
+        path: "/about",
+        element: <AboutUs />,
+      },
+      {
+        path: "/privacy",
+        element: <PrivacyPolicy />,
+      },
+      {
+        path: "/terms",
+        element: <TermsConditions />,
       },
     ]
   },

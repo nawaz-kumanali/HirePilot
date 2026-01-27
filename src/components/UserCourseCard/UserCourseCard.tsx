@@ -1,5 +1,8 @@
 import React from 'react';
 import { Clock, BookOpen, ChevronRight } from 'lucide-react';
+import ProgressBar from '../ui/ProgressBar/ProgressBar';
+import Button from '../ui/Button/Button';
+import Badge from '../ui/Badge/Badge';
 import './userCourseCard.scss'
 
 interface UserCourseCardProps {
@@ -28,7 +31,7 @@ const UserCourseCard: React.FC<UserCourseCardProps> = ({
         <div className="user-course-card glass-card">
             <div className="card-image">
                 <img src={image} alt={title} />
-                <div className="category-tag">{category}</div>
+                <Badge variant="primary" className="category-tag">{category}</Badge>
             </div>
 
             <div className="card-content">
@@ -46,19 +49,11 @@ const UserCourseCard: React.FC<UserCourseCardProps> = ({
                     </div>
                 </div>
 
-                <div className="progress-section">
-                    <div className="progress-info">
-                        <span>Progress</span>
-                        <span>{progress}%</span>
-                    </div>
-                    <div className="progress-bar">
-                        <div className="fill" style={{ width: `${progress}%` }}></div>
-                    </div>
-                </div>
+                <ProgressBar progress={progress} showLabel label="Progress" />
 
-                <button className="continue-btn">
-                    Continue <ChevronRight size={16} />
-                </button>
+                <Button variant="primary" iconRight={<ChevronRight size={16} />} fullWidth>
+                    Continue
+                </Button>
             </div>
         </div>
     );

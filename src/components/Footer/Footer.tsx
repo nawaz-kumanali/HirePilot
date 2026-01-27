@@ -5,8 +5,6 @@ import './footer.scss'
 import Logo from '../Logo/Logo'
 
 const socialLinks = [
-    // { icon: Facebook, label: 'Facebook', to: 'https://facebook.com' },
-    // { icon: Twitter, label: 'Twitter', to: 'https://twitter.com' },
     { icon: Linkedin, label: 'LinkedIn', to: 'https://linkedin.com/in/nawaj-kumanali' },
     { icon: Github, label: 'GitHub', to: 'https://github.com/nawaz-kumanali' },
 ]
@@ -47,17 +45,7 @@ const Footer: React.FC = () => {
                             <li><Link to="/jobs">Job Board</Link></li>
                             <li><Link to="/interview">Mock Prep</Link></li>
                             <li><Link to="/courses">Courses</Link></li>
-                        </ul>
-                    </div>
-
-                    {/* Resources Section */}
-                    <div className="footer-section">
-                        <h3 className="footer-section-title">Resources</h3>
-                        <ul className="footer-links">
-                            <li><Link to="/blog">Insights</Link></li>
-                            <li><Link to="/docs">Guide</Link></li>
-                            <li><Link to="/faq">Help Center</Link></li>
-                            <li><Link to="/community">Community</Link></li>
+                            <li><Link to="/about">About Us</Link></li>
                         </ul>
                     </div>
 

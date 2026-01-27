@@ -42,6 +42,8 @@
     will-change: width;
     transform: translateZ(0);
     transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
 
     &.collapsed {
       width: 80px;
@@ -56,7 +58,7 @@
     }
 
     &.expanded {
-      width: 320px;
+      width: 300px;
       box-shadow: 0 20px 60px var(--shadow-md), 0 0 0 1px rgba(var(--theme-primary-rgb), 0.1);
       background: var(--card-bg);
     }
@@ -70,6 +72,7 @@
       border-radius: 0 !important;
       width: 270px !important;
       background: var(--card-bg) !important;
+      overflow: hidden !important;
 
       &.open {
         left: 0 !important;
@@ -85,6 +88,7 @@
       border-bottom: 1px solid var(--glass-border);
       gap: 12px;
       transition: all 0.3s ease;
+      flex-shrink: 0;
 
       .jobs-filter-title {
         display: flex;
@@ -136,6 +140,7 @@
         display: flex;
         align-items: center;
         gap: 8px;
+        flex-shrink: 0;
 
         .lock-btn {
           background: var(--glass-bg);
@@ -149,6 +154,7 @@
           justify-content: center;
           cursor: pointer;
           transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          flex-shrink: 0;
 
           &:hover {
             background: rgba(var(--theme-primary-rgb), 0.05);
@@ -184,6 +190,7 @@
           border-radius: 10px;
           cursor: pointer;
           transition: all 0.3s ease;
+          flex-shrink: 0;
 
           &:hover {
             background: rgba(var(--theme-primary-rgb), 0.05);
@@ -206,8 +213,10 @@
       display: flex;
       flex-direction: column;
       gap: 24px;
-      overflow-y: visible;
+      overflow-y: auto;
+      overflow-x: hidden;
       position: relative;
+      flex: 1;
 
       .jobs-filter-dropdown {
         position: relative;
@@ -275,6 +284,7 @@
               color: var(--theme-color-primary);
               opacity: 0.8;
               display: flex;
+              flex-shrink: 0;
             }
 
             .dropdown-label-wrapper {
@@ -282,6 +292,7 @@
               flex-direction: column;
               text-align: left;
               white-space: nowrap;
+              min-width: 0;
 
               .dropdown-label-text {
                 font-size: 0.7rem;
@@ -315,9 +326,10 @@
           box-shadow: 0 10px 40px var(--shadow-md), 0 0 0 1px rgba(var(--theme-primary-rgb), 0.05);
           z-index: 10;
           overflow-y: auto;
+          overflow-x: hidden;
           transition: all 0.3s ease;
 
-          /* Custom Scrollbar */
+          /* Custom Scrollbar - Webkit browsers */
           &::-webkit-scrollbar {
             width: 6px;
           }
@@ -334,6 +346,10 @@
               background: linear-gradient(180deg, rgba(var(--theme-primary-rgb), 0.4) 0%, rgba(var(--theme-primary-rgb), 0.3) 100%);
             }
           }
+
+          /* Scrollbar for Firefox */
+          scrollbar-color: rgba(var(--theme-primary-rgb), 0.3) transparent;
+          scrollbar-width: thin;
 
           .dropdown-item {
             width: 100%;
@@ -405,6 +421,7 @@
       border-top: 1px solid var(--glass-border);
       background: var(--glass-bg);
       transition: all 0.3s ease;
+      flex-shrink: 0;
 
       .jobs-reset-btn {
         width: 100%;

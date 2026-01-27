@@ -108,19 +108,19 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onEnroll, onWishlist })
 
                 <div className="course-stats-row">
                     <div className="stat-pill rating">
-                        <Star size={14} fill="#fbaf24" color="#fbaf24" />
+                        <Star size={12} fill="#fbaf24" color="#fbaf24" />
                         <span className="rating-val">{rating.toFixed(1)}</span>
                         <span className="review-count">({reviews.toLocaleString()})</span>
                     </div>
                     <div className="stat-pill students">
-                        <Users size={14} />
+                        <Users size={12} />
                         <span>{students > 1000 ? `${(students / 1000).toFixed(1)}k` : students} students</span>
                     </div>
                 </div>
 
                 <div className="course-footer-row">
                     <div className="duration">
-                        <Clock size={14} />
+                        <Clock size={12} />
                         <span>{duration}</span>
                     </div>
                     <div className="price-tag">
@@ -135,7 +135,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onEnroll, onWishlist })
                     disabled={isEnrolling}
                 >
                     <span>{isEnrolling ? 'Enrolling...' : 'Enroll Now'}</span>
-                    <ChevronRight size={18} />
+                    <ChevronRight size={16} />
                 </button>
             </div>
         </motion.article>

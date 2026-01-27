@@ -1,177 +1,160 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import {
-    BookOpen,
-    Trophy,
     Clock,
-    ArrowRight,
-    Star,
-    X,
-    Flame,
+    BookOpen,
+    Award,
     TrendingUp,
-    Sparkles
+    Search,
+    Filter,
+    ArrowRight,
+    PlayCircle,
+    X,
+    Star,
+    Users
 } from 'lucide-react';
-
-import './training.scss'
-import type { UserCourse } from '../../types/course';
+import './training.scss';
 import { USER_COURSES } from '../../data/usercourses';
 import CourseCard from '../../components/UserCourseCard/UserCourseCard';
 import { Link } from 'react-router-dom';
+import ProgressBar from '../../components/ui/ProgressBar/ProgressBar';
+import Button from '../../components/ui/Button/Button';
+import Card from '../../components/ui/Card/Card';
 
 type StatCardProps = {
     Icon: any,
-    value: string,
     label: string,
+    value: string,
     color: string
 }
 
-const Training = () => {
+const Training: React.FC = () => {
+    const [selectedCourse, setSelectedCourse] = useState<any>(null);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const [selectedCourse, setSelectedCourse] = useState<UserCourse | null>(null);
-    const [hoveredCard, setHoveredCard] = useState<number | null>(null);
 
+    const statItems: StatCardProps[] = [
+        { Icon: Clock, label: 'Learning Time', value: '12.5h', color: '#6366f1' },
+        { Icon: BookOpen, label: 'Courses', value: '4 Active', color: '#10b981' },
+        { Icon: Award, label: 'Certificates', value: '2 Earned', color: '#f59e0b' },
+        { Icon: TrendingUp, label: 'Skill Score', value: '840', color: '#ec4899' },
+    ];
 
-    const StatCard = ({ Icon, value, label, color }: StatCardProps) => (
-        <div className="stat-card" style={{ borderColor: `${color}20`, backgroundColor: `${color}08` }}>
-            <div className="stat-icon-wrapper" style={{ backgroundColor: `${color}15` }}>
-                <Icon size={24} color={color} strokeWidth={2.5} />
-            </div>
-            <div className="stat-content">
-                <span className="stat-value">{value}</span>
-                <span className="stat-label">{label}</span>
-            </div>
-        </div>
-    );
+    const openCourseDetails = (course: any) => {
+        setSelectedCourse(course);
+        setIsDialogOpen(true);
+    };
 
     return (
-        <main className="training-container">
-            <div className="background-animation"></div>
-
+        <main className="training-page">
             <header className="training-header">
-                <div className="header-text">
-                    <div className="greeting-badge">
-                        <Sparkles size={16} /> Good to see you again
-                    </div>
-                    <h1 className="welcome-title">
-                        Welcome back, <span className="gradient-text">Nawaz!</span>
-                    </h1>
-                    <p className="welcome-subtitle">
-                        You're on a 🔥 roll! 4 modules completed this week. Let's keep the momentum going!
-                    </p>
+                <div className="header-info">
+                    <h1>Your <span className="gradient-text">Learning Hub</span></h1>
+                    <p>Track your progress and continue your skill development journey.</p>
                 </div>
-
-                <aside className="stats-bar">
-                    <StatCard Icon={Trophy} value="1,240" label="Points" color="#f59e0b" />
-                    <StatCard Icon={Flame} value="8" label="Streak" color="#ef4444" />
-                    <StatCard Icon={Clock} value="24h" label="This Week" color="#3b82f6" />
-                    <StatCard Icon={TrendingUp} value="+12%" label="Growth" color="#10b981" />
-                </aside>
+                <div className="header-actions">
+                    <div className="search-box">
+                        <Search size={18} />
+                        <input type="text" placeholder="Search courses..." />
+                    </div>
+                    <button className="filter-btn">
+                        <Filter size={18} />
+                    </button>
+                </div>
             </header>
 
-            <section className="section-container">
-                <div className="section-title-row">
-                    <div>
-                        <h2 className="section-heading">Continue Learning</h2>
+            <section className="stats-grid">
+                {statItems.map((card, i) => (
+                    <Card key={i} className="stat-item">
+                        <div className="icon-wrapper" style={{ backgroundColor: `${card.color}15`, color: card.color }}>
+                            <card.Icon size={24} />
+                        </div>
+                        <div className="stat-info">
+                            <h3>{card.value}</h3>
+                            <span className="label">{card.label}</span>
+                        </div>
+                    </Card>
+                ))}
+            </section>
+
+            <section className="courses-section">
+                <div className="section-title-bar">
+                    <div className="title-left">
+                        <h2>Continue Learning</h2>
                         <p className="section-subtext">Pick up where you left off</p>
                     </div>
                     <Link to="/courses" >
-                        <button className="text-link">
-                            Browse All Courses <ArrowRight size={16} />
-                        </button>
+                        <Button variant="ghost" iconRight={<ArrowRight size={16} />}>
+                            Browse All Courses
+                        </Button>
                     </Link>
                 </div>
 
-                <div className="course-grid">
-                    {USER_COURSES.map((course: UserCourse) => (
-                        <article
-                            key={course.id}
-                            className={`${hoveredCard === course.id ? 'active' : ''}`}
-                            onMouseEnter={() => setHoveredCard(course.id)}
-                            onMouseLeave={() => setHoveredCard(null)}
-                            onClick={() => {
-                                setSelectedCourse(course);
-                                setIsDialogOpen(true);
-                            }}
-                        >
+                <div className="courses-grid">
+                    {USER_COURSES.map(course => (
+                        <div key={course.id} onClick={() => openCourseDetails(course)}>
                             <CourseCard {...course} />
-
-                        </article>
+                        </div>
                     ))}
                 </div>
             </section>
 
             {isDialogOpen && selectedCourse && (
                 <div className="course-detail-modal-overlay" onClick={() => setIsDialogOpen(false)}>
-                    <div className="course-detail-modal-content" onClick={e => e.stopPropagation()}>
+                    <Card className="course-detail-modal-content" onClick={(e: any) => e.stopPropagation()}>
                         <button className="course-detail-modal-close-icon" onClick={() => setIsDialogOpen(false)}>
                             <X size={24} />
                         </button>
+
                         <div className="course-detail-modal-inner">
                             <div className="course-detail-modal-hero">
                                 <img src={selectedCourse.image} alt="" className="course-detail-modal-hero-img" />
-                                <div className="course-detail-modal-hero-overlay"></div>
-                                <div className="course-detail-modal-hero-badge">{selectedCourse.category}</div>
+                                <div className="course-detail-modal-hero-overlay">
+                                    <div className="badge-row">
+                                        <span className="category-badge">{selectedCourse.category}</span>
+                                        <div className="rating-badge">
+                                            <Star size={14} fill="#f59e0b" color="#f59e0b" />
+                                            <span>{selectedCourse.rating}</span>
+                                        </div>
+                                    </div>
+                                    <h2>{selectedCourse.title}</h2>
+                                    <div className="instructor-info">
+                                        <Users size={16} />
+                                        <span>By {selectedCourse.instructor}</span>
+                                    </div>
+                                </div>
                             </div>
-                            <div className="course-detail-modal-details">
-                                <h3 className="course-detail-modal-title">{selectedCourse.title}</h3>
 
-                                <div className="course-detail-modal-instructor">
-                                    <div className="instructor-avatar" style={{
-                                        background: 'linear-gradient(135deg, var(--theme-color-primary), #6366f1)'
-                                    }}></div>
-                                    <div>
-                                        <span className="instructor-label">Instructor</span>
-                                        <p className="instructor-detail">{selectedCourse.instructor}</p>
-                                    </div>
-                                </div>
-
-                                <div className="course-detail-modal-stats-grid">
-                                    <div className="course-detail-modal-stat">
+                            <div className="course-detail-modal-body">
+                                <div className="course-detail-modal-stats">
+                                    <div className="modal-stat">
                                         <Clock size={18} />
-                                        <div>
-                                            <span className="stat-label-small">Duration</span>
-                                            <p>{selectedCourse.duration}</p>
-                                        </div>
+                                        <span>{selectedCourse.duration}</span>
                                     </div>
-                                    <div className="course-detail-modal-stat">
-                                        <BookOpen size={18} />
-                                        <div>
-                                            <span className="stat-label-small">Lessons</span>
-                                            <p>{selectedCourse.lessons}</p>
-                                        </div>
-                                    </div>
-                                    <div className="course-detail-modal-stat">
-                                        <Star size={18} />
-                                        <div>
-                                            <span className="stat-label-small">Rating</span>
-                                            <p>{selectedCourse.rating}</p>
-                                        </div>
+                                    <div className="modal-stat">
+                                        <PlayCircle size={18} />
+                                        <span>{selectedCourse.lessons} lessons</span>
                                     </div>
                                 </div>
 
-                                <div className="course-detail-modal-progress">
-                                    <div className="progress-header">
-                                        <span>Your Progress</span>
-                                        <span>{selectedCourse.progress}%</span>
-                                    </div>
-                                    <div className="progress-track">
-                                        <div className="progress-fill" style={{ width: `${selectedCourse.progress}%` }}></div>
-                                    </div>
-                                </div>
+                                <ProgressBar
+                                    progress={selectedCourse.progress}
+                                    showLabel
+                                    label="Your Progress"
+                                    className="course-detail-modal-progress"
+                                />
 
                                 <p className="course-detail-modal-desc">
                                     Continue your learning journey! You're currently at lesson {Math.floor((selectedCourse.lessons * selectedCourse.progress) / 100)} of {selectedCourse.lessons}. Great progress so far!
                                 </p>
 
                                 <div className="course-detail-modal-actions">
-                                    <button className="secondary-button" onClick={() => setIsDialogOpen(false)}>Close</button>
-                                    <button className="primary-button course-detail-modal-button">
+                                    <Button variant="secondary" onClick={() => setIsDialogOpen(false)}>Close</Button>
+                                    <Button variant="primary" iconRight={<ArrowRight size={18} />} className="course-detail-modal-button">
                                         Resume Lesson
-                                        <ArrowRight size={18} />
-                                    </button>
+                                    </Button>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </Card>
                 </div>
             )}
         </main>
