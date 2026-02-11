@@ -1,17 +1,44 @@
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
 import { Rocket } from "lucide-react";
-import './logo.scss'
+import { Box, Typography, useTheme } from '@mui/material';
 
 const Logo = () => {
+    const theme = useTheme();
+
     return (
+        <Box
+            component={Link}
+            to="/"
+            
+            sx={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 1.5,
+                padding: '8px 16px',
+                bgcolor: 'background.paper',
+                textDecoration: 'none',
+                '&:hover': {
+                    bgcolor: 'background.paper',
+                }
+            }}
+        >
+            <Rocket size={24} color={theme.palette.primary.main} />
+            <Typography
+                variant="h6"
+                component="span"
+                sx={{
+                    fontWeight: 900,
+                    background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    backgroundClip: 'text',
+                    letterSpacing: '-0.02em',
+                }}
+            >
+                HirePilot.
+            </Typography>
+        </Box>
+    );
+};
 
-        <Link to={"/"} >
-            <div className="logo-box">
-                <Rocket size={24} className="logo-icon" />
-                <span className="logo-text">HirePilot.</span>
-            </div>
-        </Link>
-    )
-}
-
-export default Logo
+export default Logo;

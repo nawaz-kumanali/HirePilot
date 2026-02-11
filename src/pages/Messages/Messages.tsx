@@ -1,8 +1,7 @@
 import { useRef, useEffect, useState } from 'react';
 import { Send, Phone, Video, Info, Search, MoreVertical, Paperclip, Smile, CheckCheck, MessageSquare } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
-import './messages.scss';
 import { useRealTimeChat } from '../../hooks/useRealTimeChat';
+import { Box, Typography, Avatar, TextField, IconButton, Stack, Fade, List, ListItemButton, ListItemAvatar, ListItemText, Badge, Paper, InputAdornment, useTheme, alpha } from '@mui/material';
 
 const Messages = () => {
     const [newMessage, setNewMessage] = useState('');
@@ -17,6 +16,7 @@ const Messages = () => {
     } = useRealTimeChat('conv-1');
 
     const chatEndRef = useRef<HTMLDivElement>(null);
+    const theme = useTheme();
 
     const scrollToBottom = () => {
         chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -33,152 +33,325 @@ const Messages = () => {
     };
 
     return (
-        <div className="messages-wrapper">
-            <div className="messages-container">
+        <Box sx={{ p: { xs: 0, md: 3 }, height: 'calc(100vh - 70px)', display: 'flex', justifyContent: 'center', bgcolor: 'background.default' }}>
+            <Paper
+                elevation={3}
+                sx={{
+                    width: '100%',
+                    maxWidth: 1200,
+                    height: '100%',
+                    display: 'flex',
+                    overflow: 'hidden',
+                    borderRadius: { xs: 0, md: 3 },
+                    bgcolor: 'background.paper',
+                    border: { md: `1px solid ${alpha(theme.palette.divider, 0.1)}` },
+                }}
+            >
                 {/* Sidebar */}
-                <aside className="messages-sidebar">
-                    <div className="sidebar-header">
-                        <h2>Messages</h2>
-                        <div className="search-bar">
-                            <Search size={18} />
-                            <input type="text" placeholder="Search chats..." />
-                        </div>
-                    </div>
+                <Box
+                    sx={{
+                        width: { xs: '100%', md: 350 },
+                        borderRight: `1px solid ${theme.palette.divider}`,
+                        display: { xs: activeConversation ? 'none' : 'flex', md: 'flex' },
+                        flexDirection: 'column',
+                        bgcolor: alpha(theme.palette.background.paper, 0.5),
+                        backdropFilter: 'blur(12px)',
+                    }}
+                >
+                    <Box sx={{ p: 2.5, borderBottom: `1px solid ${theme.palette.divider}` }}>
+                        <Typography variant="h5" fontWeight={800} sx={{ mb: 2, color: 'text.primary' }}>
+                            Messages
+                        </Typography>
+                        <TextField
+                            fullWidth
+                            placeholder="Search chats..."
+                            size="small"
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position="start">
+                                        <Search size={18} color={theme.palette.text.secondary} />
+                                    </InputAdornment>
+                                ),
+                            }}
+                            sx={{
+                                '& .MuiOutlinedInput-root': {
+                                    borderRadius: 3,
+                                    bgcolor: 'background.paper',
+                                    '& fieldset': { borderColor: 'divider' },
+                                    '&:hover fieldset': { borderColor: 'primary.main' },
+                                }
+                            }}
+                        />
+                    </Box>
 
-                    <div className="conversations-list">
+                    <List sx={{ flex: 1, overflowY: 'auto', p: 1 }}>
                         {conversations.map((conv) => (
-                            <div
+                            <ListItemButton
                                 key={conv.id}
-                                className={`conversation-item ${selectedChat === conv.id ? 'active' : ''}`}
                                 onClick={() => setSelectedChat(conv.id)}
+                                selected={selectedChat === conv.id}
+                                sx={{
+                                    borderRadius: 3,
+                                    mb: 0.5,
+                                    '&.Mui-selected': {
+                                        bgcolor: alpha(theme.palette.primary.main, 0.1),
+                                        borderLeft: `4px solid ${theme.palette.primary.main}`,
+                                        '&:hover': { bgcolor: alpha(theme.palette.primary.main, 0.15) },
+                                    },
+                                    '&:hover': { bgcolor: alpha(theme.palette.action.hover, 0.5) }
+                                }}
                             >
-                                <div className="avatar-wrapper">
-                                    <div className="avatar">
-                                        {conv.participants[0].name.charAt(0)}
-                                    </div>
-                                    {conv.participants[0].isOnline && <div className="online-indicator"></div>}
-                                </div>
-                                <div className="conv-info">
-                                    <div className="conv-top">
-                                        <span className="conv-name">{conv.participants[0].name}</span>
-                                        <span className="conv-time">{conv.lastMessageTime}</span>
-                                    </div>
-                                    <div className="conv-bottom">
-                                        <p className="last-msg">{conv.lastMessage}</p>
-                                        {conv.unreadCount > 0 && (
-                                            <span className="unread-badge">{conv.unreadCount}</span>
-                                        )}
-                                    </div>
-                                </div>
-                            </div>
+                                <ListItemAvatar>
+                                    <Badge
+                                        overlap="circular"
+                                        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                                        variant="dot"
+                                        invisible={!conv.participants[0].isOnline}
+                                        sx={{ '& .MuiBadge-badge': { bgcolor: '#22c55e', color: '#22c55e', boxShadow: `0 0 0 2px ${theme.palette.background.paper}` } }}
+                                    >
+                                        <Avatar
+                                            sx={{
+                                                bgcolor: 'transparent',
+                                                background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
+                                                fontWeight: 600,
+                                                color: 'white'
+                                            }}
+                                        >
+                                            {conv.participants[0].name.charAt(0)}
+                                        </Avatar>
+                                    </Badge>
+                                </ListItemAvatar>
+                                <ListItemText
+                                    primary={
+                                        <Stack direction="row" justifyContent="space-between" alignItems="center">
+                                            <Typography variant="subtitle1" fontWeight={700} noWrap sx={{ maxWidth: '70%' }}>
+                                                {conv.participants[0].name}
+                                            </Typography>
+                                            <Typography variant="caption" color="text.secondary">
+                                                {conv.lastMessageTime}
+                                            </Typography>
+                                        </Stack>
+                                    }
+                                    secondary={
+                                        <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mt: 0.5 }}>
+                                            <Typography variant="body2" color="text.secondary" noWrap sx={{ maxWidth: '80%', opacity: 0.8 }}>
+                                                {conv.lastMessage}
+                                            </Typography>
+                                            {conv.unreadCount > 0 && (
+                                                <Box
+                                                    sx={{
+                                                        bgcolor: 'primary.main',
+                                                        color: 'white',
+                                                        fontSize: '0.7rem',
+                                                        fontWeight: 700,
+                                                        px: 0.75,
+                                                        py: 0.25,
+                                                        borderRadius: 1,
+                                                        lineHeight: 1
+                                                    }}
+                                                >
+                                                    {conv.unreadCount}
+                                                </Box>
+                                            )}
+                                        </Stack>
+                                    }
+                                />
+                            </ListItemButton>
                         ))}
-                    </div>
-                </aside>
+                    </List>
+                </Box>
 
                 {/* Chat Area */}
-                <main className="chat-area">
+                <Box
+                    sx={{
+                        flex: 1,
+                        display: { xs: activeConversation ? 'flex' : 'none', md: 'flex' },
+                        flexDirection: 'column',
+                        bgcolor: 'background.default',
+                    }}
+                >
                     {activeConversation ? (
                         <>
-                            <header className="chat-header">
-                                <div className="user-profile">
-                                    <div className="avatar">
+                            <Box
+                                component="header"
+                                sx={{
+                                    p: 2,
+                                    borderBottom: `1px solid ${theme.palette.divider}`,
+                                    display: 'flex',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'center',
+                                    bgcolor: 'background.paper',
+                                }}
+                            >
+                                <Stack direction="row" spacing={2} alignItems="center">
+                                    <Avatar
+                                        sx={{
+                                            bgcolor: 'transparent',
+                                            background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
+                                            fontWeight: 600,
+                                            boxShadow: theme.shadows[2]
+                                        }}
+                                    >
                                         {activeConversation.participants[0].name.charAt(0)}
-                                    </div>
-                                    <div className="user-info">
-                                        <h3>{activeConversation.participants[0].name}</h3>
-                                        <span className="status">
+                                    </Avatar>
+                                    <Box>
+                                        <Typography variant="subtitle1" fontWeight={700}>
+                                            {activeConversation.participants[0].name}
+                                        </Typography>
+                                        <Typography variant="caption" fontWeight={600} sx={{ color: activeConversation.participants[0].isOnline ? '#22c55e' : 'text.secondary' }}>
                                             {activeConversation.participants[0].isOnline ? 'Online' : 'Offline'}
-                                        </span>
-                                    </div>
-                                </div>
-                                <div className="chat-actions">
-                                    <button className="action-btn" title="Phone call"><Phone size={20} /></button>
-                                    <button className="action-btn" title="Video call"><Video size={20} /></button>
-                                    <button className="action-btn" title="Info"><Info size={20} /></button>
-                                    <button className="action-btn" title="More options"><MoreVertical size={20} /></button>
-                                </div>
-                            </header>
+                                        </Typography>
+                                    </Box>
+                                </Stack>
+                                <Stack direction="row" spacing={1}>
+                                    <IconButton size="small"><Phone size={20} /></IconButton>
+                                    <IconButton size="small"><Video size={20} /></IconButton>
+                                    <IconButton size="small"><Info size={20} /></IconButton>
+                                    <IconButton size="small"><MoreVertical size={20} /></IconButton>
+                                </Stack>
+                            </Box>
 
-                            <div className="chat-messages">
-                                <AnimatePresence initial={false}>
-                                    {activeMessages.map((msg) => (
-                                        <motion.div
-                                            key={msg.id}
-                                            initial={{ opacity: 0, scale: 0.9, y: 10 }}
-                                            animate={{ opacity: 1, scale: 1, y: 0 }}
-                                            className={`message-row ${msg.isMe ? 'me' : 'them'}`}
+                            <Box sx={{ flex: 1, overflowY: 'auto', p: 3, display: 'flex', flexDirection: 'column', gap: 2 }}>
+                                {activeMessages.map((msg) => (
+                                    <Fade in={true} key={msg.id} timeout={300}>
+                                        <Box
+                                            sx={{
+                                                display: 'flex',
+                                                gap: 1.5,
+                                                alignSelf: msg.isMe ? 'flex-end' : 'flex-start',
+                                                maxWidth: '80%',
+                                                flexDirection: msg.isMe ? 'row-reverse' : 'row',
+                                            }}
                                         >
                                             {!msg.isMe && (
-                                                <div className="msg-avatar">
+                                                <Avatar
+                                                    sx={{
+                                                        width: 32,
+                                                        height: 32,
+                                                        fontSize: '0.8rem',
+                                                        bgcolor: 'background.paper',
+                                                        border: `1px solid ${theme.palette.divider}`,
+                                                        color: 'text.secondary'
+                                                    }}
+                                                >
                                                     {activeConversation.participants[0].name.charAt(0)}
-                                                </div>
+                                                </Avatar>
                                             )}
-                                            <div className="message-bubble">
-                                                <p>{msg.text}</p>
-                                                <div className="message-meta">
-                                                    <span className="time">{msg.timestamp}</span>
-                                                    {msg.isMe && <CheckCheck size={14} className="status-icon" />}
-                                                </div>
-                                            </div>
-                                        </motion.div>
-                                    ))}
-                                </AnimatePresence>
-
+                                            <Box
+                                                sx={{
+                                                    p: 2,
+                                                    borderRadius: msg.isMe ? '20px 20px 4px 20px' : '20px 20px 20px 4px',
+                                                    bgcolor: msg.isMe ? 'transparent' : 'background.paper',
+                                                    background: msg.isMe ? `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})` : undefined,
+                                                    color: msg.isMe ? 'common.white' : 'text.primary',
+                                                    boxShadow: msg.isMe ? `0 4px 15px ${alpha(theme.palette.primary.main, 0.2)}` : theme.shadows[1],
+                                                    border: !msg.isMe ? `1px solid ${theme.palette.divider}` : 'none',
+                                                }}
+                                            >
+                                                <Typography variant="body2" sx={{ fontSize: '0.95rem', lineHeight: 1.5 }}>
+                                                    {msg.text}
+                                                </Typography>
+                                                <Stack direction="row" justifyContent="flex-end" alignItems="center" spacing={0.5} sx={{ mt: 0.5, opacity: 0.7 }}>
+                                                    <Typography variant="caption" sx={{ fontSize: '0.7rem', color: 'inherit' }}>
+                                                        {msg.timestamp}
+                                                    </Typography>
+                                                    {msg.isMe && <CheckCheck size={14} />}
+                                                </Stack>
+                                            </Box>
+                                        </Box>
+                                    </Fade>
+                                ))}
                                 {isTyping && (
-                                    <motion.div
-                                        initial={{ opacity: 0, y: 5 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        className="message-row them"
-                                    >
-                                        <div className="msg-avatar">
-                                            {activeConversation.participants[0].name.charAt(0)}
-                                        </div>
-                                        <div className="message-bubble typing">
-                                            <div className="typing-dots">
-                                                <span></span>
-                                                <span></span>
-                                                <span></span>
-                                            </div>
-                                        </div>
-                                    </motion.div>
+                                    <Fade in={true} timeout={300}>
+                                        <Box sx={{ display: 'flex', gap: 1.5, alignSelf: 'flex-start' }}>
+                                            <Avatar sx={{ width: 32, height: 32, fontSize: '0.8rem', bgcolor: 'background.paper', border: `1px solid ${theme.palette.divider}`, color: 'text.secondary' }}>
+                                                {activeConversation.participants[0].name.charAt(0)}
+                                            </Avatar>
+                                            <Box sx={{ p: 1.5, borderRadius: '20px 20px 20px 4px', bgcolor: 'background.paper', border: `1px solid ${theme.palette.divider}`, display: 'flex', gap: 0.5, alignItems: 'center' }}>
+                                                <Box sx={{ width: 6, height: 6, bgcolor: 'primary.main', borderRadius: '50%', opacity: 0.6 }} />
+                                                <Box sx={{ width: 6, height: 6, bgcolor: 'primary.main', borderRadius: '50%', opacity: 0.6 }} />
+                                                <Box sx={{ width: 6, height: 6, bgcolor: 'primary.main', borderRadius: '50%', opacity: 0.6 }} />
+                                            </Box>
+                                        </Box>
+                                    </Fade>
                                 )}
                                 <div ref={chatEndRef} />
-                            </div>
+                            </Box>
 
-                            <footer className="chat-input-area">
-                                <div className="input-actions">
-                                    <button className="icon-btn" title="Attach file"><Paperclip size={20} /></button>
-                                </div>
-                                <div className="input-wrapper">
+                            <Box
+                                component="footer"
+                                sx={{
+                                    p: 2,
+                                    borderTop: `1px solid ${theme.palette.divider}`,
+                                    display: 'flex',
+                                    gap: 1.5,
+                                    alignItems: 'center',
+                                    bgcolor: 'background.paper'
+                                }}
+                            >
+                                <IconButton size="small"><Paperclip size={20} /></IconButton>
+                                <Box
+                                    sx={{
+                                        flex: 1,
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        bgcolor: alpha(theme.palette.background.default, 0.5),
+                                        border: `1px solid ${theme.palette.divider}`,
+                                        borderRadius: 4,
+                                        px: 2,
+                                        py: 0.5,
+                                        '&:focus-within': {
+                                            borderColor: 'primary.main',
+                                            boxShadow: `0 0 0 2px ${alpha(theme.palette.primary.main, 0.1)}`
+                                        }
+                                    }}
+                                >
                                     <input
                                         type="text"
                                         placeholder="Type a message..."
                                         value={newMessage}
                                         onChange={(e) => setNewMessage(e.target.value)}
                                         onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
+                                        style={{
+                                            flex: 1,
+                                            border: 'none',
+                                            background: 'none',
+                                            outline: 'none',
+                                            padding: '8px 0',
+                                            color: theme.palette.text.primary,
+                                            fontSize: '0.95rem'
+                                        }}
                                     />
-                                    <button className="smile-btn" title="Emoji"><Smile size={20} /></button>
-                                </div>
-                                <button
-                                    className="send-btn"
+                                    <IconButton size="small" sx={{ color: 'text.secondary', '&:hover': { color: '#fbbf24' } }}><Smile size={20} /></IconButton>
+                                </Box>
+                                <IconButton
                                     onClick={handleSendMessage}
                                     disabled={!newMessage.trim()}
-                                    title="Send message"
+                                    sx={{
+                                        bgcolor: 'primary.main',
+                                        color: 'white',
+                                        width: 48,
+                                        height: 48,
+                                        '&:hover': { bgcolor: 'primary.dark' },
+                                        '&.Mui-disabled': { bgcolor: 'action.disabledBackground', color: 'action.disabled' }
+                                    }}
                                 >
                                     <Send size={20} />
-                                </button>
-                            </footer>
+                                </IconButton>
+                            </Box>
                         </>
                     ) : (
-                        <div className="no-chat-selected">
-                            <MessageSquare size={64} className="empty-icon" />
-                            <h3>Your Messages</h3>
-                            <p>Select a conversation to start chatting</p>
-                        </div>
+                        <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 2, color: 'text.secondary' }}>
+                            <Box sx={{ p: 3, bgcolor: alpha(theme.palette.primary.main, 0.1), borderRadius: '50%' }}>
+                                <MessageSquare size={48} color={theme.palette.primary.main} />
+                            </Box>
+                            <Typography variant="h5" fontWeight={700} color="text.primary">Your Messages</Typography>
+                            <Typography variant="body1">Select a conversation to start chatting</Typography>
+                        </Box>
                     )}
-                </main>
-            </div>
-        </div>
+                </Box>
+            </Paper>
+        </Box>
     );
 };
 

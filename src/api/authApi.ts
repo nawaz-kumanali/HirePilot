@@ -8,7 +8,7 @@ export const authApi = apiSlice.injectEndpoints({
                 method: 'POST',
                 body: credentials,
             }),
-            async onQueryStarted(_args, { dispatch, queryFulfilled }) {
+            async onQueryStarted(_args, { queryFulfilled }) {
                 try {
                     const { data } = await queryFulfilled;
                     // In a real app, 'data' would have the token and user info

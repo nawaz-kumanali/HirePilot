@@ -1,23 +1,33 @@
 import { Edit, X, Briefcase, Building, Calendar, Save, Plus } from 'lucide-react';
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import { currentUserActions } from '../../../store/CurrentUser/currentuser.slice';
 import type { CurrentUserState, Experience, Skill } from '../../../store/CurrentUser/currentuser.types';
 import { useAppDispatch } from '../../../store/hooks';
-import Card from '../../../components/Card/Card';
-import Button from '../../../components/Button/Button';
-
-import './editProfile.scss'
+import {
+    Card,
+    Box,
+    Typography,
+    TextField,
+    Button,
+    IconButton,
+    Select,
+    MenuItem,
+    FormControl,
+    Stack,
+    Divider,
+    useTheme,
+    alpha
+} from '@mui/material';
 
 interface EditProfileProps {
     profileData: CurrentUserState;
     setIsEditing: (isEditing: boolean) => void;
 }
+
 const EditProfile: React.FC<EditProfileProps> = ({ profileData, setIsEditing }) => {
-
     const [editData, setEditData] = useState<CurrentUserState>(profileData);
-
     const dispatch = useAppDispatch();
-
+    const theme = useTheme();
 
     const handleInputChange = (field: keyof CurrentUserState, value: any) => {
         setEditData(prev => ({ ...prev, [field]: value }));
@@ -65,139 +75,255 @@ const EditProfile: React.FC<EditProfileProps> = ({ profileData, setIsEditing }) 
             skills: prev.skills.filter((_, i) => i !== index)
         }));
     };
+
+    const handleSave = () => {
+        dispatch(currentUserActions.setCurrentUser(editData));
+        setIsEditing(false);
+    };
+
     return (
+        <Card
+            sx={{
+                p: 4,
+                borderRadius: 3,
+                border: `1px solid ${theme.palette.divider}`,
+            }}
+        >
+            {/* Header */}
+            <Box sx={{ mb: 4 }}>
+                <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 1 }}>
+                    <Edit size={22} color={theme.palette.primary.main} />
+                    <Typography variant="h4" fontWeight={700}>
+                        Update Your Identity
+                    </Typography>
+                </Stack>
+                <Typography variant="body2" color="text.secondary">
+                    Ensure your profile remains competitive and up-to-date.
+                </Typography>
+            </Box>
 
-        <Card className="edit-page-wrapper fade-in">
-            <div className="section-header">
-                <h2><Edit size={22} className="accent" /> Update Your Identity</h2>
-                <p>Ensure your profile remains competitive and up-to-date.</p>
-            </div>
+            {/* Basic Info */}
+            <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)' }, gap: 3, mb: 4 }}>
+                <TextField
+                    label="First Name"
+                    value={editData.firstName}
+                    onChange={(e) => handleInputChange('firstName', e.target.value)}
+                    fullWidth
+                />
+                <TextField
+                    label="Last Name"
+                    value={editData.lastName}
+                    onChange={(e) => handleInputChange('lastName', e.target.value)}
+                    fullWidth
+                />
+                <TextField
+                    label="Headline"
+                    value={editData.headline}
+                    onChange={(e) => handleInputChange('headline', e.target.value)}
+                    placeholder="e.g. Senior Full Stack Developer"
+                    fullWidth
+                    sx={{ gridColumn: { xs: 'span 1', md: 'span 2' } }}
+                />
+                <TextField
+                    label="Professional Bio"
+                    value={editData.bio}
+                    onChange={(e) => handleInputChange('bio', e.target.value)}
+                    multiline
+                    rows={4}
+                    fullWidth
+                    sx={{ gridColumn: { xs: 'span 1', md: 'span 2' } }}
+                />
+                <TextField
+                    label="Email"
+                    type="email"
+                    value={editData.email}
+                    onChange={(e) => handleInputChange('email', e.target.value)}
+                    fullWidth
+                />
+                <TextField
+                    label="Phone"
+                    value={editData.phone}
+                    onChange={(e) => handleInputChange('phone', e.target.value)}
+                    fullWidth
+                />
+                <TextField
+                    label="Github URL"
+                    value={editData.github}
+                    onChange={(e) => handleInputChange('github', e.target.value)}
+                    fullWidth
+                />
+                <TextField
+                    label="LinkedIn URL"
+                    value={editData.linkedin}
+                    onChange={(e) => handleInputChange('linkedin', e.target.value)}
+                    fullWidth
+                />
+            </Box>
 
-            <div className="edit-form-grid">
-                <div className="form-group half">
-                    <label>First Name</label>
-                    <input type="text" value={editData.firstName} onChange={(e) => handleInputChange('firstName', e.target.value)} />
-                </div>
-                <div className="form-group half">
-                    <label>Last Name</label>
-                    <input type="text" value={editData.lastName} onChange={(e) => handleInputChange('lastName', e.target.value)} />
-                </div>
-                <div className="form-group">
-                    <label>Headline</label>
-                    <input type="text" value={editData.headline} onChange={(e) => handleInputChange('headline', e.target.value)} placeholder="e.g. Senior Full Stack Developer" />
-                </div>
-                <div className="form-group">
-                    <label>Professional Bio</label>
-                    <textarea rows={4} value={editData.bio} onChange={(e) => handleInputChange('bio', e.target.value)} />
-                </div>
-                <div className="form-group half">
-                    <label>Email</label>
-                    <input type="email" value={editData.email} onChange={(e) => handleInputChange('email', e.target.value)} />
-                </div>
-                <div className="form-group half">
-                    <label>Phone</label>
-                    <input type="text" value={editData.phone} onChange={(e) => handleInputChange('phone', e.target.value)} />
-                </div>
-                <div className="form-group half">
-                    <label>Github URL</label>
-                    <input type="text" value={editData.github} onChange={(e) => handleInputChange('github', e.target.value)} />
-                </div>
-                <div className="form-group half">
-                    <label>LinkedIn URL</label>
-                    <input type="text" value={editData.linkedin} onChange={(e) => handleInputChange('linkedin', e.target.value)} />
-                </div>
-            </div>
+            <Divider sx={{ my: 4 }} />
 
-            {/* Experience Edit */}
-            <div className="edit-sub-section">
-                <div className="sub-header">
-                    <h3>Experience</h3>
-                    <Button variant="ghost" size="sm" iconLeft={<Plus size={16} />} onClick={addExperience}>Add Experience</Button>
-                </div>
-                {editData.experience.map((exp, i) => (
-                    <div key={i} className="edit-experience-card">
-                        <button className="remove-btn" onClick={() => removeExperience(i)} aria-label="Remove experience">
-                            <X size={16} />
-                        </button>
+            {/* Experience Section */}
+            <Box sx={{ mb: 4 }}>
+                <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 3 }}>
+                    <Typography variant="h6" fontWeight={700}>
+                        Experience
+                    </Typography>
+                    <Button
+                        variant="outlined"
+                        size="small"
+                        startIcon={<Plus size={16} />}
+                        onClick={addExperience}
+                    >
+                        Add Experience
+                    </Button>
+                </Stack>
 
-                        <div className="card-row">
-                            <div className="form-group">
-                                <label><Briefcase size={14} /> Job Title</label>
-                                <input
-                                    type="text"
-                                    value={exp.role}
-                                    onChange={(e) => handleExperienceChange(i, 'role', e.target.value)}
-                                    placeholder="e.g. Senior Software Engineer"
-                                />
-                            </div>
-                            <div className="form-group">
-                                <label><Building size={14} /> Company</label>
-                                <input
-                                    type="text"
-                                    value={exp.company}
-                                    onChange={(e) => handleExperienceChange(i, 'company', e.target.value)}
-                                    placeholder="e.g. Google"
-                                />
-                            </div>
-                        </div>
+                <Stack spacing={3}>
+                    {editData.experience.map((exp, i) => (
+                        <Card
+                            key={i}
+                            sx={{
+                                p: 3,
+                                position: 'relative',
+                                border: `1px solid ${theme.palette.divider}`,
+                                bgcolor: alpha(theme.palette.background.default, 0.5),
+                            }}
+                        >
+                            <IconButton
+                                size="small"
+                                onClick={() => removeExperience(i)}
+                                sx={{
+                                    position: 'absolute',
+                                    top: 8,
+                                    right: 8,
+                                }}
+                            >
+                                <X size={16} />
+                            </IconButton>
 
-                        <div className="card-row">
-                            <div className="form-group">
-                                <label><Calendar size={14} /> Time Period</label>
-                                <input
-                                    type="text"
+                            <Stack spacing={2}>
+                                <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)' }, gap: 2 }}>
+                                    <TextField
+                                        label="Job Title"
+                                        value={exp.role}
+                                        onChange={(e) => handleExperienceChange(i, 'role', e.target.value)}
+                                        placeholder="e.g. Senior Software Engineer"
+                                        InputProps={{
+                                            startAdornment: <Briefcase size={14} style={{ marginRight: 8 }} />
+                                        }}
+                                        fullWidth
+                                    />
+                                    <TextField
+                                        label="Company"
+                                        value={exp.company}
+                                        onChange={(e) => handleExperienceChange(i, 'company', e.target.value)}
+                                        placeholder="e.g. Google"
+                                        InputProps={{
+                                            startAdornment: <Building size={14} style={{ marginRight: 8 }} />
+                                        }}
+                                        fullWidth
+                                    />
+                                </Box>
+                                <TextField
+                                    label="Time Period"
                                     value={exp.period}
                                     onChange={(e) => handleExperienceChange(i, 'period', e.target.value)}
                                     placeholder="e.g. Jan 2022 - Present"
+                                    InputProps={{
+                                        startAdornment: <Calendar size={14} style={{ marginRight: 8 }} />
+                                    }}
+                                    fullWidth
                                 />
-                            </div>
-                        </div>
-
-                        <div className="form-group description-field">
-                            <label>Key Responsibilities & Achievements</label>
-                            <textarea
-                                rows={3}
-                                value={exp.description}
-                                onChange={(e) => handleExperienceChange(i, 'description', e.target.value)}
-                                placeholder="Describe your impact, technologies used, and key projects..."
-                            />
-                        </div>
-                    </div>
-                ))}
-            </div>
-
-            {/* Skills Edit */}
-            <div className="edit-sub-section">
-                <div className="sub-header">
-                    <h3>Skills</h3>
-                    <Button variant="ghost" size="sm" iconLeft={<Plus size={16} />} onClick={addSkill}>Add Skill</Button>
-                </div>
-                <div className="edit-skills-grid">
-                    {editData.skills.map((skill, i) => (
-                        <div key={i} className="edit-skill-item">
-                            <input type="text" value={skill.name} onChange={(e) => handleSkillChange(i, 'name', e.target.value)} placeholder="Skill name" />
-                            <select value={skill.level} onChange={(e) => handleSkillChange(i, 'level', e.target.value)}>
-                                <option value="Beginner">Beginner</option>
-                                <option value="Intermediate">Intermediate</option>
-                                <option value="Advanced">Advanced</option>
-                                <option value="Expert">Expert</option>
-                            </select>
-                            <button className="remove-skill-btn" onClick={() => removeSkill(i)}><X size={14} /></button>
-                        </div>
+                                <TextField
+                                    label="Key Responsibilities & Achievements"
+                                    value={exp.description}
+                                    onChange={(e) => handleExperienceChange(i, 'description', e.target.value)}
+                                    placeholder="Describe your impact, technologies used, and key projects..."
+                                    multiline
+                                    rows={3}
+                                    fullWidth
+                                />
+                            </Stack>
+                        </Card>
                     ))}
-                </div>
-            </div>
+                </Stack>
+            </Box>
 
-            <div className="form-actions">
-                <Button variant="primary" iconLeft={<Save size={18} />} onClick={() => { dispatch(currentUserActions.setCurrentUser(editData)); setIsEditing(false); }}>
-                    Save Changes
-                </Button>
-                <Button variant="ghost" onClick={() => setIsEditing(false)}>
+            <Divider sx={{ my: 4 }} />
+
+            {/* Skills Section */}
+            <Box sx={{ mb: 4 }}>
+                <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 3 }}>
+                    <Typography variant="h6" fontWeight={700}>
+                        Skills
+                    </Typography>
+                    <Button
+                        variant="outlined"
+                        size="small"
+                        startIcon={<Plus size={16} />}
+                        onClick={addSkill}
+                    >
+                        Add Skill
+                    </Button>
+                </Stack>
+
+                <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)' }, gap: 2 }}>
+                    {editData.skills.map((skill, i) => (
+                        <Card
+                            key={i}
+                            sx={{
+                                p: 2,
+                                display: 'flex',
+                                gap: 1,
+                                alignItems: 'center',
+                                border: `1px solid ${theme.palette.divider}`,
+                                bgcolor: alpha(theme.palette.background.default, 0.5),
+                            }}
+                        >
+                            <TextField
+                                value={skill.name}
+                                onChange={(e) => handleSkillChange(i, 'name', e.target.value)}
+                                placeholder="Skill name"
+                                size="small"
+                                fullWidth
+                            />
+                            <FormControl size="small" sx={{ minWidth: 120 }}>
+                                <Select
+                                    value={skill.level}
+                                    onChange={(e) => handleSkillChange(i, 'level', e.target.value)}
+                                >
+                                    <MenuItem value="Beginner">Beginner</MenuItem>
+                                    <MenuItem value="Intermediate">Intermediate</MenuItem>
+                                    <MenuItem value="Advanced">Advanced</MenuItem>
+                                    <MenuItem value="Expert">Expert</MenuItem>
+                                </Select>
+                            </FormControl>
+                            <IconButton size="small" onClick={() => removeSkill(i)}>
+                                <X size={14} />
+                            </IconButton>
+                        </Card>
+                    ))}
+                </Box>
+            </Box>
+
+            {/* Actions */}
+            <Stack direction="row" spacing={2} justifyContent="flex-end">
+                <Button
+                    variant="outlined"
+                    onClick={() => setIsEditing(false)}
+                >
                     Cancel
                 </Button>
-            </div>
+                <Button
+                    variant="contained"
+                    startIcon={<Save size={18} />}
+                    onClick={handleSave}
+                >
+                    Save Changes
+                </Button>
+            </Stack>
         </Card>
-    )
-}
+    );
+};
 
-export default EditProfile
+export default EditProfile;

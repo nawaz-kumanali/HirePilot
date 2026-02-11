@@ -1,36 +1,25 @@
-import { useEffect } from 'react';
-import { AnimatePresence } from 'framer-motion';
-import { Outlet, useLocation } from 'react-router-dom'
-import Navbar from './components/Navbar/Navbar'
-import Footer from './components/Footer/Footer'
+import { useEffect, useMemo } from 'react';
+import { Outlet } from 'react-router-dom'
+import { ThemeProvider, CssBaseline } from '@mui/material';
 import { useAppSelector } from './store/hooks';
-import PageTransition from './components/ui/PageTransition/PageTransition';
+import { getTheme } from './theme/theme';
 
 function App() {
   const mode = useAppSelector(state => state.theme.mode);
-  const location = useLocation();
+
+  const theme = useMemo(() => getTheme(mode as 'light' | 'dark'), [mode]);
 
   useEffect(() => {
-    const applyTheme = (currentMode: typeof mode) => {
-      let isDark = currentMode === 'dark';
-      document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
-    };
-
-    applyTheme(mode);
+    document.documentElement.setAttribute('data-theme', mode);
   }, [mode]);
 
   return (
-    <div className='app-wrapper'>
-      <Navbar />
-      <div className="app-content">
-        <AnimatePresence mode="wait" initial={false}>
-          <PageTransition key={location.pathname}>
-            <Outlet />
-          </PageTransition>
-        </AnimatePresence>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <div className='app-root'>
+        <Outlet />
       </div>
-      <Footer />
-    </div>
+    </ThemeProvider>
   );
 }
 

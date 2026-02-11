@@ -1,69 +1,29 @@
-import { 
-  TrendingUp, 
-  CheckCircle, 
-  BrainCircuit
-} from 'lucide-react';
-import { Link } from "react-router-dom";
-import "./hero.scss";
+import { Box, Container } from '@mui/material';
+import HeroBackground from './HeroBackground';
+import HeroHeader from './HeroHeader';
+import HeroFeatures from './HeroFeatures';
 
 const Hero = () => {
-
-  
-
   return (
-    <section className="hero-wrapper">
-      {/* Animated background elements */}
-      <div className="hero-float-circle hero-float-circle-1" />
-      <div className="hero-float-circle hero-float-circle-2" />
+    <Box
+      component="section"
+      sx={{
+        position: 'relative',
+        minHeight: 'calc(100vh - 70px)',
+        display: 'flex',
+        alignItems: 'center',
+        overflow: 'hidden',
+      }}
+    >
+      <HeroBackground />
 
-      <div className="hero-container">
-        <div className="hero-content">
-          {/* Main headline */}
-          <h1 className="hero-title">
-            Train Smarter.
-            <br />
-            Interview Better.
-          </h1>
-
-          {/* Subheadline */}
-          <p className="hero-subtitle">
-            Master your next interview with AI-powered mock sessions, real-time
-            feedback, and personalized training paths
-          </p>
-
-          {/* Feature highlights */}
-          <div className="hero-features">
-            <div className="hero-feature-pill">
-              <BrainCircuit className="hero-feature-icon" size={20} />
-              <span className="hero-feature-text">AI Mock Interviews</span>
-            </div>
-            <div className="hero-feature-pill">
-              <TrendingUp className="hero-feature-icon" size={20} />
-              <span className="hero-feature-text">Skill Gap Analysis</span>
-            </div>
-            <div className="hero-feature-pill">
-              <CheckCircle className="hero-feature-icon" size={20} />
-              <span className="hero-feature-text">Readiness Scoring</span>
-            </div>
-          </div>
-
-          {/* CTA buttons */}
-          <div className="hero-cta-group">
-            <Link to='/jobs' className="no-underline">
-              <button className="btn btn-transparent btn-large">
-                Browse Jobs
-              </button>
-            </Link>
-          </div>
-
-          {/* Social proof */}
-          <p className="hero-social-proof">
-            Join <strong>10,000+</strong> candidates who've improved their
-            interview skills
-          </p>
-        </div>
-      </div>
-    </section>
+      <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1, px: { xs: 2, md: 3 } }}>
+        <Box sx={{ textAlign: 'center', py: { xs: 4, md: 6 } }}>
+          <HeroHeader />
+          <HeroFeatures />
+        </Box>
+      </Container>
+    </Box>
   );
 };
 

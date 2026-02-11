@@ -15,19 +15,72 @@ import AboutUs from "../pages/AboutUs/AboutUs";
 import PrivacyPolicy from "../pages/PrivacyPolicy/PrivacyPolicy";
 import TermsConditions from "../pages/TermsConditions/TermsConditions";
 
+import MainLayout from "../Layout/MainLayout/MainLayout";
+
 export const router = createBrowserRouter([
   {
     element: <App />,
     children: [
       {
-        path: "/",
-        element: <Home />,
+        element: <MainLayout />,
+        children: [
+          {
+            path: "/",
+            element: <Home />,
+          },
+          {
+            path: "/jobs",
+            element: <Jobs />,
+          },
+          {
+            path: "/interview",
+            element: (
+              <ProtectedRoute>
+                <Interview />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: "/profile",
+            element: (
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: "/notifications",
+            element: (
+              <ProtectedRoute>
+                <Notifications />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: "/messages",
+            element: (
+              <ProtectedRoute>
+                <Messages />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: "/about",
+            element: <AboutUs />,
+          },
+          {
+            path: "/privacy",
+            element: <PrivacyPolicy />,
+          },
+          {
+            path: "/terms",
+            element: <TermsConditions />,
+          },
+        ]
       },
-      {
-        path: "/jobs",
-        element: <Jobs />,
-      },
-      // Auth routes (guest only)
+      // Auth routes (guest only) - currently these also use the layout in App.tsx
+      // If they should NOT use the layout, they should be outside MainLayout.
+      // Based on the current App.tsx, they WERE using Navbar/Footer.
       {
         path: "/signup",
         element: (
@@ -43,50 +96,6 @@ export const router = createBrowserRouter([
             <SignIn />
           </AuthRoute>
         ),
-      },
-      {
-        path: "/interview",
-        element: (
-          <ProtectedRoute>
-            <Interview />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "/profile",
-        element: (
-          <ProtectedRoute>
-            <Profile />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "/notifications",
-        element: (
-          <ProtectedRoute>
-            <Notifications />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "/messages",
-        element: (
-          <ProtectedRoute>
-            <Messages />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "/about",
-        element: <AboutUs />,
-      },
-      {
-        path: "/privacy",
-        element: <PrivacyPolicy />,
-      },
-      {
-        path: "/terms",
-        element: <TermsConditions />,
       },
     ]
   },

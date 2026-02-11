@@ -1,5 +1,5 @@
 import { Calendar, Award, TrendingUp } from 'lucide-react';
-import './interviewtabnav.scss';
+import { Tabs, Tab, Box } from '@mui/material';
 
 interface InterviewTabNavProps {
   activeTab: number;
@@ -7,6 +7,7 @@ interface InterviewTabNavProps {
 }
 
 const InterviewTabNav = ({ activeTab, setActiveTab }: InterviewTabNavProps) => {
+
   const tabs = [
     { id: 0, label: 'Upcoming Rounds', icon: Calendar },
     { id: 1, label: 'Past History', icon: Award },
@@ -14,18 +15,32 @@ const InterviewTabNav = ({ activeTab, setActiveTab }: InterviewTabNavProps) => {
   ];
 
   return (
-    <nav className="interview-tab-navigation">
-      {tabs.map(({ id, label, icon: Icon }) => (
-        <button
-          key={id}
-          className={`interview-tab-btn ${activeTab === id ? 'active' : ''}`}
-          onClick={() => setActiveTab(id)}
-        >
-          <Icon size={18} />
-          {label}
-        </button>
-      ))}
-    </nav>
+    <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}>
+      <Tabs
+        value={activeTab}
+        onChange={(_, newValue) => setActiveTab(newValue)}
+        variant="scrollable"
+        scrollButtons="auto"
+        sx={{
+          '& .MuiTab-root': {
+            minHeight: 56,
+            fontWeight: 600,
+            fontSize: '0.95rem',
+            textTransform: 'none',
+            gap: 1,
+          },
+        }}
+      >
+        {tabs.map(({ id, label, icon: Icon }) => (
+          <Tab
+            key={id}
+            label={label}
+            icon={<Icon size={18} />}
+            iconPosition="start"
+          />
+        ))}
+      </Tabs>
+    </Box>
   );
 };
 

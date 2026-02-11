@@ -1,8 +1,7 @@
-// Structure remains the same as your previous version
 import { Mic, BarChart3, Target, LineChart } from "lucide-react";
-import "./features.scss";
 import FeatureCard from "./FeatureCard/FeatureCard";
 import VisualHeader from "../../VisualHeader/VisualHeader";
+import { Box, Container, Grid } from '@mui/material';
 
 const features = [
   {
@@ -29,19 +28,26 @@ const features = [
 
 const Features = () => {
   return (
-    <section className="features-section">
-      <div className="features-container">
-        <div className="features-header">
-          <VisualHeader badge="Core Capabilities" title="Everything you need to" gradient_title="succeed." subtitle="HirePilot combines advanced AI with proven coaching methods to turn your weaknesses into your greatest strengths." />
-        </div>
+    <Box component="section" sx={{ py: { xs: 8, md: 4 }, position: 'relative', overflow: 'hidden' }}>
+      <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1 }}>
+        <Box sx={{ mb: 8, textAlign: 'center' }}>
+          <VisualHeader
+            badge="Core Capabilities"
+            title="Everything you need to"
+            gradient_title="succeed."
+            subtitle="HirePilot combines advanced AI with proven coaching methods to turn your weaknesses into your greatest strengths."
+          />
+        </Box>
 
-        <div className="feature-grid">
+        <Grid container spacing={2}>
           {features.map((feature, index) => (
-            <FeatureCard {...feature} key={index} />
+            <Grid size={{ xs: 12, md: 6, lg: 3 }} key={index}>
+              <FeatureCard {...feature} />
+            </Grid>
           ))}
-        </div>
-      </div>
-    </section>
+        </Grid>
+      </Container>
+    </Box>
   );
 };
 

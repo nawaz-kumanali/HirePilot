@@ -1,5 +1,6 @@
 import { useRef, useEffect, useState } from 'react';
-import './trainingSession.scss';
+import { Box } from '@mui/material';
+
 import { generateAIQuestion, getPerformanceReport, generateRealTimeInsight } from '../../../utility/aiHelpers';
 import { getAiStream } from '../../../utility/HandleAi';
 
@@ -209,9 +210,8 @@ const TrainingSession = ({ session, onUpdate, onFinish, onClose }: TrainingSessi
   if (!session.isActive) return null;
 
   return (
-    <div className="interview-video-wrapper">
-      <div className="video-main-container">
-
+    <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', bgcolor: 'background.default' }}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
         <SessionHeader
           position={session.interview.position}
           company={session.interview.company}
@@ -248,7 +248,7 @@ const TrainingSession = ({ session, onUpdate, onFinish, onClose }: TrainingSessi
           onSendMessage={handleSendMessage}
           isLoading={isLocalLoading}
         />
-      </div>
+      </Box>
 
       <PerformanceReport
         report={report}
@@ -263,7 +263,7 @@ const TrainingSession = ({ session, onUpdate, onFinish, onClose }: TrainingSessi
           onClose={onClose}
         />
       )}
-    </div>
+    </Box>
   );
 };
 

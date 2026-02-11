@@ -1,30 +1,67 @@
 import { X, Camera, Github } from 'lucide-react';
-import './imageModal.scss';
+import { Dialog, DialogTitle, DialogContent, Box, IconButton, Button, Stack, useTheme, alpha } from '@mui/material';
 
 interface ImageModalProps {
     onClose: () => void;
 }
 
 const ImageModal = ({ onClose }: ImageModalProps) => {
+    const theme = useTheme();
+
     return (
-        <div className="image-modal-overlay" onClick={onClose}>
-            <div className="image-modal-content" onClick={e => e.stopPropagation()}>
-                <header>
-                    <h3>Profile Picture</h3>
-                    <button onClick={onClose}><X size={20} /></button>
-                </header>
-                <div className="modal-options">
-                    <button className="option">
-                        <Camera size={20} />
-                        <span>Upload Photo</span>
-                    </button>
-                    <button className="option">
-                        <Github size={20} />
-                        <span>Import from GitHub</span>
-                    </button>
-                </div>
-            </div>
-        </div>
+        <Dialog
+            open={true}
+            onClose={onClose}
+            maxWidth="sm"
+            fullWidth
+            PaperProps={{
+                sx: {
+                    borderRadius: 3,
+                    background: alpha(theme.palette.background.paper, 0.95),
+                    backdropFilter: 'blur(20px)',
+                }
+            }}
+        >
+            <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', pb: 2 }}>
+                <Box sx={{ fontWeight: 700, fontSize: '1.25rem' }}>Profile Picture</Box>
+                <IconButton onClick={onClose} size="small">
+                    <X size={20} />
+                </IconButton>
+            </DialogTitle>
+
+            <DialogContent>
+                <Stack spacing={2}>
+                    <Button
+                        variant="outlined"
+                        fullWidth
+                        startIcon={<Camera size={20} />}
+                        sx={{
+                            py: 2,
+                            justifyContent: 'flex-start',
+                            borderRadius: 2,
+                            textTransform: 'none',
+                            fontWeight: 600,
+                        }}
+                    >
+                        Upload Photo
+                    </Button>
+                    <Button
+                        variant="outlined"
+                        fullWidth
+                        startIcon={<Github size={20} />}
+                        sx={{
+                            py: 2,
+                            justifyContent: 'flex-start',
+                            borderRadius: 2,
+                            textTransform: 'none',
+                            fontWeight: 600,
+                        }}
+                    >
+                        Import from GitHub
+                    </Button>
+                </Stack>
+            </DialogContent>
+        </Dialog>
     );
 };
 

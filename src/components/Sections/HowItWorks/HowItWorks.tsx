@@ -1,7 +1,7 @@
 import { Search, BrainCircuit, BarChartHorizontal, CheckCircle } from "lucide-react";
-import "./howitworks.scss";
 import VisualHeader from "../../VisualHeader/VisualHeader";
 import HIWCard from "./HIWCard/HIWCard";
+import { Box, Container, Grid } from '@mui/material';
 
 const steps = [
   {
@@ -32,22 +32,26 @@ const steps = [
 
 const HowItWorks = () => {
   return (
-    <section className="hiw-section">
+    <Box component="section" sx={{ py: { xs: 8, md: 4 }, position: 'relative', overflow: 'hidden' }}>
+      <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1 }}>
+        <Box sx={{ mb: 4, textAlign: 'center' }}>
+          <VisualHeader
+            badge="The Process"
+            title="Your Journey to get"
+            gradient_title="Hired"
+            subtitle="A simple, structured approach to mastering the interview process and landing your dream job."
+          />
+        </Box>
 
-      <div className="hiw-container">
-        <div className="hiw-header">
-          <VisualHeader badge="The Process" title="Your Journey to get" gradient_title="Hired" subtitle="A simple, structured approach to mastering the interview process and landing your dream job." />
-        </div>
-
-        <div className="hiw-grid">
-          {steps.map((item, _index) => (
-            <div key={item.step} className="hiw-item-wrapper">
+        <Grid container spacing={4} justifyContent="center">
+          {steps.map((item) => (
+            <Grid size={{ xs: 12, sm: 6, md: 3 }} key={item.step} sx={{ display: 'flex' }}>
               <HIWCard {...item} />
-            </div>
+            </Grid>
           ))}
-        </div>
-      </div>
-    </section>
+        </Grid>
+      </Container>
+    </Box>
   );
 };
 

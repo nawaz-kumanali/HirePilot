@@ -1,80 +1,146 @@
 import { Calendar, Clock, ArrowRight } from 'lucide-react';
 import Badge from '../../../components/Badge/Badge';
-import './interviewCard.scss';
 import type { Interview } from '../../../types/interview';
-import { motion, type Variants } from 'framer-motion';
+import { Box, Typography, Button, Stack, useTheme, alpha } from '@mui/material';
+import Card from '../../../components/Card/Card';
 
 interface InterviewCardProps {
     interview: Interview;
     onStartTraining: (interview: Interview) => void;
 }
 
-const cardVariants: Variants = {
-    hidden: { opacity: 0, scale: 0.95, y: 15 },
-    visible: {
-        opacity: 1,
-        scale: 1,
-        y: 0,
-        transition: {
-            duration: 0.5,
-            ease: "easeOut"
-        }
-    }
-};
-
 const InterviewCard = ({ interview, onStartTraining }: InterviewCardProps) => {
     const { company, position, date, time, duration, status, difficulty, topics } = interview;
+    const theme = useTheme();
 
     return (
-        <motion.div
-            className="interview-card"
-            variants={cardVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            whileHover={{ y: -5, transition: { duration: 0.2 } }}
+        <Card
+            sx={{
+                p: 3.5,
+                '&::before': {
+                    content: '""',
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    height: 3,
+                    background: `linear-gradient(90deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
+                    opacity: 0,
+                    transition: 'opacity 0.3s',
+                },
+                '&:hover': {
+                    '&::before': {
+                        opacity: 1,
+                    }
+                }
+            }}
         >
-            <div className="interview-card-top">
-                <div className="interview-card-badges">
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2, gap: 1.5 }}>
+                <Stack direction="row" spacing={1}>
                     <Badge variant={status === 'upcoming' ? 'info' : 'success'} className={status}>
                         {status}
                     </Badge>
                     <Badge variant="secondary" className={difficulty.toLowerCase()}>
                         {difficulty}
                     </Badge>
-                </div>
-                <span className="interview-company-tag">{company}</span>
-            </div>
+                </Stack>
+                <Box
+                    sx={{
+                        bgcolor: alpha(theme.palette.background.paper, 0.8),
+                        border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+                        color: 'primary.main',
+                        px: 1.5,
+                        py: 0.75,
+                        borderRadius: 1,
+                        fontSize: '0.75rem',
+                        fontWeight: 700,
+                        whiteSpace: 'nowrap',
+                    }}
+                >
+                    {company}
+                </Box>
+            </Box>
 
-            <h3 className="interview-card-title">{position} Interview</h3>
-            <p className="interview-position-text">{company}</p>
+            <Typography variant="h6" fontWeight={800} gutterBottom sx={{ fontSize: '1.2rem', mb: 0.5 }}>
+                {position} Interview
+            </Typography>
+            <Typography variant="body2" color="text.secondary" fontWeight={500} sx={{ mb: 2, fontSize: '0.9rem' }}>
+                {company}
+            </Typography>
 
-            <div className="interview-card-meta">
-                <div className="interview-meta-row">
-                    <Calendar size={16} />
+            <Stack spacing={1.25} sx={{ mb: 2.5 }}>
+                <Stack direction="row" alignItems="center" spacing={1.25} sx={{ fontSize: '0.9rem', color: 'text.secondary', fontWeight: 500 }}>
+                    <Calendar size={16} color={theme.palette.primary.main} />
                     <span>{date}</span>
-                </div>
-                <div className="interview-meta-row">
-                    <Clock size={16} />
+                </Stack>
+                <Stack direction="row" alignItems="center" spacing={1.25} sx={{ fontSize: '0.9rem', color: 'text.secondary', fontWeight: 500 }}>
+                    <Clock size={16} color={theme.palette.primary.main} />
                     <span>{time} • {duration}</span>
-                </div>
-            </div>
+                </Stack>
+            </Stack>
 
-            <div className="interview-topics">
-                {topics.map((topic, idx) => (
-                    <Badge key={idx} variant="ghost" size="sm" className="interview-topic-tag">
-                        {topic}
-                    </Badge>
-                ))}
-            </div>
-
-            <button
-                className="interview-btn-primary"
-                onClick={() => onStartTraining(interview)}
+            <Box
+                sx={{
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    gap: 1,
+                    mb: 2.5,
+                    pb: 2.5,
+                    borderBottom: '1px solid',
+                    borderColor: 'divider',
+                }}
             >
-                Start Training <ArrowRight size={16} />
-            </button>
-        </motion.div>
+                {topics.map((topic, idx) => (
+                    <Box
+                        key={idx}
+                        sx={{
+                            bgcolor: alpha(theme.palette.background.paper, 0.5),
+                            color: 'primary.main',
+                            px: 1.5,
+                            py: 0.75,
+                            borderRadius: 5,
+                            fontSize: '0.8rem',
+                            fontWeight: 600,
+                            border: `1px solid ${alpha(theme.palette.primary.main, 0.2)}`,
+                            transition: 'all 0.3s ease',
+                            '&:hover': {
+                                bgcolor: alpha(theme.palette.primary.main, 0.1),
+                                borderColor: alpha(theme.palette.primary.main, 0.3),
+                            }
+                        }}
+                    >
+                        {topic}
+                    </Box>
+                ))}
+            </Box>
+
+            <Button
+                fullWidth
+                variant="contained"
+                onClick={() => onStartTraining(interview)}
+                endIcon={<ArrowRight size={16} />}
+                sx={{
+                    mt: 'auto',
+                    background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
+                    color: 'common.white',
+                    py: 1.75,
+                    borderRadius: 3,
+                    fontWeight: 700,
+                    textTransform: 'none',
+                    fontSize: '0.95rem',
+                    boxShadow: 'none',
+                    '&:hover': {
+                        transform: 'translateY(-2px)',
+                        boxShadow: `0 12px 24px ${alpha(theme.palette.primary.main, 0.3)}`,
+                    },
+                    '&:active': {
+                        transform: 'translateY(0)',
+                    }
+                }}
+            >
+                Start Training
+            </Button>
+        </Card>
     );
 };
 

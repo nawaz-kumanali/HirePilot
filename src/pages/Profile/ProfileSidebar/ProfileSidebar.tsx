@@ -3,9 +3,9 @@ import { Link } from 'react-router-dom';
 import Badge from '../../../components/Badge/Badge';
 import Button from '../../../components/Button/Button';
 import ProgressBar from '../../../components/ProgressBar/ProgressBar';
-import Card from '../../../components/ui/Card/Card';
+import Card from '../../../components/Card/Card';
 import profileImg from '../../../assets/Nawaz_profile_IMG.jpg';
-import './profileSidebar.scss';
+import { Box, Stack, Typography, IconButton, Avatar, Divider, useTheme, alpha } from '@mui/material';
 
 interface ProfileSidebarProps {
     profileData: any;
@@ -27,56 +27,116 @@ const ProfileSidebar = ({
     onLogoutClick,
     onImageClick
 }: ProfileSidebarProps) => {
-    return (
-        <aside className="profile-sidebar">
-            <Card className="profile-main-card">
-                <div className="avatar-section">
-                    <div className="avatar-wrapper">
-                        <div className="main-avatar">
-                            {profileImg ? <img src={profileImg} alt="profile" /> : "NK"}
-                        </div>
-                        <button className="camera-btn" onClick={onImageClick}>
-                            <Camera size={18} />
-                        </button>
-                        <div className="online-indicator"></div>
-                    </div>
-                </div>
+    const theme = useTheme();
 
-                <div className="user-intro">
-                    <h1 className="user-name">{profileData.firstName} {profileData.lastName}</h1>
-                    <p className="user-headline">{profileData.headline || 'Senior Full Stack Developer'}</p>
-                    <Badge variant="ghost" iconLeft={<MapPin size={14} />} className="location-pill">
+    return (
+        <Box component="aside" sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+            <Card>
+                {/* Avatar Section */}
+                <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
+                    <Box sx={{ position: 'relative' }}>
+                        <Avatar
+                            src={profileImg}
+                            alt="profile"
+                            sx={{
+                                width: 120,
+                                height: 120,
+                                border: `4px solid ${theme.palette.background.paper}`,
+                                boxShadow: theme.shadows[4],
+                            }}
+                        >
+                            NK
+                        </Avatar>
+                        <IconButton
+                            onClick={onImageClick}
+                            size="small"
+                            sx={{
+                                position: 'absolute',
+                                bottom: 0,
+                                right: 0,
+                                bgcolor: 'primary.main',
+                                color: 'white',
+                                '&:hover': {
+                                    bgcolor: 'primary.dark',
+                                },
+                            }}
+                        >
+                            <Camera size={18} />
+                        </IconButton>
+                        <Box
+                            sx={{
+                                position: 'absolute',
+                                bottom: 8,
+                                right: -4,
+                                width: 16,
+                                height: 16,
+                                borderRadius: '50%',
+                                bgcolor: 'success.main',
+                                border: `3px solid ${theme.palette.background.paper}`,
+                            }}
+                        />
+                    </Box>
+                </Box>
+
+                {/* User Info */}
+                <Stack spacing={1} alignItems="center" sx={{ mb: 3 }}>
+                    <Typography variant="h5" fontWeight={700} textAlign="center">
+                        {profileData.firstName} {profileData.lastName}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" textAlign="center">
+                        {profileData.headline || 'Senior Full Stack Developer'}
+                    </Typography>
+                    <Badge variant="ghost" iconLeft={<MapPin size={14} />}>
                         {profileData.location || 'San Francisco, CA'}
                     </Badge>
-                </div>
+                </Stack>
 
-                <div className="profile-stats-row">
-                    <div className="stat-item">
-                        <span className="value">{profileData.interviewsCount}</span>
-                        <span className="label">Interviews</span>
-                    </div>
-                    <div className="stat-item">
-                        <span className="value">{profileData.successRate}%</span>
-                        <span className="label">Success</span>
-                    </div>
-                </div>
+                {/* Stats */}
+                <Stack direction="row" spacing={2} justifyContent="center" sx={{ mb: 3 }}>
+                    <Stack alignItems="center">
+                        <Typography variant="h6" fontWeight={700}>
+                            {profileData.interviewsCount}
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary">
+                            Interviews
+                        </Typography>
+                    </Stack>
+                    <Divider orientation="vertical" flexItem />
+                    <Stack alignItems="center">
+                        <Typography variant="h6" fontWeight={700}>
+                            {profileData.successRate}%
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary">
+                            Success
+                        </Typography>
+                    </Stack>
+                </Stack>
 
-                <ProgressBar progress={profileCompletion} showLabel label="Profile Strength" height="8px" className="completion-card-new" />
+                {/* Profile Completion */}
+                <Box sx={{ mb: 3 }}>
+                    <ProgressBar progress={profileCompletion} showLabel label="Profile Strength" height={8} />
+                </Box>
 
-                <div className="contact-list">
-                    <div className="contact-item">
-                        <Mail size={16} />
-                        <span>{profileData.email}</span>
-                    </div>
+                {/* Contact Info */}
+                <Stack spacing={1.5} sx={{ mb: 3 }}>
+                    <Stack direction="row" spacing={1.5} alignItems="center">
+                        <Mail size={16} color={theme.palette.text.secondary} />
+                        <Typography variant="body2" color="text.secondary">
+                            {profileData.email}
+                        </Typography>
+                    </Stack>
                     {profileData.phone && (
-                        <div className="contact-item">
-                            <Phone size={16} />
-                            <span>{profileData.phone}</span>
-                        </div>
+                        <Stack direction="row" spacing={1.5} alignItems="center">
+                            <Phone size={16} color={theme.palette.text.secondary} />
+                            <Typography variant="body2" color="text.secondary">
+                                {profileData.phone}
+                            </Typography>
+                        </Stack>
                     )}
-                </div>
+                </Stack>
 
-                <div className="sidebar-actions">
+                {/* Actions */}
+                <Stack spacing={2}>
                     <Button variant="secondary" iconLeft={<Edit size={16} />} onClick={onEditClick} fullWidth>
                         Edit Profile
                     </Button>
@@ -86,19 +146,47 @@ const ProfileSidebar = ({
                     <Button variant="danger" iconLeft={<LogOut size={16} />} onClick={onLogoutClick} fullWidth>
                         Logout
                     </Button>
-                </div>
+                </Stack>
             </Card>
 
-            <Card className="social-card">
-                <h3>Connect Everywhere</h3>
-                <div className="social-grid">
-                    <Link to={profileData.github || '#'} className="social-icon github" target="_blank"><Github size={20} /></Link>
-                    <Link to={profileData.linkedin || '#'} className="social-icon linkedin" target="_blank"><Linkedin size={20} /></Link>
-                    <Link to={profileData.twitter || '#'} className="social-icon twitter" target="_blank"><Twitter size={20} /></Link>
-                    <Link to={profileData.website || '#'} className="social-icon globe" target="_blank"><Globe size={20} /></Link>
-                </div>
+            {/* Social Card */}
+            <Card>
+                <Typography variant="h6" fontWeight={700} sx={{ mb: 2 }}>
+                    Connect Everywhere
+                </Typography>
+                <Box
+                    sx={{
+                        display: 'grid',
+                        gridTemplateColumns: 'repeat(4, 1fr)',
+                        gap: 1.5,
+                    }}
+                >
+                    {[
+                        { icon: Github, link: profileData.github, color: '#333' },
+                        { icon: Linkedin, link: profileData.linkedin, color: '#0077b5' },
+                        { icon: Twitter, link: profileData.twitter, color: '#1da1f2' },
+                        { icon: Globe, link: profileData.website, color: theme.palette.primary.main },
+                    ].map(({ icon: Icon, link, color }, i) => (
+                        <IconButton
+                            key={i}
+                            component={Link}
+                            to={link || '#'}
+                            target="_blank"
+                            sx={{
+                                bgcolor: alpha(color, 0.1),
+                                color: color,
+                                '&:hover': {
+                                    bgcolor: color,
+                                    color: 'white',
+                                },
+                            }}
+                        >
+                            <Icon size={20} />
+                        </IconButton>
+                    ))}
+                </Box>
             </Card>
-        </aside>
+        </Box>
     );
 };
 

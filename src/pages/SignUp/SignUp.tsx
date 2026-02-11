@@ -1,10 +1,25 @@
 import { useState } from 'react';
-import { Mail, Lock, Eye, EyeOff, User, Phone, Loader, CheckCircle, AlertCircle } from 'lucide-react';
-
-import './signup.scss'
+import { Mail, Lock, Eye, EyeOff, User, Phone, CheckCircle, AlertCircle } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { authActions } from '../../store/auth/auth.slice';
 import { useAppDispatch } from '../../store/hooks';
+import {
+  Box,
+  TextField,
+  Button,
+  Typography,
+  Paper,
+  Alert,
+  IconButton,
+  InputAdornment,
+  Divider,
+  CircularProgress,
+  Checkbox,
+  FormControlLabel,
+  LinearProgress,
+  useTheme,
+  alpha
+} from '@mui/material';
 
 const SignUp = () => {
   const [formData, setFormData] = useState({
@@ -25,6 +40,7 @@ const SignUp = () => {
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const theme = useTheme();
 
   const getPasswordStrength = (password: string) => {
     if (!password) return '';
@@ -157,179 +173,255 @@ const SignUp = () => {
     }
   };
 
+  const getPasswordStrengthColor = () => {
+    if (passwordStrength === 'weak') return '#ef4444';
+    if (passwordStrength === 'medium') return '#f59e0b';
+    return '#10b981';
+  };
+
+  const getPasswordStrengthValue = () => {
+    if (passwordStrength === 'weak') return 33;
+    if (passwordStrength === 'medium') return 66;
+    return 100;
+  };
+
   return (
-    <div className="signup-wrapper">
-      <div className="signup-container">
-        <div className="signup-content">
+    <Box
+      sx={{
+        minHeight: '100vh',
+        bgcolor: 'background.default',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        p: 2.5,
+        position: 'relative',
+        '&::before': {
+          content: '""',
+          position: 'fixed',
+          inset: 0,
+          background: `radial-gradient(circle at 20% 50%, ${alpha(theme.palette.primary.main, 0.08)} 0%, transparent 50%), radial-gradient(circle at 80% 80%, ${alpha(theme.palette.secondary.main, 0.08)} 0%, transparent 50%)`,
+          pointerEvents: 'none',
+          zIndex: 0,
+        }
+      }}
+    >
+      <Box sx={{ width: '100%', maxWidth: 520, position: 'relative', zIndex: 1 }}>
+        <Paper
+          elevation={3}
+          sx={{
+            p: { xs: 3, sm: 5 },
+            borderRadius: 3,
+            bgcolor: 'background.paper',
+            border: `1px solid ${theme.palette.divider}`,
+            mb: 2.5
+          }}
+        >
+          {/* Header */}
+          <Box sx={{ textAlign: 'center', mb: 4 }}>
+            <Typography variant="h4" fontWeight={900} gutterBottom sx={{ letterSpacing: '-0.03em' }}>
+              Create Account
+            </Typography>
+            <Typography variant="body1" color="text.secondary" fontWeight={500}>
+              Join us and get started in seconds
+            </Typography>
+          </Box>
 
-          {/* Card */}
-          <div className="signup-card">
+          {/* Success Message */}
+          {successMessage && (
+            <Alert
+              icon={<CheckCircle size={20} />}
+              severity="success"
+              sx={{ mb: 3 }}
+            >
+              {successMessage}
+            </Alert>
+          )}
 
-            {/* Header */}
-            <div className="signup-header">
-              <h1 className="signup-title">Create Account</h1>
-              <p className="signup-subtitle">Join us and get started in seconds</p>
-            </div>
+          {/* Form */}
+          <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2.25 }}>
+            {/* Name Fields Row */}
+            <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 1.75 }}>
+              <TextField
+                fullWidth
+                label="First Name"
+                placeholder="John"
+                name="firstName"
+                value={formData.firstName}
+                onChange={handleInputChange}
+                error={!!errors.firstName}
+                helperText={errors.firstName}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <User size={20} />
+                    </InputAdornment>
+                  ),
+                }}
+                sx={{ '& .MuiOutlinedInput-root': { borderRadius: 1.5 } }}
+              />
+              <TextField
+                fullWidth
+                label="Last Name"
+                placeholder="Doe"
+                name="lastName"
+                value={formData.lastName}
+                onChange={handleInputChange}
+                error={!!errors.lastName}
+                helperText={errors.lastName}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <User size={20} />
+                    </InputAdornment>
+                  ),
+                }}
+                sx={{ '& .MuiOutlinedInput-root': { borderRadius: 1.5 } }}
+              />
+            </Box>
 
-            {/* Success Message */}
-            {successMessage && (
-              <div className="signup-alert signup-alert-success">
-                <div className="signup-alert-icon">
-                  <CheckCircle size={20} />
-                </div>
-                <span>{successMessage}</span>
-              </div>
-            )}
+            {/* Email Field */}
+            <TextField
+              fullWidth
+              label="Email Address"
+              type="email"
+              placeholder="john@example.com"
+              name="email"
+              value={formData.email}
+              onChange={handleInputChange}
+              error={!!errors.email}
+              helperText={errors.email}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Mail size={20} />
+                  </InputAdornment>
+                ),
+              }}
+              sx={{ '& .MuiOutlinedInput-root': { borderRadius: 1.5 } }}
+            />
 
-            {/* Form */}
-            <div className="signup-form">
+            {/* Phone Field */}
+            <TextField
+              fullWidth
+              label="Phone Number (Optional)"
+              type="tel"
+              placeholder="+1 (555) 123-4567"
+              name="phone"
+              value={formData.phone}
+              onChange={handleInputChange}
+              error={!!errors.phone}
+              helperText={errors.phone}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Phone size={20} />
+                  </InputAdornment>
+                ),
+              }}
+              sx={{ '& .MuiOutlinedInput-root': { borderRadius: 1.5 } }}
+            />
 
-              {/* Name Fields Row */}
-              <div className="signup-form-row">
-                {/* First Name */}
-                <div className="signup-form-group">
-                  <label className="signup-label">First Name</label>
-                  <div className="signup-input-wrapper">
-                    <User size={20} className="signup-input-icon" />
-                    <input
-                      type="text"
-                      className={`signup-input ${errors.firstName ? 'error' : ''}`}
-                      placeholder="John"
-                      name="firstName"
-                      value={formData.firstName}
-                      onChange={handleInputChange}
-                    />
-                  </div>
-                  {errors.firstName && (
-                    <span className="signup-error">{errors.firstName}</span>
-                  )}
-                </div>
-
-                {/* Last Name */}
-                <div className="signup-form-group">
-                  <label className="signup-label">Last Name</label>
-                  <div className="signup-input-wrapper">
-                    <User size={20} className="signup-input-icon" />
-                    <input
-                      type="text"
-                      className={`signup-input ${errors.lastName ? 'error' : ''}`}
-                      placeholder="Doe"
-                      name="lastName"
-                      value={formData.lastName}
-                      onChange={handleInputChange}
-                    />
-                  </div>
-                  {errors.lastName && (
-                    <span className="signup-error">{errors.lastName}</span>
-                  )}
-                </div>
-              </div>
-
-              {/* Email Field */}
-              <div className="signup-form-group">
-                <label className="signup-label">Email Address</label>
-                <div className="signup-input-wrapper">
-                  <Mail size={20} className="signup-input-icon" />
-                  <input
-                    type="email"
-                    className={`signup-input ${errors.email ? 'error' : ''}`}
-                    placeholder="john@example.com"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
+            {/* Password Field */}
+            <Box>
+              <TextField
+                fullWidth
+                label="Password"
+                type={showPassword ? 'text' : 'password'}
+                placeholder="••••••••"
+                name="password"
+                value={formData.password}
+                onChange={handleInputChange}
+                error={!!errors.password}
+                helperText={errors.password}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Lock size={20} />
+                    </InputAdornment>
+                  ),
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        onClick={() => setShowPassword(!showPassword)}
+                        edge="end"
+                        size="small"
+                      >
+                        {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+                sx={{ '& .MuiOutlinedInput-root': { borderRadius: 1.5 } }}
+              />
+              {formData.password && (
+                <Box sx={{ mt: 1, display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <LinearProgress
+                    variant="determinate"
+                    value={getPasswordStrengthValue()}
+                    sx={{
+                      flex: 1,
+                      height: 4,
+                      borderRadius: 1,
+                      bgcolor: 'divider',
+                      '& .MuiLinearProgress-bar': {
+                        bgcolor: getPasswordStrengthColor(),
+                      }
+                    }}
                   />
-                </div>
-                {errors.email && (
-                  <span className="signup-error">{errors.email}</span>
-                )}
-              </div>
+                  <Typography variant="caption" fontWeight={700} sx={{ color: getPasswordStrengthColor(), minWidth: 60 }}>
+                    {passwordStrength === 'weak' && '⚠️ Weak'}
+                    {passwordStrength === 'medium' && '📊 Medium'}
+                    {passwordStrength === 'strong' && '✓ Strong'}
+                  </Typography>
+                </Box>
+              )}
+            </Box>
 
-              {/* Phone Field */}
-              <div className="signup-form-group">
-                <label className="signup-label">Phone Number (Optional)</label>
-                <div className="signup-input-wrapper">
-                  <Phone size={20} className="signup-input-icon" />
-                  <input
-                    type="tel"
-                    className={`signup-input ${errors.phone ? 'error' : ''}`}
-                    placeholder="+1 (555) 123-4567"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleInputChange}
-                  />
-                </div>
-                {errors.phone && (
-                  <span className="signup-error">{errors.phone}</span>
-                )}
-              </div>
+            {/* Confirm Password Field */}
+            <TextField
+              fullWidth
+              label="Confirm Password"
+              type={showConfirmPassword ? 'text' : 'password'}
+              placeholder="••••••••"
+              name="confirmPassword"
+              value={formData.confirmPassword}
+              onChange={handleInputChange}
+              error={!!errors.confirmPassword}
+              helperText={errors.confirmPassword}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Lock size={20} />
+                  </InputAdornment>
+                ),
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      edge="end"
+                      size="small"
+                    >
+                      {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+              sx={{ '& .MuiOutlinedInput-root': { borderRadius: 1.5 } }}
+            />
 
-              {/* Password Field */}
-              <div className="signup-form-group">
-                <label className="signup-label">Password</label>
-                <div className="signup-input-wrapper">
-                  <Lock size={20} className="signup-input-icon" />
-                  <input
-                    type={showPassword ? 'text' : 'password'}
-                    className={`signup-input ${errors.password ? 'error' : ''}`}
-                    placeholder="••••••••"
-                    name="password"
-                    value={formData.password}
-                    onChange={handleInputChange}
-                  />
-                  <button
-                    type="button"
-                    className="signup-password-toggle"
-                    onClick={() => setShowPassword(!showPassword)}
-                  >
-                    {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-                  </button>
-                </div>
-                {formData.password && (
-                  <div className={`signup-password-strength ${passwordStrength}`}>
-                    <div className="signup-password-strength-bar"></div>
-                    <span className="signup-password-strength-text">
-                      {passwordStrength === 'weak' && '⚠️ Weak'}
-                      {passwordStrength === 'medium' && '📊 Medium'}
-                      {passwordStrength === 'strong' && '✓ Strong'}
-                    </span>
-                  </div>
-                )}
-                {errors.password && (
-                  <span className="signup-error">{errors.password}</span>
-                )}
-              </div>
-
-              {/* Confirm Password Field */}
-              <div className="signup-form-group">
-                <label className="signup-label">Confirm Password</label>
-                <div className="signup-input-wrapper">
-                  <Lock size={20} className="signup-input-icon" />
-                  <input
-                    type={showConfirmPassword ? 'text' : 'password'}
-                    className={`signup-input ${errors.confirmPassword ? 'error' : ''}`}
-                    placeholder="••••••••"
-                    name="confirmPassword"
-                    value={formData.confirmPassword}
-                    onChange={handleInputChange}
-                  />
-                  <button
-                    type="button"
-                    className="signup-password-toggle"
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  >
-                    {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-                  </button>
-                </div>
-                {errors.confirmPassword && (
-                  <span className="signup-error">{errors.confirmPassword}</span>
-                )}
-              </div>
-
-              {/* Terms Checkbox */}
-              <div className="signup-terms">
-                <label className="signup-checkbox-label">
-                  <input
-                    type="checkbox"
+            {/* Terms Checkbox */}
+            <Box
+              sx={{
+                bgcolor: 'background.default',
+                borderRadius: 1.5,
+                border: `1px solid ${theme.palette.divider}`,
+                p: 1.5,
+                mt: 1.25
+              }}
+            >
+              <FormControlLabel
+                control={
+                  <Checkbox
                     checked={agreedToTerms}
                     onChange={(e) => {
                       setAgreedToTerms(e.target.checked);
@@ -340,89 +432,140 @@ const SignUp = () => {
                         }));
                       }
                     }}
-                    className="signup-checkbox"
                   />
-                  <span className="signup-checkbox-text">
+                }
+                label={
+                  <Typography variant="body2">
                     I agree to the{' '}
-                    <Link to="/terms-of-service" className="signup-link">
+                    <Link to="/terms-of-service" style={{ color: theme.palette.primary.main, fontWeight: 700, textDecoration: 'none' }}>
                       Terms of Service
                     </Link>
                     {' '}and{' '}
-                    <Link to="/privacy-policy" className="signup-link">
+                    <Link to="/privacy-policy" style={{ color: theme.palette.primary.main, fontWeight: 700, textDecoration: 'none' }}>
                       Privacy Policy
                     </Link>
-                  </span>
-                </label>
-                {errors.terms && (
-                  <div className="signup-terms-error">
-                    <AlertCircle size={16} />
-                    <span>{errors.terms}</span>
-                  </div>
-                )}
-              </div>
+                  </Typography>
+                }
+              />
+              {errors.terms && (
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75, mt: 0.5, color: 'error.main' }}>
+                  <AlertCircle size={16} />
+                  <Typography variant="caption">{errors.terms}</Typography>
+                </Box>
+              )}
+            </Box>
 
-              {/* Submit Button */}
-              <button
-                onClick={handleSubmit}
-                className="signup-btn signup-btn-primary"
-                disabled={isLoading}
-              >
-                {isLoading ? (
-                  <>
-                    <Loader size={20} className="signup-btn-loader" />
-                    <span>Creating Account...</span>
-                  </>
-                ) : (
-                  'Sign Up'
-                )}
-              </button>
-            </div>
+            {/* Submit Button */}
+            <Button
+              fullWidth
+              variant="contained"
+              size="large"
+              onClick={handleSubmit}
+              disabled={isLoading}
+              sx={{
+                py: 1.75,
+                borderRadius: 1.5,
+                fontWeight: 700,
+                background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`,
+                boxShadow: `0 8px 24px ${alpha(theme.palette.primary.main, 0.3)}`,
+                '&:hover': {
+                  transform: 'translateY(-2px)',
+                  boxShadow: `0 12px 32px ${alpha(theme.palette.primary.main, 0.4)}`,
+                },
+                '&:disabled': {
+                  opacity: 0.8,
+                }
+              }}
+            >
+              {isLoading ? (
+                <>
+                  <CircularProgress size={20} sx={{ mr: 1, color: 'white' }} />
+                  <span>Creating Account...</span>
+                </>
+              ) : (
+                'Sign Up'
+              )}
+            </Button>
+          </Box>
 
-            {/* Divider */}
-            <div className="signup-divider">
-              <div className="signup-divider-line"></div>
-              <span className="signup-divider-text">or continue with</span>
-              <div className="signup-divider-line"></div>
-            </div>
+          {/* Divider */}
+          <Divider sx={{ my: 3.5 }}>
+            <Typography variant="caption" fontWeight={600} color="text.secondary" sx={{ textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+              or continue with
+            </Typography>
+          </Divider>
 
-            {/* OAuth Buttons */}
-            <div className="signup-oauth">
-              <button className="signup-btn signup-btn-oauth signup-btn-google" onClick={handleAuthSubmit}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#1f2937" />
-                  <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34a853" />
-                  <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#fbbc04" />
-                  <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#ea4335" />
-                </svg>
-                <span>Google</span>
-              </button>
-              <button className="signup-btn signup-btn-oauth signup-btn-facebook" onClick={handleAuthSubmit}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
-                </svg>
-                <span>Facebook</span>
-              </button>
-            </div>
+          {/* OAuth Buttons */}
+          <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1.5, mb: 3 }}>
+            <Button
+              variant="outlined"
+              onClick={handleAuthSubmit}
+              sx={{
+                py: 1.75,
+                borderRadius: 1.5,
+                fontWeight: 700,
+                borderWidth: 2,
+                '&:hover': {
+                  borderWidth: 2,
+                  transform: 'translateY(-2px)',
+                  bgcolor: alpha(theme.palette.primary.main, 0.05),
+                }
+              }}
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ marginRight: 8 }}>
+                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#1f2937" />
+                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34a853" />
+                <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#fbbc04" />
+                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#ea4335" />
+              </svg>
+              <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>Google</Box>
+            </Button>
+            <Button
+              variant="outlined"
+              onClick={handleAuthSubmit}
+              sx={{
+                py: 1.75,
+                borderRadius: 1.5,
+                fontWeight: 700,
+                borderWidth: 2,
+                '&:hover': {
+                  borderWidth: 2,
+                  transform: 'translateY(-2px)',
+                  bgcolor: alpha(theme.palette.primary.main, 0.05),
+                }
+              }}
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style={{ marginRight: 8 }}>
+                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+              </svg>
+              <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>Facebook</Box>
+            </Button>
+          </Box>
 
-            {/* Sign In Link */}
-            <p className="signup-signin-text">
-              Already have an account?{' '}
-              <Link to="/signin" className="signup-signin-link">Sign in</Link>
-            </p>
-          </div>
+          {/* Sign In Link */}
+          <Typography variant="body2" textAlign="center" color="text.secondary">
+            Already have an account?{' '}
+            <Link to="/signin" style={{ textDecoration: 'none' }}>
+              <Typography component="span" variant="body2" fontWeight={700} color="primary" sx={{ '&:hover': { textDecoration: 'underline' } }}>
+                Sign in
+              </Typography>
+            </Link>
+          </Typography>
+        </Paper>
 
-          {/* Footer */}
-          <div className="signup-footer">
-            <p className="signup-footer-text">
-              By signing up, you agree to our{' '}
-              <Link to="/terms-of-service">Terms of Service</Link>
-              {' '}and{' '}
-              <Link to="/privacy-policy">Privacy Policy</Link>
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
+        {/* Footer */}
+        <Typography variant="caption" textAlign="center" color="text.secondary" sx={{ display: 'block', mt: 2.5 }}>
+          By signing up, you agree to our{' '}
+          <Link to="/terms-of-service" style={{ color: theme.palette.primary.main, fontWeight: 600, textDecoration: 'none' }}>
+            Terms of Service
+          </Link>
+          {' '}and{' '}
+          <Link to="/privacy-policy" style={{ color: theme.palette.primary.main, fontWeight: 600, textDecoration: 'none' }}>
+            Privacy Policy
+          </Link>
+        </Typography>
+      </Box>
+    </Box>
   );
 };
 

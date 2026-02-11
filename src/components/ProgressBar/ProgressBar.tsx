@@ -1,10 +1,10 @@
 import React from 'react';
-import './progressBar.scss';
+import { Box, Typography, LinearProgress, linearProgressClasses, alpha } from '@mui/material';
 
 interface ProgressBarProps {
     progress: number;
     color?: string;
-    height?: string;
+    height?: string | number;
     showLabel?: boolean;
     label?: string;
     className?: string;
@@ -12,30 +12,44 @@ interface ProgressBarProps {
 
 const ProgressBar: React.FC<ProgressBarProps> = ({
     progress,
-    color = 'var(--accent)',
-    height = '6px',
+    color = 'primary.main', // defaulted to theme primary
+    height = 6,
     showLabel = false,
     label,
     className = ''
 }) => {
     return (
-        <div className={`ui-progress-container ${className}`}>
+        <Box className={className} sx={{ width: '100%' }}>
             {showLabel && (
-                <div className="progress-info">
-                    {label && <span className="label-text">{label}</span>}
-                    <span className="percent-text">{progress}%</span>
-                </div>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+                    {label && (
+                        <Typography variant="body2" fontWeight={700} color="text.secondary">
+                            {label}
+                        </Typography>
+                    )}
+                    <Typography variant="body2" fontWeight={700} color="text.primary">
+                        {Math.round(progress)}%
+                    </Typography>
+                </Box>
             )}
-            <div className="progress-track" style={{ height }}>
-                <div
-                    className="progress-fill"
-                    style={{
-                        width: `${progress}%`,
-                        backgroundColor: color
-                    }}
-                />
-            </div>
-        </div>
+            <LinearProgress
+                variant="determinate"
+                value={progress}
+                sx={{
+                    height: height,
+                    borderRadius: 10,
+                    bgcolor: (theme) => alpha(theme.palette.mode === 'light' ? theme.palette.grey[200] : theme.palette.grey[700], 0.5),
+                    [`& .${linearProgressClasses.bar}`]: {
+                        borderRadius: 10,
+                        backgroundColor: color.startsWith('#') || color.startsWith('rgb') ? color : undefined, // Check if it's a raw color or theme ref
+                        // If it's a theme ref like 'primary.main', we can use sx properly via props too, but LinearProgress color prop is limited.
+                        // Better to rely on sx backgroundColor inheritance if valid, or explicit custom color.
+                        // Actually, let's allow 'color' to be passed to sx backgroundColor
+                        bgcolor: color
+                    }
+                }}
+            />
+        </Box>
     );
 };
 

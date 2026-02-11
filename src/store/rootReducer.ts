@@ -4,12 +4,14 @@ import userMenuReducer from './UserMenu/usermenu.slice'
 import currentUserReducer from './CurrentUser/currentuser.slice'
 import themeReducer from './theme/themeSlice'
 import { apiSlice } from "../api/apiSlice";
+import notificationReducer from "./Notification/notification.slice";
 
 export const rootReducer = combineReducers({
     auth: authReducer,
     userMenu: userMenuReducer,
     currentUser: currentUserReducer,
     theme: themeReducer,
+    notification: notificationReducer,
     [apiSlice.reducerPath]: apiSlice.reducer
 })
 

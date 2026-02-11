@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import './profile.scss'
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { currentUserActions } from '../../store/CurrentUser/currentuser.slice';
 import { authActions } from '../../store/auth/auth.slice';
 import { type CurrentUserState } from '../../store/CurrentUser/currentuser.types';
+import { Box, Stack } from '@mui/material';
 
 // Components
 import EditProfile from './Edit/EditProfile';
@@ -52,38 +52,45 @@ const Profile = () => {
   };
 
   return (
-    <div className="profile-page-wrapper">
-      <div className="profile-container">
+    <Box sx={{ minHeight: '100vh', bgcolor: 'background.default', py: 4 }}>
+      <Box sx={{ maxWidth: 1400, mx: 'auto', px: { xs: 2, md: 4 } }}>
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: { xs: '1fr', lg: '320px 1fr' },
+            gap: 4,
+          }}
+        >
+          <ProfileSidebar
+            profileData={profileData}
+            profileCompletion={profileCompletion}
+            isEditing={isEditing}
+            copiedLink={copiedLink}
+            onEditClick={() => setIsEditing(true)}
+            onCopyClick={copyToClipboard}
+            onLogoutClick={handleLogout}
+            onImageClick={() => setOpenImageDialog(true)}
+          />
 
-        <ProfileSidebar
-          profileData={profileData}
-          profileCompletion={profileCompletion}
-          isEditing={isEditing}
-          copiedLink={copiedLink}
-          onEditClick={() => setIsEditing(true)}
-          onCopyClick={copyToClipboard}
-          onLogoutClick={handleLogout}
-          onImageClick={() => setOpenImageDialog(true)}
-        />
-
-        <main className="profile-main-content">
-          {isEditing ? (
-            <EditProfile profileData={profileData} setIsEditing={setIsEditing} />
-          ) : (
-            <div className="main-content-grid">
-              <ReadinessSection readiness={profileData.readiness} />
-              <AboutMe bio={profileData.bio} />
-              <CareerJourney experience={profileData.experience} />
-              <SkillsCloud skills={profileData.skills} />
-            </div>
-          )}
-        </main>
-      </div>
+          <Box component="main">
+            {isEditing ? (
+              <EditProfile profileData={profileData} setIsEditing={setIsEditing} />
+            ) : (
+              <Stack spacing={3}>
+                <ReadinessSection readiness={profileData.readiness} />
+                <AboutMe bio={profileData.bio} />
+                <CareerJourney experience={profileData.experience} />
+                <SkillsCloud skills={profileData.skills} />
+              </Stack>
+            )}
+          </Box>
+        </Box>
+      </Box>
 
       {openImageDialog && (
         <ImageModal onClose={() => setOpenImageDialog(false)} />
       )}
-    </div>
+    </Box>
   );
 };
 

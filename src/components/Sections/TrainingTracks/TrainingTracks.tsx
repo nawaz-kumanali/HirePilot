@@ -1,7 +1,7 @@
-import { Terminal, Code, Layers, BarChart, Settings} from 'lucide-react';
-import './trainingTracks.scss';
+import { Terminal, Code, Layers, BarChart, Settings } from 'lucide-react';
 import VisualHeader from '../../VisualHeader/VisualHeader';
 import TTCard from './TTCard/TTCard';
+import { Box, Container, Grid, useTheme } from '@mui/material';
 
 const trainingTracksData = [
   {
@@ -9,7 +9,7 @@ const trainingTracksData = [
     title: 'Backend Developer',
     desc: 'Master APIs, databases, microservices, and system design for scalable applications.',
     icon: <Terminal size={26} />,
-    color: 'var(--theme-color-secondary)',
+    color: '#8b5cf6', // violet-500 equivalent for "Secondary" theme color usually
     tag: 'Popular',
   },
   {
@@ -45,20 +45,38 @@ const trainingTracksData = [
 ];
 
 const TrainingTracks = () => {
-  return (
-    <section className="tracks-section">
-      <div className="tracks-container">
-        <header className="tracks-header">
-          <VisualHeader badge='Career Paths' title='Specialized' gradient_title='Training Tracks' subtitle='Industry-validated curriculums designed to turn beginners into job-ready engineers.' />
-        </header>
+  const theme = useTheme();
 
-        <div className="tracks-grid">
-          {trainingTracksData.map((track, index) => (
-              <TTCard {...track} key={index}/>
+  // Updating the color for the first item to use theme if possible, or keeping hardcoded if strict
+  // The original used var(--theme-color-secondary) which maps to secondary.main usually.
+  // We can inject theme colors into the data if we move data inside component, or just use a hex that matches.
+  // For now I'll use the hardcoded hexes from original array but update the first one.
+  const processedData = trainingTracksData.map(track => ({
+    ...track,
+    color: track.id === 'backend' ? theme.palette.secondary.main : track.color
+  }));
+
+  return (
+    <Box component="section" sx={{ py: 4, position: 'relative' }}>
+      <Container maxWidth="lg">
+        <Box component="header" sx={{ mb: 2, textAlign: 'center' }}>
+          <VisualHeader
+            badge='Career Paths'
+            title='Specialized'
+            gradient_title='Training Tracks'
+            subtitle='Industry-validated curriculums designed to turn beginners into job-ready engineers.'
+          />
+        </Box>
+
+        <Grid container spacing={3}>
+          {processedData.map((track, index) => (
+            <Grid size={{ xs: 12, sm: 6, md: 4 }} key={index} sx={{ display: 'flex' }}>
+              <TTCard {...track} />
+            </Grid>
           ))}
-        </div>
-      </div>
-    </section>
+        </Grid>
+      </Container>
+    </Box>
   );
 };
 

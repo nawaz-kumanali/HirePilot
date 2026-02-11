@@ -1,19 +1,22 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { Bell, Briefcase, MessageSquare, Settings, CheckCircle2, Trash2, RotateCcw } from 'lucide-react';
 import VisualHeader from '../../components/VisualHeader/VisualHeader';
-import { notificationsData } from '../../data/notificationsData';
 import type { Notification } from '../../data/notificationsData';
-import './notifications.scss';
 import EmptyState from '../../components/EmptyState/EmptyState';
 import NotificationItem from './NotificationItem/NotificationItem';
+import { Box, Container, Stack, Typography, Button, Select, MenuItem, useTheme, alpha, Snackbar, Alert, Chip } from '@mui/material';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { notificationActions } from '../../store/Notification/notification.slice';
 
 const Notifications: React.FC = () => {
-  const [notifications, setNotifications] = useState<Notification[]>(notificationsData);
   const [filter, setFilter] = useState<'all' | 'unread'>('all');
   const [lastDeleted, setLastDeleted] = useState<Notification | null>(null);
   const [showUndo, setShowUndo] = useState(false);
   const [sortBy, setSortBy] = useState<'recent' | 'unread'>('recent');
+  const theme = useTheme();
+
+  const notifications = useAppSelector(state => state.notification.notifications);
+  const dispatch = useAppDispatch();
 
   const filteredNotifications = useMemo(() => {
     let filtered = filter === 'all' ? notifications : notifications.filter(n => !n.isRead);
@@ -32,11 +35,11 @@ const Notifications: React.FC = () => {
   }), [notifications, unreadCount]);
 
   const markAsRead = (id: string): void => {
-    setNotifications(prev => prev.map(n => n.id === id ? { ...n, isRead: true } : n));
+    dispatch(notificationActions.markAsRead(id));
   };
 
   const markAllAsRead = (): void => {
-    setNotifications(prev => prev.map(n => ({ ...n, isRead: true })));
+    dispatch(notificationActions.markAllAsRead());
   };
 
   const deleteNotification = (id: string): void => {
@@ -44,20 +47,20 @@ const Notifications: React.FC = () => {
     if (target) {
       setLastDeleted(target);
       setShowUndo(true);
-      setNotifications(prev => prev.filter(n => n.id !== id));
+      dispatch(notificationActions.deleteNotification(id));
     }
   };
 
   const undoDelete = (): void => {
     if (lastDeleted) {
-      setNotifications(prev => [lastDeleted, ...prev]);
+      dispatch(notificationActions.addNotification(lastDeleted));
       setShowUndo(false);
       setLastDeleted(null);
     }
   };
 
   const clearAll = (): void => {
-    setNotifications([]);
+    dispatch(notificationActions.clearNotification());
   };
 
   useEffect(() => {
@@ -68,92 +71,156 @@ const Notifications: React.FC = () => {
   }, [showUndo]);
 
   const getIcon = (type: Notification['type']): React.ReactNode => {
-    const props = { size: 20 };
+    const props = { size: 24, strokeWidth: 2 };
     const iconMap: Record<Notification['type'], React.ReactNode> = {
-      job: <Briefcase {...props} className="icon-job" />,
-      message: <MessageSquare {...props} className="icon-message" />,
-      system: <Settings {...props} className="icon-system" />,
+      job: <Briefcase {...props} />,
+      message: <MessageSquare {...props} />,
+      system: <Settings {...props} />,
     };
     return iconMap[type] || <Bell {...props} />;
   };
 
   return (
-    <div className="notifications-wrapper">
+    <Box sx={{ minHeight: '100vh', py: { xs: 8, md: 10 }, bgcolor: 'background.default', position: 'relative', overflowX: 'hidden' }}>
       {/* Decorative Background */}
-      <div className="bg-elements">
-        <div className="blob blob-1" />
-        <div className="blob blob-2" />
-        <div className="blob blob-3" />
-      </div>
+      <Box sx={{
+        position: 'absolute',
+        width: 600,
+        height: 600,
+        filter: 'blur(120px)',
+        zIndex: 0,
+        opacity: 0.1,
+        borderRadius: '50%',
+        top: -200,
+        right: -100,
+        bgcolor: 'secondary.main',
+        pointerEvents: 'none',
+      }} />
+      <Box sx={{
+        position: 'absolute',
+        width: 500,
+        height: 500,
+        filter: 'blur(120px)',
+        zIndex: 0,
+        opacity: 0.1,
+        borderRadius: '50%',
+        top: -200,
+        left: -100,
+        bgcolor: 'primary.main',
+        pointerEvents: 'none',
+      }} />
 
-      <div className="notifications-container">
-        <VisualHeader
-          badge={`Activity Feed • ${stats.unread} New`}
-          title="Stay Updated"
-          gradient_title="with Alerts"
-          subtitle="Manage your notifications and track job updates in one place."
-        />
+      <Container maxWidth="md" sx={{ position: 'relative', zIndex: 1 }}>
+        <Box sx={{ mb: 6 }}>
+          <VisualHeader
+            badge={`Activity Feed • ${stats.unread} New`}
+            title="Stay Updated"
+            gradient_title="with Alerts"
+            subtitle="Manage your notifications and track job updates in one place."
+          />
+        </Box>
 
         {/* Controls */}
-        <div className="notifications-controls">
-          <div className="filter-pill-group">
+        <Stack
+          direction={{ xs: 'column', md: 'row' }}
+          justifyContent="space-between"
+          alignItems={{ xs: 'stretch', md: 'center' }}
+          spacing={3}
+          sx={{ mb: 4 }}
+        >
+          <Stack direction="row" spacing={1} sx={{ p: 0.5, bgcolor: alpha(theme.palette.background.paper, 0.5), borderRadius: 3, backdropFilter: 'blur(10px)', border: '1px solid', borderColor: 'divider' }}>
             {(['all', 'unread'] as const).map((f) => (
-              <motion.button
+              <Button
                 key={f}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className={`filter-pill ${filter === f ? 'active' : ''}`}
                 onClick={() => setFilter(f)}
+                sx={{
+                  borderRadius: 2.5,
+                  px: 3,
+                  py: 1,
+                  color: filter === f ? 'common.white' : 'text.secondary',
+                  bgcolor: filter === f ? 'primary.main' : 'transparent',
+                  fontWeight: 700,
+                  textTransform: 'capitalize',
+                  '&:hover': {
+                    bgcolor: filter === f ? 'primary.dark' : alpha(theme.palette.primary.main, 0.1),
+                  }
+                }}
               >
-                {f.charAt(0).toUpperCase() + f.slice(1)}
-                <span className="badge">
-                  {f === 'all' ? stats.total : stats.unread}
-                </span>
-              </motion.button>
+                {f}
+                <Chip
+                  label={f === 'all' ? stats.total : stats.unread}
+                  size="small"
+                  sx={{
+                    ml: 1,
+                    height: 20,
+                    fontSize: '0.7rem',
+                    fontWeight: 800,
+                    bgcolor: filter === f ? 'rgba(255,255,255,0.2)' : alpha(theme.palette.primary.main, 0.1),
+                    color: filter === f ? 'white' : 'primary.main',
+                  }}
+                />
+              </Button>
             ))}
-          </div>
+          </Stack>
 
-          <div className="control-actions">
-            <select
-              className="sort-select"
+          <Stack direction="row" spacing={2} alignItems="center">
+            <Select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as 'recent' | 'unread')}
+              size="small"
+              sx={{
+                borderRadius: 2,
+                bgcolor: alpha(theme.palette.background.paper, 0.6),
+                fontWeight: 600,
+                '.MuiSelect-select': { py: 1.2 },
+                fieldset: { borderColor: 'divider' },
+              }}
             >
-              <option value="recent">Most Recent</option>
-              <option value="unread">Unread First</option>
-            </select>
+              <MenuItem value="recent">Most Recent</MenuItem>
+              <MenuItem value="unread">Unread First</MenuItem>
+            </Select>
 
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="btn-ghost"
+            <Button
+              startIcon={<CheckCircle2 size={16} />}
               onClick={markAllAsRead}
               disabled={unreadCount === 0}
+              sx={{
+                color: 'text.secondary',
+                fontWeight: 600,
+                borderRadius: 2,
+                textTransform: 'none',
+                '&:hover': { color: 'primary.main', bgcolor: alpha(theme.palette.primary.main, 0.1) }
+              }}
             >
-              <CheckCircle2 size={16} /> Mark all read
-            </motion.button>
+              Mark all read
+            </Button>
 
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="btn-danger"
+            <Button
+              startIcon={<Trash2 size={16} />}
               onClick={clearAll}
               disabled={notifications.length === 0}
+              sx={{
+                color: 'error.main',
+                fontWeight: 600,
+                borderRadius: 2,
+                textTransform: 'none',
+                '&:hover': { bgcolor: alpha(theme.palette.error.main, 0.1) }
+              }}
             >
-              <Trash2 size={16} /> Clear all
-            </motion.button>
-          </div>
-        </div>
+              Clear all
+            </Button>
+          </Stack>
+        </Stack>
 
         {/* Notifications List */}
-        <div className="notifications-list">
+        <Box sx={{ minHeight: 400 }}>
           {filteredNotifications.length === 0 ? (
             <EmptyState
               title="No notifications yet"
               description={filter === 'unread' ? "You've read everything! Check 'All' for history." : "We'll notify you here when there's activity."}
             />
           ) : (
-            <AnimatePresence mode="popLayout" initial={false}>
+            <Stack spacing={0}>
               {filteredNotifications.map((n) => (
                 <NotificationItem
                   key={n.id}
@@ -163,37 +230,50 @@ const Notifications: React.FC = () => {
                   onRead={markAsRead}
                 />
               ))}
-            </AnimatePresence>
+            </Stack>
           )}
-        </div>
+        </Box>
 
-        {/* Undo Toast */}
-        <AnimatePresence>
-          {showUndo && (
-            <motion.div
-              initial={{ y: 100, x: '-50%', opacity: 0 }}
-              animate={{ y: 0, x: '-50%', opacity: 1 }}
-              exit={{ y: 100, x: '-50%', opacity: 0 }}
-              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="undo-toast"
-            >
-              <span className="undo-text">Notification removed from your feed</span>
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+        <Snackbar
+          open={showUndo}
+          autoHideDuration={5000}
+          onClose={() => setShowUndo(false)}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+          sx={{ bottom: { xs: 24, md: 40 } }}
+        >
+          <Alert
+            icon={false}
+            sx={{
+              width: '100%',
+              bgcolor: 'background.paper',
+              color: 'text.primary',
+              border: '1px solid',
+              borderColor: 'divider',
+              borderRadius: 3,
+              boxShadow: theme.shadows[6],
+              alignItems: 'center',
+              py: 1,
+              px: 2
+            }}
+          >
+            <Stack direction="row" alignItems="center" spacing={2}>
+              <Typography variant="body2" fontWeight={600}>Notification removed</Typography>
+              <Button
+                size="small"
+                startIcon={<RotateCcw size={14} />}
                 onClick={undoDelete}
-                className="undo-btn"
+                variant="contained"
+                sx={{ borderRadius: 2, textTransform: 'none', fontWeight: 700, fontSize: '0.8rem', py: 0.5 }}
               >
-                <RotateCcw size={14} /> Undo Action
-              </motion.button>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-    </div>
+                Undo
+              </Button>
+            </Stack>
+          </Alert>
+        </Snackbar>
+
+      </Container>
+    </Box>
   );
 };
-
-
 
 export default Notifications;

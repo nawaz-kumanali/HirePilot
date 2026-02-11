@@ -1,5 +1,6 @@
 import InterviewCard from "../InterviewCard/InterviewCard";
 import type { Interview } from "../../../types/interview";
+import { Box } from '@mui/material';
 
 interface UpcomingInterviewsTabProps {
   interviews: Interview[];
@@ -8,7 +9,13 @@ interface UpcomingInterviewsTabProps {
 
 const UpcomingInterviewsTab = ({ interviews, onStartTraining }: UpcomingInterviewsTabProps) => {
   return (
-    <div className="interview-grid-layout">
+    <Box
+      sx={{
+        display: 'grid',
+        gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' },
+        gap: 3,
+      }}
+    >
       {interviews.map((interview) => (
         <InterviewCard
           key={interview.id}
@@ -16,7 +23,7 @@ const UpcomingInterviewsTab = ({ interviews, onStartTraining }: UpcomingIntervie
           onStartTraining={onStartTraining}
         />
       ))}
-    </div>
+    </Box>
   );
 };
 

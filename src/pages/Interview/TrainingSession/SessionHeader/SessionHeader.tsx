@@ -1,5 +1,5 @@
 import { Timer, Loader, X } from 'lucide-react';
-import './sessionHeader.scss';
+import { Box, Stack, Typography, Button, IconButton, Chip, useTheme, alpha, keyframes } from '@mui/material';
 
 interface SessionHeaderProps {
     position: string;
@@ -12,6 +12,11 @@ interface SessionHeaderProps {
     canFinish: boolean;
 }
 
+const pulse = keyframes`
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+`;
+
 const SessionHeader = ({
     position,
     company,
@@ -22,34 +27,108 @@ const SessionHeader = ({
     isFinishing,
     canFinish
 }: SessionHeaderProps) => {
+    const theme = useTheme();
+    const isWarning = timeLeft < 60;
+
     return (
-        <header className="video-header">
-            <div className="interview-info">
-                <div className="live-pill">
-                    <span className="dot pulse"></span> LIVE INTERVIEW
-                </div>
-                <h1>{position}</h1>
-                <p className="company-name">{company}</p>
-            </div>
+        <Box
+            component="header"
+            sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                p: 3,
+                bgcolor: alpha(theme.palette.background.paper, 0.8),
+                backdropFilter: 'blur(12px)',
+                borderBottom: `1px solid ${theme.palette.divider}`,
+            }}
+        >
+            <Stack spacing={1}>
+                <Chip
+                    label={
+                        <Stack direction="row" spacing={0.5} alignItems="center">
+                            <Box
+                                sx={{
+                                    width: 8,
+                                    height: 8,
+                                    borderRadius: '50%',
+                                    bgcolor: 'error.main',
+                                    animation: `${pulse} 2s ease-in-out infinite`,
+                                }}
+                            />
+                            LIVE INTERVIEW
+                        </Stack>
+                    }
+                    size="small"
+                    sx={{
+                        bgcolor: alpha(theme.palette.error.main, 0.1),
+                        color: 'error.main',
+                        fontWeight: 700,
+                        width: 'fit-content',
+                    }}
+                />
+                <Typography variant="h5" fontWeight={700}>
+                    {position}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                    {company}
+                </Typography>
+            </Stack>
 
-            <div className="timer-display glass-panel">
-                <Timer size={18} className={timeLeft < 60 ? 'warning' : ''} />
-                <span className={`time ${timeLeft < 60 ? 'warning' : ''}`}>
+            <Box
+                sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 2,
+                    px: 3,
+                    py: 1.5,
+                    borderRadius: 2,
+                    bgcolor: alpha(theme.palette.background.paper, 0.8),
+                    border: `1px solid ${theme.palette.divider}`,
+                }}
+            >
+                <Timer size={18} color={isWarning ? theme.palette.warning.main : theme.palette.primary.main} />
+                <Typography
+                    variant="h6"
+                    fontWeight={700}
+                    sx={{
+                        color: isWarning ? 'warning.main' : 'text.primary',
+                        fontVariantNumeric: 'tabular-nums',
+                    }}
+                >
                     {formatTime(timeLeft)}
-                </span>
-            </div>
+                </Typography>
+            </Box>
 
-            <div className="header-actions">
+            <Stack direction="row" spacing={2}>
                 {canFinish && (
-                    <button className="finish-btn highlight" onClick={onFinish} disabled={isFinishing}>
-                        {isFinishing ? <Loader className="spin" size={18} /> : "Finish Now"}
-                    </button>
+                    <Button
+                        variant="contained"
+                        onClick={onFinish}
+                        disabled={isFinishing}
+                        startIcon={isFinishing ? <Loader size={18} /> : null}
+                        sx={{
+                            background: `linear-gradient(135deg, ${theme.palette.success.main}, ${theme.palette.success.dark})`,
+                        }}
+                    >
+                        {isFinishing ? 'Finishing...' : 'Finish Now'}
+                    </Button>
                 )}
-                <button className="exit-btn" onClick={onClose} title="Exit Session">
+                <IconButton
+                    onClick={onClose}
+                    sx={{
+                        bgcolor: alpha(theme.palette.error.main, 0.1),
+                        color: 'error.main',
+                        '&:hover': {
+                            bgcolor: 'error.main',
+                            color: 'white',
+                        },
+                    }}
+                >
                     <X size={20} />
-                </button>
-            </div>
-        </header>
+                </IconButton>
+            </Stack>
+        </Box>
     );
 };
 

@@ -1,6 +1,19 @@
 import { X, Filter, RotateCcw, ChevronDown, Briefcase, TrendingUp, MapPin, Pin, PinOff } from 'lucide-react';
-import './JobsSidebar.scss';
-import { useRef, useEffect, useState } from 'react';
+import { useState } from 'react';
+import {
+  Box,
+  Drawer,
+  IconButton,
+  Typography,
+  Button,
+  Stack,
+  Collapse,
+  List,
+  ListItemButton,
+  useTheme,
+  alpha,
+
+} from '@mui/material';
 
 interface JobsFiltersSidebarProps {
   jobTypes: string[];
@@ -33,7 +46,7 @@ const JobsSidebar = ({
   mobileOpen,
   onMobileClose,
 }: JobsFiltersSidebarProps) => {
-  const menuRef = useRef<HTMLDivElement>(null);
+  const theme = useTheme();
   const [isHovered, setIsHovered] = useState(false);
   const [isLocked, setIsLocked] = useState(false);
 
@@ -42,64 +55,82 @@ const JobsSidebar = ({
 
   const showFullContent = isHovered || isLocked || mobileOpen;
 
-  return (
-    <div
-      className="jobs-sidebar-outer-wrapper"
-      ref={menuRef}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+  const sidebarContent = (
+    <Box
+      sx={{
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        bgcolor: 'background.paper',
+        borderRight: `1px solid ${theme.palette.divider}`,
+      }}
     >
-      {/* Mobile Backdrop */}
-      <div
-        className={`jobs-sidebar-backdrop ${mobileOpen ? 'visible' : ''}`}
-        onClick={onMobileClose}
-        aria-hidden="true"
-      />
-
-      <aside
-        className={`jobs-filter-sidebar ${mobileOpen ? 'open' : ''} ${showFullContent ? 'expanded' : 'collapsed'}`}
-        role="complementary"
-        aria-label="Job Filters">
-        {/* Header */}
-        <div className="jobs-filter-header">
-          <div className="jobs-filter-title" onClick={toggleLock} style={{ cursor: 'pointer' }}>
-            <div className="jobs-filter-icon-box">
-              <Filter size={22} strokeWidth={2.5} />
-            </div>
-            {showFullContent && (
-              <div className="jobs-filter-title-text">
-                <span className="jobs-filter-title-main">Filters</span>
-                {activeFilters > 0 && (
-                  <span className="jobs-filter-count">
-                    {activeFilters} selected
-                  </span>
-                )}
-              </div>
-            )}
-          </div>
-
+      {/* Header */}
+      <Box
+        sx={{
+          p: 2,
+          borderBottom: `1px solid ${theme.palette.divider}`,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}
+      >
+        <Stack direction="row" spacing={1.5} alignItems="center" onClick={toggleLock} sx={{ cursor: 'pointer', flex: 1 }}>
+          <Box
+            sx={{
+              width: 40,
+              height: 40,
+              borderRadius: 1.5,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              bgcolor: alpha(theme.palette.primary.main, 0.1),
+              color: 'primary.main',
+            }}
+          >
+            <Filter size={22} strokeWidth={2.5} />
+          </Box>
           {showFullContent && (
-            <div className="header-actions">
-              <button
-                className={`lock-btn ${isLocked ? 'active' : ''}`}
-                onClick={toggleLock}
-                title={isLocked ? "Unlock Sidebar" : "Lock Sidebar"}
-              >
-                {isLocked ? <Pin size={18} /> : <PinOff size={18} />}
-              </button>
-              <button
-                className="jobs-close-mobile-btn"
-                onClick={onMobileClose}
-                aria-label="Close filters"
-                type="button"
-              >
-                <X size={22} />
-              </button>
-            </div>
+            <Box>
+              <Typography variant="subtitle1" fontWeight={700}>
+                Filters
+              </Typography>
+              {activeFilters > 0 && (
+                <Typography variant="caption" color="text.secondary">
+                  {activeFilters} selected
+                </Typography>
+              )}
+            </Box>
           )}
-        </div>
+        </Stack>
 
-        <div className="jobs-filter-body">
+        {showFullContent && (
+          <Stack direction="row" spacing={0.5}>
+            <IconButton
+              size="small"
+              onClick={toggleLock}
+              title={isLocked ? "Unlock Sidebar" : "Lock Sidebar"}
+              sx={{
+                display: { xs: 'none', lg: 'flex' },
+                color: isLocked ? 'primary.main' : 'text.secondary',
+              }}
+            >
+              {isLocked ? <Pin size={18} /> : <PinOff size={18} />}
+            </IconButton>
+            <IconButton
+              size="small"
+              onClick={onMobileClose}
+              sx={{ display: { xs: 'flex', lg: 'none' } }}
+            >
+              <X size={22} />
+            </IconButton>
+          </Stack>
+        )}
+      </Box>
+
+      {/* Filter Body */}
+      <Box sx={{ flex: 1, overflowY: 'auto', p: 2 }}>
+        <Stack spacing={2}>
           <FilterDropdown
             label="Job Type"
             activeValue={filterType}
@@ -129,25 +160,64 @@ const JobsSidebar = ({
             compact={!showFullContent}
             onExpand={expandAndLock}
           />
-        </div>
+        </Stack>
+      </Box>
 
-        {/* Footer */}
-        {showFullContent && (
-          <div className="jobs-filter-footer">
-            <button
-              className={`jobs-reset-btn ${activeFilters === 0 ? 'disabled' : ''}`}
-              onClick={onReset}
-              disabled={activeFilters === 0}
-              type="button"
-              aria-label="Clear all filters"
-            >
-              <RotateCcw size={16} />
-              <span>Clear All</span>
-            </button>
-          </div>
-        )}
-      </aside>
-    </div>
+      {/* Footer */}
+      {showFullContent && (
+        <Box sx={{ p: 2, borderTop: `1px solid ${theme.palette.divider}` }}>
+          <Button
+            fullWidth
+            variant="outlined"
+            startIcon={<RotateCcw size={16} />}
+            onClick={onReset}
+            disabled={activeFilters === 0}
+            sx={{
+              borderRadius: 1.5,
+              fontWeight: 600,
+            }}
+          >
+            Clear All
+          </Button>
+        </Box>
+      )}
+    </Box>
+  );
+
+  return (
+    <>
+      {/* Desktop Sidebar */}
+      <Box
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        sx={{
+          display: { xs: 'none', lg: 'block' },
+          width: showFullContent ? 280 : 72,
+          flexShrink: 0,
+          transition: 'width 0.3s ease',
+          position: 'sticky',
+          top: 80,
+          height: 'calc(100vh - 100px)',
+        }}
+      >
+        {sidebarContent}
+      </Box>
+
+      {/* Mobile Drawer */}
+      <Drawer
+        anchor="left"
+        open={mobileOpen}
+        onClose={onMobileClose}
+        sx={{
+          display: { xs: 'block', lg: 'none' },
+          '& .MuiDrawer-paper': {
+            width: 280,
+          },
+        }}
+      >
+        {sidebarContent}
+      </Drawer>
+    </>
   );
 };
 
@@ -171,29 +241,7 @@ const FilterDropdown = ({
   onExpand
 }: FilterDropdownProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    // Only set up click-outside handler when dropdown is open AND not in compact mode
-    if (!isOpen || compact) {
-      return;
-    }
-
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
-        setIsOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [isOpen, compact]);
+  const theme = useTheme();
 
   const handleTriggerClick = () => {
     if (compact) {
@@ -206,62 +254,105 @@ const FilterDropdown = ({
   const selectedLabel = activeValue || `All ${label}s`;
 
   return (
-    <div className={`jobs-filter-dropdown ${compact ? 'compact' : ''}`} ref={dropdownRef}>
-      <button
-        className="filter-dropdown-trigger"
+    <Box>
+      <Button
+        fullWidth
         onClick={handleTriggerClick}
-        type="button"
-        aria-expanded={isOpen && !compact}
+        sx={{
+          justifyContent: compact ? 'center' : 'space-between',
+          p: compact ? 1.5 : 1.5,
+          borderRadius: 1.5,
+          bgcolor: activeValue ? alpha(theme.palette.primary.main, 0.1) : 'transparent',
+          border: `1px solid ${activeValue ? theme.palette.primary.main : theme.palette.divider}`,
+          color: 'text.primary',
+          '&:hover': {
+            bgcolor: alpha(theme.palette.primary.main, 0.05),
+            borderColor: 'primary.main',
+          },
+        }}
       >
-        <div className="dropdown-trigger-content">
-          <span className="dropdown-icon">{icon}</span>
+        <Stack direction="row" spacing={1.5} alignItems="center" sx={{ flex: 1 }}>
+          <Box sx={{ color: activeValue ? 'primary.main' : 'text.secondary', display: 'flex' }}>
+            {icon}
+          </Box>
           {!compact && (
-            <div className="dropdown-label-wrapper" >
-              <span className="dropdown-label-text">{label}</span>
-              <span className="dropdown-selected">{selectedLabel}</span>
-            </div>
+            <Box sx={{ flex: 1, textAlign: 'left' }}>
+              <Typography variant="caption" display="block" color="text.secondary" fontWeight={600}>
+                {label}
+              </Typography>
+              <Typography variant="body2" fontWeight={600}>
+                {selectedLabel}
+              </Typography>
+            </Box>
           )}
-        </div>
+        </Stack>
         {!compact && (
-          <div>
-            <ChevronDown
-              size={20}
-              className="dropdown-chevron"
-            />
-          </div>
-        )}
-      </button>
-
-      {isOpen && !compact && (
-        <div className="filter-dropdown-menu" >
-          <button
-            className={`dropdown-item ${activeValue === '' ? 'active' : ''}`}
-            onClick={() => {
-              onChange('');
-              setIsOpen(false);
+          <ChevronDown
+            size={20}
+            style={{
+              transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+              transition: 'transform 0.2s',
             }}
-            type="button"
-          >
-            <span>All {label}s</span>
-            {activeValue === '' && <span className="checkmark">✓</span>}
-          </button>
-          {options.map((option, _index) => (
-            <button
-              key={option}
-              className={`dropdown-item ${activeValue === option ? 'active' : ''}`}
+          />
+        )}
+      </Button>
+
+      {!compact && (
+        <Collapse in={isOpen}>
+          <List sx={{ mt: 1, bgcolor: alpha(theme.palette.background.paper, 0.5), borderRadius: 1.5, overflow: 'hidden' }}>
+            <ListItemButton
+              selected={activeValue === ''}
               onClick={() => {
-                onChange(option);
+                onChange('');
                 setIsOpen(false);
               }}
-              type="button"
+              sx={{
+                py: 1,
+                '&.Mui-selected': {
+                  bgcolor: alpha(theme.palette.primary.main, 0.1),
+                  '&:hover': {
+                    bgcolor: alpha(theme.palette.primary.main, 0.15),
+                  },
+                },
+              }}
             >
-              <span>{option}</span>
-              {activeValue === option && <span className="checkmark">✓</span>}
-            </button>
-          ))}
-        </div>
+              <Typography variant="body2">All {label}s</Typography>
+              {activeValue === '' && (
+                <Typography variant="body2" sx={{ ml: 'auto', color: 'primary.main' }}>
+                  ✓
+                </Typography>
+              )}
+            </ListItemButton>
+            {options.map((option) => (
+              <ListItemButton
+                key={option}
+                selected={activeValue === option}
+                onClick={() => {
+                  onChange(option);
+                  setIsOpen(false);
+                }}
+                sx={{
+                  py: 1,
+                  '&.Mui-selected': {
+                    bgcolor: alpha(theme.palette.primary.main, 0.1),
+                    '&:hover': {
+                      bgcolor: alpha(theme.palette.primary.main, 0.15),
+                    },
+                  },
+                }}
+              >
+                <Typography variant="body2">{option}</Typography>
+                {activeValue === option && (
+                  <Typography variant="body2" sx={{ ml: 'auto', color: 'primary.main' }}>
+                    ✓
+                  </Typography>
+                )}
+              </ListItemButton>
+            ))}
+          </List>
+        </Collapse>
       )}
-    </div>
+    </Box>
   );
 };
 

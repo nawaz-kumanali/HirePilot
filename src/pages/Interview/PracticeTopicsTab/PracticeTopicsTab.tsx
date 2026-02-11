@@ -1,5 +1,5 @@
 import { TrendingUp, ArrowRight } from 'lucide-react';
-import './practiceTopicsTab.scss';
+import { Box, Card, Typography, Stack, LinearProgress, Chip, Button, useTheme, alpha } from '@mui/material';
 
 interface PracticeTopic {
   id: number;
@@ -17,52 +17,106 @@ interface PracticeTopicsTabProps {
 }
 
 const PracticeTopicsTab = ({ topics, onStartTraining }: PracticeTopicsTabProps) => {
+  const theme = useTheme();
+
+  const getDifficultyColor = (difficulty: string) => {
+    switch (difficulty.toLowerCase()) {
+      case 'easy': return 'success';
+      case 'medium': return 'warning';
+      case 'hard': return 'error';
+      default: return 'default';
+    }
+  };
+
   return (
-    <div className="interview-grid-layout">
+    <Box
+      sx={{
+        display: 'grid',
+        gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' },
+        gap: 3,
+      }}
+    >
       {topics.map((topic) => (
-        <div key={topic.id} className="interview-practice-card">
-          <div className="interview-practice-header">
-            <div>
-              <h3 className="interview-card-title">{topic.title}</h3>
-              <p className="interview-practice-category">{topic.category}</p>
-            </div>
-            <TrendingUp size={24} className="interview-trend-icon" />
-          </div>
+        <Card
+          key={topic.id}
+          sx={{
+            p: 3,
+            borderRadius: 2,
+            border: `1px solid ${theme.palette.divider}`,
+            transition: 'all 0.3s',
+            '&:hover': {
+              transform: 'translateY(-4px)',
+              boxShadow: `0 12px 24px ${alpha(theme.palette.primary.main, 0.15)}`,
+            },
+          }}
+        >
+          <Stack direction="row" justifyContent="space-between" alignItems="flex-start" sx={{ mb: 2 }}>
+            <Box>
+              <Typography variant="h6" fontWeight={700} gutterBottom>
+                {topic.title}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                {topic.category}
+              </Typography>
+            </Box>
+            <TrendingUp size={24} color={theme.palette.primary.main} />
+          </Stack>
 
-          <div className="interview-progress-container">
-            <div className="interview-progress-labels">
-              <span>Progress</span>
-              <span>{topic.completed}/{topic.total} lessons</span>
-            </div>
-            <div className="interview-progress-track">
-              <div
-                className="interview-progress-fill"
-                style={{ width: `${(topic.completed / topic.total) * 100}%` }}
-              ></div>
-            </div>
-          </div>
+          <Box sx={{ mb: 2 }}>
+            <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 1 }}>
+              <Typography variant="caption" fontWeight={600}>
+                Progress
+              </Typography>
+              <Typography variant="caption" color="text.secondary">
+                {topic.completed}/{topic.total} lessons
+              </Typography>
+            </Stack>
+            <LinearProgress
+              variant="determinate"
+              value={(topic.completed / topic.total) * 100}
+              sx={{
+                height: 8,
+                borderRadius: 1,
+                bgcolor: alpha(theme.palette.primary.main, 0.1),
+                '& .MuiLinearProgress-bar': {
+                  borderRadius: 1,
+                },
+              }}
+            />
+          </Box>
 
-          <div className="interview-practice-footer">
-            <div className="interview-practice-left">
-              <span className={`interview-diff-chip ${topic.difficulty.toLowerCase()}`}>
-                {topic.difficulty}
-              </span>
-              <span className="interview-duration-text">⏱️ {topic.duration}</span>
-            </div>
-            <button
-              className="interview-continue-btn"
+          <Stack direction="row" justifyContent="space-between" alignItems="center">
+            <Stack direction="row" spacing={1} alignItems="center">
+              <Chip
+                label={topic.difficulty}
+                size="small"
+                color={getDifficultyColor(topic.difficulty) as any}
+                sx={{ fontWeight: 600 }}
+              />
+              <Typography variant="caption" color="text.secondary">
+                ⏱️ {topic.duration}
+              </Typography>
+            </Stack>
+            <Button
+              size="small"
+              endIcon={<ArrowRight size={14} />}
               onClick={() => onStartTraining({
                 position: topic.title,
                 company: 'Practice Session',
                 topics: [topic.category, topic.title]
               })}
+              sx={{
+                borderRadius: 1.5,
+                fontWeight: 600,
+                textTransform: 'none',
+              }}
             >
-              Continue <ArrowRight size={14} />
-            </button>
-          </div>
-        </div>
+              Continue
+            </Button>
+          </Stack>
+        </Card>
       ))}
-    </div>
+    </Box>
   );
 };
 

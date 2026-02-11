@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import './interview.scss';
 import VisualHeader from '../../components/VisualHeader/VisualHeader';
 import InterviewTabNav from './InterviewTabNav/InterviewTabNav';
 import UpcomingInterviewsTab from './UpcomingInterviewsTab/UpcomingInterviewsTab';
@@ -9,7 +8,7 @@ import PracticeTopicsTab from './PracticeTopicsTab/PracticeTopicsTab';
 import TrainingSession from './TrainingSession/TrainingSession';
 import { upcomingInterviews, completedInterviews, prepTopics } from '../../data/interviewData';
 import type { TrainingInterview } from '../../types/interview';
-
+import { Box, Container, useTheme, alpha } from '@mui/material';
 
 interface Message {
   id: string;
@@ -28,8 +27,8 @@ interface InterviewSession {
 const Interview = () => {
   const location = useLocation();
   const [activeTab, setActiveTab] = useState(0);
+  const theme = useTheme();
 
-  // Dynamic State for Interviews and Topics
   const [upcomingInterviewsList] = useState(upcomingInterviews);
   const [completedInterviewsList, setCompletedInterviewsList] = useState(completedInterviews);
   const [prepTopicsList, setPrepTopicsList] = useState(prepTopics);
@@ -59,7 +58,6 @@ const Interview = () => {
         company: job.company,
         topics: job.tags || []
       });
-      // Clear location state to prevent restart on refresh
       window.history.replaceState({}, document.title);
     }
   }, [location.state]);
@@ -92,7 +90,7 @@ const Interview = () => {
       duration: '15 mins',
       interviewer: 'AI Interviewer',
       status: 'completed' as const,
-      difficulty: 'Medium' as const, // We can make this dynamic later
+      difficulty: 'Medium' as const,
       topics: session.interview?.topics || [],
       score: report.overallScore,
       feedback: report.feedback,
@@ -100,7 +98,6 @@ const Interview = () => {
 
     setCompletedInterviewsList(prev => [newCompletedInterview, ...prev]);
 
-    // Optionally update topic progress here
     if (session.interview?.topics) {
       setPrepTopicsList(prev => prev.map(topic => {
         const matches = session.interview?.topics.some(t => topic.title.toLowerCase().includes(t.toLowerCase()) || topic.category.toLowerCase().includes(t.toLowerCase()));
@@ -124,20 +121,34 @@ const Interview = () => {
   }
 
   return (
-    <div className="interview-wrapper">
-      <div className="interview-container">
-        <header className="interview-header">
+    <Box
+      sx={{
+        minHeight: '100vh',
+        py: 5,
+        position: 'relative',
+        '&::before': {
+          content: '""',
+          position: 'fixed',
+          inset: 0,
+          background: `radial-gradient(circle at 20% 50%, ${alpha(theme.palette.primary.main, 0.08)} 0%, transparent 50%), radial-gradient(circle at 80% 80%, ${alpha(theme.palette.secondary.main, 0.08)} 0%, transparent 50%)`,
+          pointerEvents: 'none',
+          zIndex: 0,
+        }
+      }}
+    >
+      <Container maxWidth="xl" sx={{ position: 'relative', zIndex: 1 }}>
+        <Box component="header" sx={{ textAlign: 'center', py: { xs: 3, md: 5 } }}>
           <VisualHeader
             badge="Ready to ace it?"
             title="Interview Prep Hub"
             gradient_title="with AI"
             subtitle="Master your next technical round with AI-driven insights and personalized feedback."
           />
-        </header>
+        </Box>
 
         <InterviewTabNav activeTab={activeTab} setActiveTab={setActiveTab} />
 
-        <div className="interview-tab-content">
+        <Box sx={{ mt: 4 }}>
           {activeTab === 0 && (
             <UpcomingInterviewsTab
               interviews={upcomingInterviewsList}
@@ -155,9 +166,9 @@ const Interview = () => {
               onStartTraining={handleStartTraining}
             />
           )}
-        </div>
-      </div>
-    </div>
+        </Box>
+      </Container>
+    </Box>
   );
 };
 
