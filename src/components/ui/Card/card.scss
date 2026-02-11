@@ -1,21 +1,84 @@
 .hp-card {
-    background: var(--glass-bg);
-    backdrop-filter: blur(var(--glass-blur, 12px));
-    border: 1px solid var(--glass-border);
-    border-radius: 20px;
-    padding: 24px;
-    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     position: relative;
+    border-radius: 20px;
     overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
 
-    &.clickable {
+    /* Padding Options */
+    &--p-none {
+        padding: 0;
+    }
+
+    &--p-sm {
+        padding: 12px;
+    }
+
+    &--p-md {
+        padding: 24px;
+    }
+
+    &--p-lg {
+        padding: 32px;
+    }
+
+    /* Hover Effect */
+    &--hoverable {
         cursor: pointer;
 
         &:hover {
             transform: translateY(-4px);
-            background: var(--card-bg);
-            border-color: var(--accent);
-            box-shadow: 0 20px 40px var(--shadow-md);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
         }
+    }
+
+    /* Variant: Glass (Default Premium) */
+    &--glass {
+        background: var(--glass-card-bg, rgba(255, 255, 255, 0.05));
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1.5px solid var(--glass-border, rgba(255, 255, 255, 0.1));
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+
+        &:hover {
+            border-color: var(--theme-color-primary-alpha, rgba(168, 85, 247, 0.3));
+        }
+    }
+
+    /* Variant: Glass Alt (Deep) */
+    &--glass-alt {
+        background: rgba(15, 23, 42, 0.7);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    /* Variant: Primary */
+    &--primary {
+        background: var(--card-bg, #ffffff);
+        border: 1px solid var(--border-color, rgba(0, 0, 0, 0.05));
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+
+        [data-theme='dark'] & {
+            background: #1e293b;
+            border-color: rgba(255, 255, 255, 0.05);
+        }
+    }
+
+    /* Sub-component Styles */
+    &__header {
+        padding-bottom: 16px;
+        margin-bottom: 8px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    &__body {
+        flex: 1;
+    }
+
+    &__footer {
+        margin-top: 16px;
+        padding-top: 16px;
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
     }
 }

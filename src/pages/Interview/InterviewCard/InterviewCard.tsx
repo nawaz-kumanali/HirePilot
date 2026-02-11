@@ -1,18 +1,39 @@
 import { Calendar, Clock, ArrowRight } from 'lucide-react';
-import Badge from '../../../components/ui/Badge/Badge';
+import Badge from '../../../components/Badge/Badge';
 import './interviewCard.scss';
 import type { Interview } from '../../../types/interview';
+import { motion, type Variants } from 'framer-motion';
 
 interface InterviewCardProps {
     interview: Interview;
     onStartTraining: (interview: Interview) => void;
 }
 
+const cardVariants: Variants = {
+    hidden: { opacity: 0, scale: 0.95, y: 15 },
+    visible: {
+        opacity: 1,
+        scale: 1,
+        y: 0,
+        transition: {
+            duration: 0.5,
+            ease: "easeOut"
+        }
+    }
+};
+
 const InterviewCard = ({ interview, onStartTraining }: InterviewCardProps) => {
-    const { title, company, position, date, time, duration, status, difficulty, topics } = interview;
+    const { company, position, date, time, duration, status, difficulty, topics } = interview;
 
     return (
-        <div className="interview-card">
+        <motion.div
+            className="interview-card"
+            variants={cardVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            whileHover={{ y: -5, transition: { duration: 0.2 } }}
+        >
             <div className="interview-card-top">
                 <div className="interview-card-badges">
                     <Badge variant={status === 'upcoming' ? 'info' : 'success'} className={status}>
@@ -25,8 +46,8 @@ const InterviewCard = ({ interview, onStartTraining }: InterviewCardProps) => {
                 <span className="interview-company-tag">{company}</span>
             </div>
 
-            <h3 className="interview-card-title">{title}</h3>
-            <p className="interview-position-text">{position}</p>
+            <h3 className="interview-card-title">{position} Interview</h3>
+            <p className="interview-position-text">{company}</p>
 
             <div className="interview-card-meta">
                 <div className="interview-meta-row">
@@ -53,7 +74,7 @@ const InterviewCard = ({ interview, onStartTraining }: InterviewCardProps) => {
             >
                 Start Training <ArrowRight size={16} />
             </button>
-        </div>
+        </motion.div>
     );
 };
 

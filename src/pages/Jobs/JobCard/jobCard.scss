@@ -110,6 +110,37 @@
         }
       }
 
+      .jc-save-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(var(--text-secondary-rgb), 0.05);
+        border: 1.5px solid transparent;
+        color: #64748b;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        flex-shrink: 0;
+
+        &:hover {
+          background: rgba(244, 63, 94, 0.1);
+          border-color: rgba(244, 63, 94, 0.2);
+          color: #f43f5e;
+        }
+
+        &.saved {
+          background: rgba(244, 63, 94, 0.1);
+          border-color: rgba(244, 63, 94, 0.3);
+          color: #f43f5e;
+
+          svg {
+            fill: #f43f5e;
+          }
+        }
+      }
+
       .jc-type-badge {
         padding: 8px 16px;
         border-radius: 100px;

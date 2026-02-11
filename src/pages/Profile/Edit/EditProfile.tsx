@@ -3,8 +3,8 @@ import React, { useState } from 'react'
 import { currentUserActions } from '../../../store/CurrentUser/currentuser.slice';
 import type { CurrentUserState, Experience, Skill } from '../../../store/CurrentUser/currentuser.types';
 import { useAppDispatch } from '../../../store/hooks';
-import Card from '../../../components/ui/Card/Card';
-import Button from '../../../components/ui/Button/Button';
+import Card from '../../../components/Card/Card';
+import Button from '../../../components/Button/Button';
 
 import './editProfile.scss'
 

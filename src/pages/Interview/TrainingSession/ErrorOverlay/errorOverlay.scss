@@ -1,0 +1,102 @@
+.system-error-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.8);
+    backdrop-filter: blur(12px);
+    z-index: 3000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+
+    .error-popup {
+        background: #0f172a;
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        border-radius: 28px;
+        padding: 40px;
+        max-width: 440px;
+        width: 100%;
+        text-align: center;
+        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), 0 0 30px rgba(239, 68, 68, 0.1);
+        animation: zoomIn-error 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+
+        .error-icon-box {
+            width: 72px;
+            height: 72px;
+            background: rgba(239, 68, 68, 0.1);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            color: #ef4444;
+        }
+
+        h2 {
+            font-size: 1.75rem;
+            font-weight: 800;
+            margin-bottom: 12px;
+            color: white;
+            letter-spacing: -0.02em;
+        }
+
+        p {
+            color: #94a3b8;
+            line-height: 1.6;
+            margin-bottom: 32px;
+            font-size: 1.05rem;
+        }
+
+        .error-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+
+            .retry-btn {
+                width: 100%;
+                padding: 16px;
+                background: #ef4444;
+                color: white;
+                border: none;
+                border-radius: 14px;
+                font-weight: 700;
+                font-size: 1rem;
+                cursor: pointer;
+                transition: all 0.3s;
+
+                &:hover {
+                    background: #dc2626;
+                    transform: translateY(-2px);
+                    box-shadow: 0 8px 20px rgba(239, 68, 68, 0.3);
+                }
+            }
+
+            .secondary-btn {
+                background: rgba(255, 255, 255, 0.05);
+                color: #94a3b8;
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                padding: 12px;
+                border-radius: 12px;
+                font-weight: 600;
+                transition: all 0.3s;
+
+                &:hover {
+                    background: rgba(255, 255, 255, 0.1);
+                    color: white;
+                }
+            }
+        }
+    }
+}
+
+@keyframes zoomIn-error {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}

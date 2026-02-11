@@ -1,13 +1,35 @@
-import { MapPin, DollarSign, Clock, TrendingUp, Briefcase, Star } from 'lucide-react';
+import React from 'react';
+import { MapPin, DollarSign, Clock, TrendingUp, Briefcase, Star, Heart } from 'lucide-react';
 import type Job from '../../../types/job';
 import './jobCard.scss';
+import { motion, type Variants } from 'framer-motion';
+import { useSaveJobMutation } from '../../../api/jobApi';
 
 interface JobCardProps {
     job: Job;
     onOpen: (job: Job) => void;
 }
 
+const cardVariants: Variants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        transition: {
+            duration: 0.5,
+            ease: "easeOut"
+        }
+    }
+};
+
 const JobCard = ({ job, onOpen }: JobCardProps) => {
+    const [saveJob] = useSaveJobMutation();
+
+    const handleSave = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        saveJob(job.id);
+    };
+
     // Helper for Type Badges
     const getTypeStyles = (type: Job['type']) => {
         const styles: Record<Job["type"], { bg: string; color: string }> = {
@@ -26,7 +48,15 @@ const JobCard = ({ job, onOpen }: JobCardProps) => {
     };
 
     return (
-        <article className="jc-card" onClick={() => onOpen(job)}>
+        <motion.article
+            className="jc-card"
+            onClick={() => onOpen(job)}
+            variants={cardVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-50px" }}
+            whileHover={{ y: -5, transition: { duration: 0.2 } }}
+        >
             <div className="jc-body">
                 {/* Top Section: Title & Save */}
                 <div className="jc-header">
@@ -34,6 +64,14 @@ const JobCard = ({ job, onOpen }: JobCardProps) => {
                         <h3 className="jc-title">{job.title}</h3>
                         <span className="jc-company">{job.company}</span>
                     </div>
+                    <motion.button
+                        className={`jc-save-btn ${job.saved ? 'saved' : ''}`}
+                        onClick={handleSave}
+                        whileTap={{ scale: 0.8 }}
+                        whileHover={{ scale: 1.1 }}
+                    >
+                        <Heart size={20} fill={job.saved ? "#f43f5e" : "none"} color={job.saved ? "#f43f5e" : "#64748b"} />
+                    </motion.button>
                 </div>
 
                 <p className="jc-description">{job.description}</p>
@@ -93,7 +131,7 @@ const JobCard = ({ job, onOpen }: JobCardProps) => {
                 <span>View position details</span>
                 <div className="jc-arrow">→</div>
             </div>
-        </article>
+        </motion.article>
     );
 };
 

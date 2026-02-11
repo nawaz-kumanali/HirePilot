@@ -15,10 +15,14 @@ export const getAiResponse = async (prompt: string) => {
         const result = await model.generateContent(prompt);
         return result.response.text();
     } catch (error: any) {
+        let errorMessage = "AI Error";
         if (error.message?.includes("404") || error.message?.includes("not found")) {
-            console.warn(`Model ${MODEL_ID} not found, trying fallback...`);
+            errorMessage = "Model not found. Please check your configuration.";
+        } else if (error.message?.includes("429")) {
+            errorMessage = "Rate limit exceeded. Please wait a moment.";
         }
-        throw error;
+        console.error(`AI Error (${MODEL_ID}):`, error.message);
+        throw new Error(errorMessage);
     }
 }
 
@@ -43,9 +47,13 @@ export const getAiStream = async (userInput: string, history: any[]) => {
         const result = await chat.sendMessageStream(userInput);
         return result.stream;
     } catch (error: any) {
+        let errorMessage = "AI Stream Error";
         if (error.message?.includes("404") || error.message?.includes("not found")) {
-            console.warn(`Model ${MODEL_ID} not found, trying fallback...`);
+            errorMessage = "Model not found. Please check your configuration.";
+        } else if (error.message?.includes("429")) {
+            errorMessage = "Rate limit reached. Please try again in 1 minute.";
         }
-        throw error;
+        console.error(`AI Stream Error (${MODEL_ID}):`, error.message);
+        throw new Error(errorMessage);
     }
 };
