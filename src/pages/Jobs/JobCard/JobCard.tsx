@@ -1,8 +1,6 @@
-import React from 'react';
-import { MapPin, DollarSign, Clock, TrendingUp, Briefcase, Star, Heart, ArrowRight } from 'lucide-react';
+import { MapPin, DollarSign, Clock, TrendingUp, Briefcase, Star, ArrowRight } from 'lucide-react';
 import type Job from '../../../types/job';
-import { useSaveJobMutation } from '../../../api/jobApi';
-import { Box, Typography, Stack, IconButton, useTheme, alpha } from '@mui/material';
+import { Box, Typography, Stack, useTheme, alpha } from '@mui/material';
 import Card from '../../../components/Card/Card';
 
 interface JobCardProps {
@@ -11,13 +9,7 @@ interface JobCardProps {
 }
 
 const JobCard = ({ job, onOpen }: JobCardProps) => {
-    const [saveJob] = useSaveJobMutation();
     const theme = useTheme();
-
-    const handleSave = (e: React.MouseEvent) => {
-        e.stopPropagation();
-        saveJob(job.id);
-    };
 
     // Helper for Type Badges
     const getTypeStyles = (type: Job['type']) => {
@@ -70,30 +62,6 @@ const JobCard = ({ job, onOpen }: JobCardProps) => {
                             {job.company}
                         </Typography>
                     </Box>
-                    <IconButton
-                        onClick={handleSave}
-                        sx={{
-                            width: 40,
-                            height: 40,
-                            borderRadius: 3,
-                            bgcolor: alpha(theme.palette.text.secondary, 0.05),
-                            border: '1.5px solid transparent',
-                            color: job.saved ? '#f43f5e' : 'text.secondary',
-                            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                            flexShrink: 0,
-                            '&:hover': {
-                                bgcolor: alpha('#f43f5e', 0.1),
-                                borderColor: alpha('#f43f5e', 0.2),
-                                color: '#f43f5e',
-                            },
-                            ...(job.saved && {
-                                bgcolor: alpha('#f43f5e', 0.1),
-                                borderColor: alpha('#f43f5e', 0.3),
-                            })
-                        }}
-                    >
-                        <Heart size={20} fill={job.saved ? "#f43f5e" : "none"} />
-                    </IconButton>
                 </Box>
 
                 <Typography

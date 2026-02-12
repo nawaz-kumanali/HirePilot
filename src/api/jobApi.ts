@@ -15,19 +15,11 @@ export const jobApi = apiSlice.injectEndpoints({
         getJobById: builder.query({
             query: (id) => `/jobs/${id}`,
             providesTags: (_result, _error, id) => [{ type: 'Job', id }],
-        }),
-        saveJob: builder.mutation({
-            query: (id) => ({
-                url: `/jobs/${id}/save`,
-                method: 'POST',
-            }),
-            invalidatesTags: (_result, _error, id) => [{ type: 'Job', id }],
-        }),
+        })
     }),
 });
 
 export const {
     useGetJobsQuery,
-    useGetJobByIdQuery,
-    useSaveJobMutation
+    useGetJobByIdQuery
 } = jobApi;

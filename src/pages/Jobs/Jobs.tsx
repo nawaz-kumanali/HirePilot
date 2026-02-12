@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppSelector } from '../../store/hooks';
 import type Job from '../../types/job';
-import { Box, Container, useTheme, alpha, CircularProgress, Typography } from '@mui/material';
+import { Box, useTheme, alpha } from '@mui/material';
+import { Briefcase, TrendingUp, MapPin } from 'lucide-react';
 
 // Components & Hooks
 import JobDetails from './JobDetails/JobDetails';
@@ -16,6 +17,7 @@ import { useJobFilters } from '../../hooks/useJobFilters';
 
 // RTK Query
 import { useGetJobsQuery } from '../../api/jobApi';
+import Loading from '../../components/Loading/Loading';
 
 const Jobs = () => {
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
@@ -49,6 +51,34 @@ const Jobs = () => {
     activeFiltersCount
   } = useJobFilters({ jobs: jobsData });
 
+  // Memoize filter configuration
+  const filterConfigs = useMemo(
+    () => [
+      {
+        label: 'Job Type',
+        value: filterType,
+        onChange: setFilterType,
+        options: jobTypes,
+        icon: Briefcase,
+      },
+      {
+        label: 'Experience Level',
+        value: filterLevel,
+        onChange: setFilterLevel,
+        options: jobLevels,
+        icon: TrendingUp,
+      },
+      {
+        label: 'Location',
+        value: filterLocation,
+        onChange: setFilterLocation,
+        options: locations,
+        icon: MapPin,
+      },
+    ],
+    [filterType, filterLevel, filterLocation, jobTypes, jobLevels, locations, setFilterType, setFilterLevel, setFilterLocation]
+  );
+
   const handleOpenJob = (job: Job) => {
     if (!isAuthenticated) {
       navigate('/signin');
@@ -58,12 +88,14 @@ const Jobs = () => {
     setOpenDialog(true);
   };
 
+
+  if(isLoading) return <Loading />
+
   return (
     <Box
       component="main"
       sx={{
         minHeight: '100vh',
-        py: 5,
         position: 'relative',
         '&::before': {
           content: '""',
@@ -75,8 +107,8 @@ const Jobs = () => {
         }
       }}
     >
-      <Container maxWidth="xl" sx={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', pr: { xs: 3, md: 0 } }}>
-        <Box component="header" sx={{ textAlign: 'center', py: { xs: 3, md: 5 } }}>
+      <Box  sx={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', pr: { xs: 2, md: 2, lg: 2 }, pl: { xs: 2, md: 0, lg: 0 }}}>
+        <Box component="header" sx={{ textAlign: 'center', py: { xs: 3, md: 5 }}}>
           <VisualHeader
             badge='New opportunities added today'
             title='Find Your'
@@ -93,31 +125,18 @@ const Jobs = () => {
 
         <Box sx={{ display: 'flex', gap: 4, alignItems: 'start', mt: 3, flexDirection: { xs: 'column', lg: 'row' } }}>
           <JobsSidebar
-            jobTypes={jobTypes}
-            jobLevels={jobLevels}
-            locations={locations}
-            filterType={filterType}
-            filterLevel={filterLevel}
-            filterLocation={filterLocation}
-            onFilterTypeChange={setFilterType as any}
-            onFilterLevelChange={setFilterLevel as any}
-            onFilterLocationChange={setFilterLocation}
-            onReset={handleReset}
+            filters={filterConfigs}
             activeFilters={activeFiltersCount}
+            onReset={handleReset}
             mobileOpen={mobileFiltersOpen}
             onMobileClose={() => setMobileFiltersOpen(false)}
           />
 
-          <Box component="section" sx={{ display: 'flex', flexDirection: 'column', gap: 3.5, width: '100%' }}>
+          <Box component="section" sx={{ display: 'flex', flexDirection: 'column', gap: 3.5, width: '100%'}}>
             <Box>
-              {isLoading ? (
-                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', py: 8 }}>
-                  <CircularProgress />
-                  <Typography variant="body1" sx={{ ml: 2 }}>Loading jobs...</Typography>
-                </Box>
-              ) : paginatedJobs.length > 0 ? (
+              {paginatedJobs.length > 0 ? (
                 <>
-                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2  }}>
                     {paginatedJobs.map((job: any) => (
                       <JobCard
                         key={job.id}
@@ -143,7 +162,7 @@ const Jobs = () => {
             </Box>
           </Box>
         </Box>
-      </Container>
+      </Box>
 
       {selectedJob && (
         <JobDetails

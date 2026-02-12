@@ -3,7 +3,7 @@ import { Outlet, useLocation } from 'react-router-dom';
 import { Box, Stack } from '@mui/material';
 import Navbar from '../../components/Navbar/Navbar';
 import Footer from '../../components/Footer/Footer';
-import PageTransition from '../../components/ui/PageTransition/PageTransition';
+import PageTransition from '../../components/PageTransition/PageTransition';
 
 const MainLayout = () => {
     const location = useLocation();

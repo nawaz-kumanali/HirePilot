@@ -21,9 +21,9 @@ const JobToolbar = ({ searchTerm, onSearchChange, onMobileFilterOpen }: JobToolb
                 position: 'sticky',
                 top: 70,
                 zIndex: 10,
-                bgcolor: 'background.paper',
                 borderBottomLeftRadius: 16,
                 borderBottomRightRadius: 16,
+                ml: {xs: 0, md: 0, lg: "100px"},
             }}
         >
             <SearchBar
