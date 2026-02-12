@@ -3,9 +3,12 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 const genAI = new GoogleGenerativeAI(API_KEY);
 
-const MODEL_ID = "gemini-2.0-flash";
 
+
+const MODEL_ID = "gemini-2.5-flash";
+console.log('called outside')
 export const getAiResponse = async (prompt: string) => {
+    console.log('called')
     try {
         const model = genAI.getGenerativeModel({
             model: MODEL_ID,
