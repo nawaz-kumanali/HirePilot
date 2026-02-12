@@ -1,6 +1,11 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
+
+if (!API_KEY) {
+  console.error("API Key is missing! Check Vercel Env Variables.");
+}
+
 const genAI = new GoogleGenerativeAI(API_KEY);
 
 
