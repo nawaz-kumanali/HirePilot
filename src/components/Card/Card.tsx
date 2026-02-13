@@ -3,7 +3,7 @@ import { Card as MuiCard, type CardProps as MuiCardProps, alpha, useTheme } from
 
 interface CardProps extends MuiCardProps {
     children: React.ReactNode;
-    onClick?: (e: any) => void;
+    onClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
 }
 
 const Card: React.FC<CardProps> = ({ children, className = '', onClick, sx, ...props }) => {

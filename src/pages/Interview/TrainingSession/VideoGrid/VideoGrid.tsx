@@ -2,13 +2,21 @@ import { Sparkles, Lightbulb, User } from 'lucide-react';
 import { Box, Stack, Typography, Card, useTheme, alpha, keyframes } from '@mui/material';
 
 interface VideoGridProps {
+    /** Whether the AI is currently synthesizing speech. */
     isSpeaking: boolean;
+    /** Whether the AI is currently processing/thinking (simulating transcription). */
     isLoading: boolean;
+    /** Whether an AI insight popup should be displayed. */
     isInsightVisible: boolean;
+    /** The content of the AI insight/hint. */
     insight: string | null;
+    /** The content of the last AI message for subtitles. */
     lastAiMessage: string | undefined;
+    /** Reference to the local user's video element. */
     videoRef: React.RefObject<HTMLVideoElement | null>;
+    /** Whether the local user's video is toggled off. */
     isVideoOff: boolean;
+    /** Whether the local user's microphone is muted. */
     isMuted: boolean;
 }
 

@@ -17,6 +17,12 @@ const pulse = keyframes`
   50% { transform: scale(0.8); opacity: 0.2; filter: blur(4px); }
 `;
 
+/**
+ * Visual "No Results" or "Empty" placeholder.
+ * 
+ * Features a floating Briefcase icon animation and a 
+ * responsive layout for various container sizes.
+ */
 const EmptyState = ({
     title = 'Found nothing here',
     description = 'Try adjusting your filters to find more results',

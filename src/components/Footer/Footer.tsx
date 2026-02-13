@@ -52,6 +52,13 @@ const CONTACT_INFO = {
 const BRAND_DESCRIPTION =
     'The ultimate companion for modern developers. Practice, prepare, and land your dream job with AI-driven mock interviews.';
 
+/**
+ * Global application footer.
+ * 
+ * Contains brand information, platform navigation links, 
+ * legal disclaimers, contact info, and social media connectivity.
+ * Features a theme-aware gradient top border and glassmorphic social buttons.
+ */
 const Footer: React.FC = () => {
     const theme = useTheme();
 

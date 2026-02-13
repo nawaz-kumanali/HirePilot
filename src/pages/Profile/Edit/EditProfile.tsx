@@ -29,7 +29,7 @@ const EditProfile: React.FC<EditProfileProps> = ({ profileData, setIsEditing }) 
     const dispatch = useAppDispatch();
     const theme = useTheme();
 
-    const handleInputChange = (field: keyof CurrentUserState, value: any) => {
+    const handleInputChange = <T extends keyof CurrentUserState>(field: T, value: CurrentUserState[T]) => {
         setEditData(prev => ({ ...prev, [field]: value }));
     };
 
@@ -58,7 +58,7 @@ const EditProfile: React.FC<EditProfileProps> = ({ profileData, setIsEditing }) 
 
     const handleSkillChange = (index: number, field: keyof Skill, value: string) => {
         const updatedSkills = [...editData.skills];
-        updatedSkills[index] = { ...updatedSkills[index], [field]: value as any };
+        updatedSkills[index] = { ...updatedSkills[index], [field]: value };
         setEditData(prev => ({ ...prev, skills: updatedSkills }));
     };
 

@@ -19,14 +19,18 @@ import ControlBar from './ControlBar/ControlBar';
 import PerformanceReport from './PerformanceReport/PerformanceReport';
 import ErrorOverlay from './ErrorOverlay/ErrorOverlay';
 
-interface Message {
-  id: string;
-  role: 'user' | 'ai';
-  content: string;
-  timestamp: Date;
-  hidden?: boolean;
-}
+import type { Message, PerformanceReportData } from '../../../types/interview';
 
+/**
+ * The core component for the AI Interview Simulation session.
+ * 
+ * Manages the entire lifecycle of an interview:
+ * 1. Initializes the AI interviewer with a seed message.
+ * 2. Streams real-time AI responses using Gemini AI.
+ * 3. Provides real-time insights based on candidate input.
+ * 4. Manages media streams (video/audio) and speech synthesis.
+ * 5. Generates and saves a performance report upon completion.
+ */
 const TrainingSession = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -39,7 +43,7 @@ const TrainingSession = () => {
   const [isFinishing, setIsFinishing] = useState(false);
   const [isLocalLoading, setIsLocalLoading] = useState(false);
   const [timeLeft, setTimeLeft] = useState(1800); // 30 mins
-  const [report, setReport] = useState<Record<string, unknown> | null>(null);
+  const [report, setReport] = useState<PerformanceReportData | null>(null);
   const [isAudioEnabled, setIsAudioEnabled] = useState(true);
   const [isListening, setIsListening] = useState(false);
 
@@ -106,12 +110,7 @@ const TrainingSession = () => {
       }
 
       // 2. Start Message Stream
-      const chatHistory = messages.map(m => ({
-        role: m.role === 'ai' ? 'model' : 'user',
-        parts: [{ text: m.content }]
-      }));
-
-      const streamRes = await getAiStream(trimmedInput, chatHistory);
+      const streamRes = await getAiStream(trimmedInput, messages);
       let accumulatedText = "";
 
       setMessages([...currentMessages, { id: aiMsgId, role: 'ai', content: "", timestamp: new Date() }]);
@@ -120,7 +119,7 @@ const TrainingSession = () => {
       const UPDATE_INTERVAL = 100;
 
       for await (const chunk of streamRes) {
-        const chunkText = chunk.text();
+        const chunkText = (chunk as { text: () => string }).text();
         accumulatedText += chunkText;
 
         const now = Date.now();

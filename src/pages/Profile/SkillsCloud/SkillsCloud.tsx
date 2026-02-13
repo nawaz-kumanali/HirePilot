@@ -4,9 +4,16 @@ import type { Skill } from '../../../store/CurrentUser/currentuser.types';
 import { Card, Box, Stack, Typography, Chip, useTheme, alpha } from '@mui/material';
 
 interface SkillsCloudProps {
+    /** List of professional skills and their proficiency levels. */
     skills: Skill[];
 }
 
+/**
+ * Interactive cloud of skill badges.
+ * 
+ * Displays skills as chips with color-coded proficiency indicators 
+ * (Expert, Advanced, etc.) and hover effects.
+ */
 const SkillsCloud: React.FC<SkillsCloudProps> = ({ skills }) => {
     const theme = useTheme();
 

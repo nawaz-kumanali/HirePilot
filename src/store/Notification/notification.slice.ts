@@ -14,8 +14,8 @@ const notificationSlice = createSlice({
             state.notifications = action.payload
         },
         clearNotification: (state) => {
-            state.notifications = [],
-            state.unreadNotificationCount = 0
+            state.notifications = [];
+            state.unreadNotificationCount = 0;
         },
         markAsRead: (state, action) => {
             state.notifications = state.notifications.map(n => n.id === action.payload ? { ...n, isRead: true } : n)

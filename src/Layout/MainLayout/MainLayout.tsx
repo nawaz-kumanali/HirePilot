@@ -5,6 +5,15 @@ import Navbar from '../../components/Navbar/Navbar';
 import Footer from '../../components/Footer/Footer';
 import PageTransition from '../../components/PageTransition/PageTransition';
 
+/**
+ * The primary layout wrapper for the application.
+ * 
+ * Features:
+ * - Persistent Navbar and Footer
+ * - Integrated PageTransition using Framer Motion
+ * - Flexbox stack to ensure footer stays at bottom
+ * - Adaptive main content height
+ */
 const MainLayout = () => {
     const location = useLocation();
 

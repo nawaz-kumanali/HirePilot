@@ -4,10 +4,18 @@ import { Box, Typography, Stack, useTheme, alpha } from '@mui/material';
 import Card from '../../../components/Card/Card';
 
 interface JobCardProps {
+    /** The job data object to display. */
     job: Job;
+    /** Callback when the user clicks to view job details. */
     onOpen: (job: Job) => void;
 }
 
+/**
+ * A preview card for a job listing.
+ * 
+ * Includes job title, company, description summary, location, salary, 
+ * and dynamic badges for job type (Remote, Hybrid, etc.).
+ */
 const JobCard = ({ job, onOpen }: JobCardProps) => {
     const theme = useTheme();
 

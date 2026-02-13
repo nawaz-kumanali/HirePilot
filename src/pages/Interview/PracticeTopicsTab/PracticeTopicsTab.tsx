@@ -13,7 +13,7 @@ interface PracticeTopic {
 
 interface PracticeTopicsTabProps {
   topics: PracticeTopic[];
-  onStartTraining: (interview: any) => void;
+  onStartTraining: (interview: { position: string; company: string; topics: string[] }) => void;
 }
 
 const PracticeTopicsTab = ({ topics, onStartTraining }: PracticeTopicsTabProps) => {
@@ -90,7 +90,7 @@ const PracticeTopicsTab = ({ topics, onStartTraining }: PracticeTopicsTabProps) 
               <Chip
                 label={topic.difficulty}
                 size="small"
-                color={getDifficultyColor(topic.difficulty) as any}
+                color={getDifficultyColor(topic.difficulty) as 'success' | 'warning' | 'error' | 'default'}
                 sx={{ fontWeight: 600 }}
               />
               <Typography variant="caption" color="text.secondary">

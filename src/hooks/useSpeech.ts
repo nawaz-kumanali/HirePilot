@@ -6,6 +6,16 @@ interface UseSpeechOptions {
     enabled?: boolean;
 }
 
+/**
+ * Custom hook for managing the Web Speech Synthesis API.
+ * 
+ * Provides a simple interface for triggering text-to-speech with customizable
+ * pitch and rate, while automatically managing the synthesis lifecycle to
+ * prevent overlapping audio.
+ * 
+ * @param {UseSpeechOptions} options - Configuration for speech behavior.
+ * @returns {Object} { speak, stop, isSpeaking }
+ */
 export const useSpeech = (options: UseSpeechOptions = {}) => {
     const { rate = 1.0, pitch = 1.0, enabled = true } = options;
     const [isSpeaking, setIsSpeaking] = useState(false);

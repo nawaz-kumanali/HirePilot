@@ -2,6 +2,12 @@ import { Link } from 'react-router-dom';
 import { Rocket } from "lucide-react";
 import { Box, Typography, useTheme } from '@mui/material';
 
+/**
+ * The standard brand Logo component.
+ * 
+ * Features a Rocket icon and the "HirePilot." brand text with 
+ * a theme-aware gradient. Navigates to the home page on click.
+ */
 const Logo = () => {
     const theme = useTheme();
 
@@ -9,7 +15,7 @@ const Logo = () => {
         <Box
             component={Link}
             to="/"
-            
+
             sx={{
                 display: 'flex',
                 alignItems: 'center',

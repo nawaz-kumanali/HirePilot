@@ -2,14 +2,26 @@ import React from 'react';
 import { Box, Typography, LinearProgress, linearProgressClasses, alpha } from '@mui/material';
 
 interface ProgressBarProps {
+    /** Current progress value (0 to 100). */
     progress: number;
+    /** Custom color for the progress bar. Can be a hex code or a theme key. */
     color?: string;
+    /** The thickness/height of the bar. */
     height?: string | number;
+    /** Whether to show a text label with title and percentage. */
     showLabel?: boolean;
+    /** The title text for the label. */
     label?: string;
+    /** Optional CSS class for the wrapper Box. */
     className?: string;
 }
 
+/**
+ * A stylized progress bar with optional labeling.
+ * 
+ * Built on top of MUI LinearProgress, with customization for 
+ * rounded corners, backdrop blur, and custom brand colors.
+ */
 const ProgressBar: React.FC<ProgressBarProps> = ({
     progress,
     color = 'primary.main', // defaulted to theme primary

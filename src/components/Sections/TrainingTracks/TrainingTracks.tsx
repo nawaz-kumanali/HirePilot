@@ -44,6 +44,12 @@ const trainingTracksData = [
   },
 ];
 
+/**
+ * Specialized Training Tracks section for career paths.
+ * 
+ * Displays multiple career-focused tracks (Backend, Frontend, etc.) 
+ * using `TTCard`. Dynamically injects theme colors for specific tracks.
+ */
 const TrainingTracks = () => {
   const theme = useTheme();
 

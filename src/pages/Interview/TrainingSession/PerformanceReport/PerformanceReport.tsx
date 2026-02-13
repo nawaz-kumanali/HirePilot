@@ -1,8 +1,9 @@
 import { Award, CheckCircle, TrendingUp, ChevronRight } from 'lucide-react';
 import { Box, Stack, Typography, Button, LinearProgress, useTheme, alpha } from '@mui/material';
+import type { PerformanceReportData } from '../../../../types/interview';
 
 interface PerformanceReportProps {
-    report: any;
+    report: PerformanceReportData;
     position: string;
     onClose: () => void;
 }

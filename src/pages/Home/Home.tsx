@@ -5,6 +5,12 @@ import Hero from "../../components/Sections/Hero/Hero";
 import HowItWorks from "../../components/Sections/HowItWorks/HowItWorks";
 import TrainingTracks from "../../components/Sections/TrainingTracks/TrainingTracks";
 
+/**
+ * The Landing Page of the application.
+ * 
+ * Features a sequence of animated sections (Hero, HowItWorks, Features, etc.) 
+ * to introduce users to the platform's value proposition.
+ */
 const Home = () => {
   return (
     <Box

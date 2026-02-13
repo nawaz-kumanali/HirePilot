@@ -1,12 +1,19 @@
 import { getAiResponse } from './HandleAi';
+import type { Message, InterviewSession, PerformanceReportData } from '../types/interview';
 
 /**
  * Generates a dynamic interview question using AI.
- * It considers the role, company, past conversation, and topics.
+ * 
+ * This function constructs a personalized prompt based on the candidate's target position,
+ * the company, and the history of the current interaction to ensure contextually
+ * relevant follow-up questions.
+ * 
+ * @param {InterviewSession} session - Object containing interview details and message history.
+ * @returns {Promise<string>} The AI-generated question.
  */
-export const generateAIQuestion = async (session: any): Promise<string> => {
+export const generateAIQuestion = async (session: InterviewSession): Promise<string> => {
   const { interview, messages } = session;
-  const history = messages.map((m: any) => `${m.role.toUpperCase()}: ${m.content}`).join('\n');
+  const history = messages.map((m: Message) => `${m.role.toUpperCase()}: ${m.content}`).join('\n');
 
   const prompt = `
         You are an expert interviewer for the position of ${interview.position} at ${interview.company}.
@@ -26,37 +33,53 @@ export const generateAIQuestion = async (session: any): Promise<string> => {
     `;
 
   try {
-    const response: any = await getAiResponse(prompt);
+    const response = await getAiResponse(prompt);
     return response;
   } catch (error) {
     console.error("AI Question Generation Failed:", error);
+    // Rethrow to allow the UI to handle the error (e.g., showing an error overlay)
     throw error;
   }
 };
 
 /**
- * Generates real-time behavioral/technical hints for the user during the interview.
+ * Generates real-time behavioral or technical hints for the user during the interview.
+ *
+ * Designed to provide immediate, low-friction guidance while the AI is busy
+ * generating a full response. These insights are meant to be short and encouraging.
+ *
+ * @param {string} lastUserMessage - The last response provided by the candidate.
+ * @param {string} position - The target job position.
+ * @returns {Promise<string>} A short tip or technical hint.
  */
 export const generateRealTimeInsight = async (lastUserMessage: string, position: string): Promise<string> => {
   const prompt = `
         A candidate for a ${position} role just said: "${lastUserMessage}"
-        
+
         Give a single, very short (max 10 words) encouraging tip or technical hint for their next response.
         Example: "Mention specific tools used," or "Focus on the business impact."
     `;
 
   try {
-    const response: any = await getAiResponse(prompt);
+    const response: string = await getAiResponse(prompt);
     return response.trim();
-  } catch (error) {
+  } catch {
     return ""; // Silently fail
   }
 };
 
 /**
- * Generates a comprehensive performance report at the end of the session.
+ * Generates a comprehensive performance report at the end of the interview session.
+ * 
+ * This function sends the entire chat history to the AI to evaluate the candidate's 
+ * performance across technical knowledge and communication skills. It returns a
+ * structured JSON object used to populate the PerformanceReport component.
+ * 
+ * @param {Message[]} history - The full array of messages from the session.
+ * @param {string} position - The target job position for focused evaluation.
+ * @returns {Promise<PerformanceReportData>} A report containing scores, feedback, and actionable tips.
  */
-export const getPerformanceReport = async (history: any[], position: string) => {
+export const getPerformanceReport = async (history: Message[], position: string): Promise<PerformanceReportData> => {
   const prompt = `
     Analyze this interview history for a ${position} role.
     
@@ -74,14 +97,14 @@ export const getPerformanceReport = async (history: any[], position: string) => 
   `;
 
   try {
-    const response: any = await getAiResponse(prompt);
+    const response = await getAiResponse(prompt);
     // Extract JSON from the response (handling potential markdown)
     const jsonMatch = response.match(/\{[\s\S]*\}/);
     const cleanJson = jsonMatch ? jsonMatch[0] : response;
 
     try {
-      return JSON.parse(cleanJson);
-    } catch (parseError) {
+      return JSON.parse(cleanJson) as PerformanceReportData;
+    } catch (parseError: unknown) {
       console.error("JSON Parse Error:", parseError, "Response:", response);
       return {
         communicationScore: 78,
@@ -91,7 +114,7 @@ export const getPerformanceReport = async (history: any[], position: string) => 
         tips: ["Be more specific with technical examples", "Maintain the same professional energy", "Focus on results-oriented answers"]
       };
     }
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Failed to generate performance report:", error);
     return {
       communicationScore: 0,
@@ -102,4 +125,3 @@ export const getPerformanceReport = async (history: any[], position: string) => 
     };
   }
 };
-

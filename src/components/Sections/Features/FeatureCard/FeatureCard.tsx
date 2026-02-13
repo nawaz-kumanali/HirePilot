@@ -4,7 +4,7 @@ import { Box, Typography, alpha, useTheme } from '@mui/material';
 interface FeatureCardType {
     title: string,
     desc: string,
-    icon: any,
+    icon: React.ReactNode,
 }
 
 const FeatureCard: React.FC<FeatureCardType> = ({ title, desc, icon }) => {
@@ -33,14 +33,14 @@ const FeatureCard: React.FC<FeatureCardType> = ({ title, desc, icon }) => {
                 sx={{
                     width: 64,
                     height: 64,
-                    minWidth: 64, 
+                    minWidth: 64,
                     borderRadius: 5,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     bgcolor: alpha(theme.palette.primary.main, 0.05),
                     color: 'secondary.main',
-                    mb: { xs: 0, md: 2.5 }, 
+                    mb: { xs: 0, md: 2.5 },
                 }}
             >
                 {icon}

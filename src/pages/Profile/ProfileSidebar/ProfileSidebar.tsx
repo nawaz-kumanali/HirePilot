@@ -7,8 +7,10 @@ import Card from '../../../components/Card/Card';
 import profileImg from '../../../assets/Nawaz_profile_IMG.jpg';
 import { Box, Stack, Typography, IconButton, Avatar, Divider, useTheme, alpha } from '@mui/material';
 
+import type { CurrentUserState } from '../../../store/CurrentUser/currentuser.types';
+
 interface ProfileSidebarProps {
-    profileData: any;
+    profileData: CurrentUserState;
     profileCompletion: number;
     isEditing: boolean;
     copiedLink: boolean;

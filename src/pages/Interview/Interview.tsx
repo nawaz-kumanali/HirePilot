@@ -10,6 +10,14 @@ import type { RootState } from '../../store/rootReducer';
 import { Box, Container, useTheme, alpha } from '@mui/material';
 import type { TrainingInterview, CompletedInterview } from '../../types/interview';
 
+/**
+ * Main Hub for all interview preparation activities.
+ * 
+ * Features:
+ * - Tabbed navigation (Upcoming, Completed, Practice Topics).
+ * - Centralized training start logic with route-based initialization.
+ * - Persistent visual background patterns.
+ */
 const Interview = () => {
   const location = useLocation();
   const navigate = useNavigate();

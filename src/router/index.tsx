@@ -18,6 +18,15 @@ import TrainingSession from "../pages/Interview/TrainingSession/TrainingSession"
 
 import MainLayout from "../Layout/MainLayout/MainLayout";
 
+/**
+ * Global router configuration for HirePilot.
+ * 
+ * Features:
+ * - Nested layouts (MainLayout for primary navigation)
+ * - ProtectedRoutes for authenticated content
+ * - AuthRoutes for guest-only pages (Login/Signup)
+ * - Absolute path for immersion simulation (/live-interview)
+ */
 export const router = createBrowserRouter([
   {
     element: <App />,

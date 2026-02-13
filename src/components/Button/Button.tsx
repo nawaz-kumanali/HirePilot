@@ -1,5 +1,5 @@
-import React from 'react';
 import { Button as MuiButton, type ButtonProps as MuiButtonProps, alpha } from '@mui/material';
+import type { Theme } from '@mui/material/styles';
 
 interface ButtonProps extends Omit<MuiButtonProps, 'variant'> {
     variant?: 'primary' | 'secondary' | 'ghost' | 'danger';
@@ -44,7 +44,7 @@ const Button: React.FC<ButtonProps> = ({
                     '&:hover': {
                         borderColor: 'primary.main',
                         color: 'primary.main',
-                        bgcolor: (theme: any) => alpha(theme.palette.primary.main, 0.05),
+                        bgcolor: (theme: Theme) => alpha(theme.palette.primary.main, 0.05),
                     }
                 };
             case 'ghost':
@@ -53,14 +53,14 @@ const Button: React.FC<ButtonProps> = ({
                     color: 'text.secondary',
                     boxShadow: 'none',
                     '&:hover': {
-                        bgcolor: (theme: any) => alpha(theme.palette.primary.main, 0.08),
+                        bgcolor: (theme: Theme) => alpha(theme.palette.primary.main, 0.08),
                         color: 'primary.main',
                         boxShadow: 'none',
                     }
                 };
             case 'danger':
                 return {
-                    bgcolor: (theme: any) => alpha(theme.palette.error.main, 0.1),
+                    bgcolor: (theme: Theme) => alpha(theme.palette.error.main, 0.1),
                     color: 'error.main',
                     boxShadow: 'none',
                     '&:hover': {

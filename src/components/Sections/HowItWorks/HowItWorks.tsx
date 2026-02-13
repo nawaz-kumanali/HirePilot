@@ -30,6 +30,12 @@ const steps = [
   },
 ];
 
+/**
+ * "How It Works" section explaining the 4-step user journey.
+ * 
+ * Uses `HIWCard` to display each step (Browse, Train, Insights, apply).
+ * Animates as a responsive grid of steps.
+ */
 const HowItWorks = () => {
   return (
     <Box component="section" sx={{ py: { xs: 8, md: 4 }, position: 'relative', overflow: 'hidden' }}>

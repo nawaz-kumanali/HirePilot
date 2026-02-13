@@ -12,6 +12,12 @@ const pulse = keyframes`
   50% { transform: scale(1.2); opacity: 0.6; }
 `;
 
+/**
+ * Custom 404 Error Page.
+ * 
+ * Features animated rocket illustration and quick navigation links to 
+ * help users find their way back after an invalid route access.
+ */
 const NotFound = () => {
   const theme = useTheme();
   const navigate = useNavigate();
@@ -53,7 +59,7 @@ const NotFound = () => {
             animation: `${float} ${6 + i * 2}s ease-in-out infinite`,
             animationDelay: `${i * 0.5}s`,
           }}
-          style={{ top: pos.top, left: pos.left, right: pos.right, bottom: pos.bottom } as any}
+          style={{ top: pos.top, left: pos.left, right: pos.right, bottom: pos.bottom } as React.CSSProperties}
         />
       ))}
 

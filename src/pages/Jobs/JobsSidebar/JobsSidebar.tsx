@@ -12,21 +12,41 @@ import {
 } from '@mui/material';
 
 interface FilterConfig {
+  /** Display label for the filter (e.g. "Location", "Job Type"). */
   label: string;
+  /** The current selected filter value. */
   value: string;
-  onChange: (value: any) => void;
+  /** Callback to update the filter value. */
+  onChange: (value: string | number) => void;
+  /** List of available options for this filter. */
   options: string[];
+  /** Lucide icon component to represent the filter. */
   icon: React.ComponentType<{ size: number }>;
 }
 
 interface JobsFiltersSidebarProps {
+  /** Array of filter configurations. */
   filters: FilterConfig[];
+  /** Count of currently active (non-empty) filters. */
   activeFilters: number;
+  /** Callback to clear all active filters. */
   onReset: () => void;
+  /** Mobile drawer state. */
   mobileOpen: boolean;
+  /** Callback to close the mobile drawer. */
   onMobileClose: () => void;
 }
 
+/**
+ * Enhanced Sidebar for filtering job listings.
+ * 
+ * Features:
+ * - Hover-to-expand behavior on desktop.
+ * - Stick/Lock functionality for persistent view.
+ * - Dynamic active filter indicator.
+ * - Collapsible dropdown categories.
+ * - Full Mobile Drawer support.
+ */
 const JobsSidebar = ({
   filters,
   activeFilters,

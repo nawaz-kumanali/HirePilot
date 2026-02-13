@@ -19,6 +19,13 @@ import { useJobFilters } from '../../hooks/useJobFilters';
 import { useGetJobsQuery } from '../../api/jobApi';
 import Loading from '../../components/Loading/Loading';
 
+/**
+ * The main page for browsing and filtering job opportunities.
+ * 
+ * It integrates with the `useGetJobsQuery` RTK Query hook for data fetching
+ * and uses `useJobFilters` for complex filtering across job types, experience
+ * levels, and locations. Requires authentication for viewing job details.
+ */
 const Jobs = () => {
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
   const [openDialog, setOpenDialog] = useState(false);
@@ -57,21 +64,21 @@ const Jobs = () => {
       {
         label: 'Job Type',
         value: filterType,
-        onChange: setFilterType,
+        onChange: (val: string | number) => setFilterType(val as any),
         options: jobTypes,
         icon: Briefcase,
       },
       {
         label: 'Experience Level',
         value: filterLevel,
-        onChange: setFilterLevel,
+        onChange: (val: string | number) => setFilterLevel(val as any),
         options: jobLevels,
         icon: TrendingUp,
       },
       {
         label: 'Location',
         value: filterLocation,
-        onChange: setFilterLocation,
+        onChange: (val: string | number) => setFilterLocation(val as string),
         options: locations,
         icon: MapPin,
       },

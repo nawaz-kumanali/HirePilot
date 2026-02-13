@@ -1,5 +1,14 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 
+/**
+ * Custom hook for managing the browser's MediaDevices API (Camera and Microphone).
+ * 
+ * Automatically handles stream acquisition when `active` is true and ensures
+ * proper cleanup of tracks to prevent hardware usage indicators from remaining on.
+ * 
+ * @param {boolean} active - Whether the media stream should be currently active.
+ * @returns {Object} Object containing the stream, status flags, and toggle functions.
+ */
 export const useMediaStream = (active: boolean) => {
     const [stream, setStream] = useState<MediaStream | null>(null);
     const [error, setError] = useState<Error | null>(null);
@@ -25,9 +34,10 @@ export const useMediaStream = (active: boolean) => {
             setStream(mediaStream);
             setError(null);
             return mediaStream;
-        } catch (err: any) {
-            console.error("Media Access Error:", err);
-            setError(err);
+        } catch (err: unknown) {
+            const errorInstance = err instanceof Error ? err : new Error(String(err));
+            console.error("Media Access Error:", errorInstance);
+            setError(errorInstance);
             return null;
         }
     }, []);

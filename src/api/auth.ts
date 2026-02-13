@@ -1,11 +1,11 @@
-import { useAppSelector } from "../store/hooks"
-
+/**
+ * Authentication service placeholder.
+ * 
+ * TODO: Implement real authentication logic.
+ * Currently, authentication state is handled directly via Redux hooks in components.
+ */
 const AuthService = {
-
-    getAuthenticationState: () => {
-        const isAuthenticated = useAppSelector(state => state.auth.isAuthenticated)
-        return isAuthenticated;
-    }
-}
+    // Methods removed due to incorrect hook usage in non-component file.
+};
 
 export default AuthService;

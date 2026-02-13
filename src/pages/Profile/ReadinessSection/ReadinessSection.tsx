@@ -1,17 +1,24 @@
 import React from 'react';
-import { Rocket, Activity, Zap, Shield, Target } from 'lucide-react';
+import { Rocket, Activity, Zap, Shield, Target, type LucideIcon } from 'lucide-react';
 import type { ReadinessMetric } from '../../../store/CurrentUser/currentuser.types';
 import ProgressBar from '../../../components/ProgressBar/ProgressBar';
 import { Card, Box, Stack, Typography, useTheme, alpha } from '@mui/material';
 
 interface ReadinessSectionProps {
+    /** Array of readiness metrics (Zap, technical, etc.) to display. */
     readiness: ReadinessMetric[];
 }
 
-const iconMap: Record<string, any> = {
+const iconMap: Record<string, LucideIcon> = {
     Zap, Activity, Shield, Target
 };
 
+/**
+ * Visual summary of interview readiness metrics.
+ * 
+ * Renders a grid of cards, each containing a progress bar and 
+ * an icon-labeled score for specific performance categories.
+ */
 const ReadinessSection: React.FC<ReadinessSectionProps> = ({ readiness }) => {
     const theme = useTheme();
 

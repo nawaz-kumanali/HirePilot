@@ -86,12 +86,12 @@ const SignIn = () => {
     }, 500);
   };
 
-  const handleEmailChange = (e: any) => {
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setEmail(e.target.value);
     if (errors.email) setErrors({ ...errors, email: undefined });
   };
 
-  const handlePasswordChange = (e: any) => {
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setPassword(e.target.value);
     if (errors.password) setErrors({ ...errors, password: undefined });
   };

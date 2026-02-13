@@ -18,13 +18,14 @@ export const useJobFilters = ({ jobs = defaultJobList, itemsPerPage = 5 }: UseJo
     const [currentPage, setCurrentPage] = useState(1);
 
     // Dynamic Options derived from data
-    const jobTypes = useMemo(() => Array.from(new Set(defaultJobList.map(j => j.type))), []);
-    const jobLevels = useMemo(() => Array.from(new Set(defaultJobList.map(j => j.level))), []);
-    const locations = useMemo(() => Array.from(new Set(defaultJobList.map(j => j.location))), []);
+    // Use the 'jobs' prop for dynamic options if provided, otherwise use defaultJobList
+    const jobTypes = useMemo(() => Array.from(new Set((jobs || defaultJobList).map(j => j.type))), [jobs]);
+    const jobLevels = useMemo(() => Array.from(new Set((jobs || defaultJobList).map(j => j.level))), [jobs]);
+    const locations = useMemo(() => Array.from(new Set((jobs || defaultJobList).map(j => j.location))), [jobs]);
 
     // Filtering Logic
     const filteredJobs = useMemo(() => {
-        return jobs.filter((job: any) => {
+        return jobs.filter((job: Job) => {
             const matchesSearch =
                 job.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 job.company.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -40,6 +41,7 @@ export const useJobFilters = ({ jobs = defaultJobList, itemsPerPage = 5 }: UseJo
 
     // Reset to page 1 when filters change
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setCurrentPage(1);
     }, [searchTerm, filterType, filterLevel, filterLocation]);
 

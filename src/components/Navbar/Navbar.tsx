@@ -23,6 +23,15 @@ const NAV_ITEMS = [
   { label: "AI Interview", path: "/interview", icon: Zap },
 ];
 
+/**
+ * The main Navigation Bar of the application.
+ * 
+ * Features:
+ * - Responsive design (Desktop links vs. Mobile drawer)
+ * - Conditional rendering based on authentication state
+ * - Theme toggle integration
+ * - Sticky positioning with backdrop blur logic (via MUI AppBar)
+ */
 export default function Navbar() {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const isAuthenticated = useAppSelector(state => state.auth.isAuthenticated);

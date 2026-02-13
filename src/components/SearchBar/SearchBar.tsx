@@ -1,13 +1,22 @@
 import { Search } from 'lucide-react';
 import { Box, Paper, InputBase, alpha, useTheme } from '@mui/material';
 
-interface JobsSearchProps {
-  placeHolder: string
-  value: string
-  onChange: (value: string) => void
+interface SearchBarProps {
+  /** Placeholder text for the search input. */
+  placeHolder: string;
+  /** The current search query value. */
+  value: string;
+  /** Callback triggered on input change. */
+  onChange: (value: string) => void;
 }
 
-const SearchBar = ({ placeHolder, value, onChange }: JobsSearchProps) => {
+/**
+ * A specialized Search Input component with hover and focus effects.
+ * 
+ * Includes a Search icon that changes color on focus and a 
+ * paper-style background with shadow and border transitions.
+ */
+const SearchBar = ({ placeHolder, value, onChange }: SearchBarProps) => {
   const theme = useTheme();
 
   return (

@@ -5,10 +5,19 @@ import { Box, Typography, Button, Stack, useTheme, alpha } from '@mui/material';
 import Card from '../../../components/Card/Card';
 
 interface InterviewCardProps {
+    /** The interview data to display. */
     interview: Interview;
+    /** Callback to start the training simulation. */
     onStartTraining: (interview: Interview) => void;
 }
 
+/**
+ * A detailed card representing an individual interview round.
+ * 
+ * Displays company info, position, status badges (upcoming/completed), 
+ * date/time, and targeted topics. Provides a direct action link 
+ * to start/resume training.
+ */
 const InterviewCard = ({ interview, onStartTraining }: InterviewCardProps) => {
     const { company, position, date, time, duration, status, difficulty, topics } = interview;
     const theme = useTheme();

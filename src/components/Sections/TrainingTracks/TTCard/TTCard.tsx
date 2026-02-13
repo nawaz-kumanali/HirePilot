@@ -7,7 +7,7 @@ interface TTCardType {
     id: string,
     color: string,
     tag?: string,
-    icon: any,
+    icon: React.ReactNode,
     title: string,
     desc: string
 }

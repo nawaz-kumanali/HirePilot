@@ -2,17 +2,23 @@ import { Mic, MicOff, Video, VideoOff, Volume2, VolumeX, Send, Loader } from 'lu
 import { Box, Stack, IconButton, TextField, Button, useTheme, alpha, keyframes } from '@mui/material';
 
 interface ControlBarProps {
+    /** Whether the user's microphone is muted at the stream level. */
     isMuted: boolean;
+    /** Whether the user's camera is turned off. */
     isVideoOff: boolean;
+    /** Whether speech synthesis (the AI's voice) is enabled. */
     isAudioEnabled: boolean;
     onToggleMute: () => void;
     onToggleVideo: () => void;
     onToggleAudio: () => void;
+    /** Whether the speech-to-text listener is active. */
     isListening: boolean;
     onToggleListening: () => void;
+    /** The current text in the response input field. */
     userInput: string;
     setUserInput: (val: string) => void;
     onSendMessage: () => void;
+    /** Whether a message is currently being sent or processed by AI. */
     isLoading: boolean;
 }
 
@@ -21,6 +27,12 @@ const pulse = keyframes`
   50% { transform: scale(1.1); }
 `;
 
+/**
+ * Footer control bar for the interview session.
+ * 
+ * Provides toggles for hardware (camera/mic), voice feedback settings,
+ * and the message input system (both typed and voice-to-text).
+ */
 const ControlBar = ({
     isMuted,
     isVideoOff,

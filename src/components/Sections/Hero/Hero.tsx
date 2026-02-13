@@ -4,6 +4,13 @@ import HeroBackground from './HeroBackground';
 import HeroHeader from './HeroHeader';
 import HeroFeatures from './HeroFeatures';
 
+/**
+ * The Hero section of the landing page.
+ * 
+ * Includes a visually rich animated background, introductory header, 
+ * and high-level feature highlights. Uses complex MUI styling and 
+ * Framer Motion-inspired CSS animations.
+ */
 const Hero = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));

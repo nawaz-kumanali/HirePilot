@@ -1,12 +1,17 @@
 import React from 'react';
 import { Box, Typography, keyframes, alpha, useTheme } from '@mui/material';
 
-interface VisualHeaderType {
-    badge?: string,
-    title: string,
-    gradient_title: string,
-    subtitle?: string,
-    align?: React.CSSProperties['textAlign']
+interface VisualHeaderProps {
+    /** Optional badge text displayed above the main title. */
+    badge?: string;
+    /** Primary title text. */
+    title: string;
+    /** Title text segment that will be rendered with the brand gradient. */
+    gradient_title: string;
+    /** Optional detailed description below the title. */
+    subtitle?: string;
+    /** Text alignment (default: center). */
+    align?: React.CSSProperties['textAlign'];
 }
 
 const slideDown = keyframes`
@@ -20,7 +25,14 @@ const pulse = keyframes`
     100% { transform: scale(1); opacity: 1; box-shadow: 0 0 0 0 rgba(168, 85, 247, 0); }
 `;
 
-const VisualHeader: React.FC<VisualHeaderType> = ({ badge, title, gradient_title, subtitle="", align = "center" }) => {
+/**
+ * A standard, high-impact header for page sections.
+ * 
+ * Features an animated badge with a pulse effect, 
+ * a bold responsive title with gradient typography, 
+ * and consistent entrance animations.
+ */
+const VisualHeader: React.FC<VisualHeaderProps> = ({ badge, title, gradient_title, subtitle = "", align = "center" }) => {
     const theme = useTheme();
 
     return (
@@ -84,10 +96,10 @@ const VisualHeader: React.FC<VisualHeaderType> = ({ badge, title, gradient_title
                 variant="body1"
                 sx={{
                     color: 'text.secondary',
-                    fontSize: { xs: '1.2rem', md: '1.1rem', lg: '1rem' }, // Tweaked to match SCSS media queries inversely or reasonably better
+                    fontSize: { xs: '1.2rem', md: '1.1rem', lg: '1rem' },
                     lineHeight: 1.6,
                     maxWidth: 900,
-                    mx: align === 'center' ? 'auto' : 0, // Auto margins if centered
+                    mx: align === 'center' ? 'auto' : 0,
                     mb: 2,
                     animation: `${slideDown} 0.6s ease-out`,
                 }}

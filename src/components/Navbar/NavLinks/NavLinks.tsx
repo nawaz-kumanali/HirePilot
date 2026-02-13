@@ -12,6 +12,14 @@ interface NavLinksProps {
     NAV_ITEMS: NAV_ITEM[];
 }
 
+/**
+ * Desktop navigation links for the Navbar.
+ * 
+ * Renders a horizontal list of buttons with active state styling 
+ * based on the current browser location.
+ * 
+ * @param {NavLinksProps} props - Component props.
+ */
 const NavLinks: React.FC<NavLinksProps> = ({ NAV_ITEMS }) => {
     const location = useLocation();
     return (

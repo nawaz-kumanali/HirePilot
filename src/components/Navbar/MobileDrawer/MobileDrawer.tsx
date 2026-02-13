@@ -1,14 +1,27 @@
 import { Drawer, Box, List, ListItem, Button, Divider } from "@mui/material";
 import { Link } from "react-router-dom";
 
+import type { LucideIcon } from "lucide-react";
+
 interface MobileDrawerProps {
+    /** Whether the drawer is currently open. */
     isMobileOpen: boolean;
+    /** Callback to change the open state of the drawer. */
     setIsMobileOpen: (open: boolean) => void;
+    /** Navigation handler that also closes the drawer. */
     handleNavigation: (path: string) => void;
+    /** Authentication status of the current user. */
     isAuthenticated: boolean;
-    NAV_ITEMS: { label: string; path: string; icon: any }[];
+    /** List of navigation items to display in the drawer. */
+    NAV_ITEMS: { label: string; path: string; icon: LucideIcon }[];
 }
 
+/**
+ * Slide-out navigation drawer for mobile screens.
+ * 
+ * Provides quick access to main navigation links and auth actions 
+ * when the screen width is restricted.
+ */
 const MobileDrawer: React.FC<MobileDrawerProps> = ({ isMobileOpen, setIsMobileOpen, handleNavigation, isAuthenticated, NAV_ITEMS }) => {
     return (
         <Drawer

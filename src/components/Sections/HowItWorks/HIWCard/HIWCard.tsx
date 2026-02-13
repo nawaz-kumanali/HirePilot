@@ -3,7 +3,7 @@ import { Box, Typography, alpha, useTheme } from '@mui/material';
 
 interface HIWCardType {
     step: string,
-    Icon: any,
+    Icon: React.ReactNode,
     title: string,
     desc: string
 }
