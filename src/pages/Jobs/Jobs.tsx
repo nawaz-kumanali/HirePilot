@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppSelector } from '../../store/hooks';
 import type Job from '../../types/job';
@@ -13,30 +13,45 @@ import JobCard from './JobCard/JobCard';
 import VisualHeader from '../../components/VisualHeader/VisualHeader';
 import Pagination from '../../components/Pagination/Pagination';
 import JobToolbar from './JobToolbar/JobToolbar';
-import { useJobFilters } from '../../hooks/useJobFilters';
+import { useJobFilters, type JobType, type JobLevel } from '../../hooks/useJobFilters';
 
-// RTK Query
-import { useGetJobsQuery } from '../../api/jobApi';
+// Mock API Service
+import { JOB_SERVICE } from '../../api/services/jobApi';
 import Loading from '../../components/Loading/Loading';
 
 /**
  * The main page for browsing and filtering job opportunities.
  * 
- * It integrates with the `useGetJobsQuery` RTK Query hook for data fetching
- * and uses `useJobFilters` for complex filtering across job types, experience
- * levels, and locations. Requires authentication for viewing job details.
+ * It uses the mocked `JOB_SERVICE` for local data fetching
+ * and the `useJobFilters` hook for complex filtering across job types, 
+ * experience levels, and locations. 
  */
 const Jobs = () => {
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
   const [openDialog, setOpenDialog] = useState(false);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const [jobsData, setJobsData] = useState<Job[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const navigate = useNavigate();
   const isAuthenticated = useAppSelector(state => state.auth.isAuthenticated);
   const theme = useTheme();
 
-  // RTK Query Call
-  const { data: jobsData, isLoading } = useGetJobsQuery({});
+  // Fetch jobs using mock service
+  useEffect(() => {
+    const fetchJobs = async () => {
+      try {
+        setIsLoading(true);
+        const data = await JOB_SERVICE.getJobs();
+        setJobsData(data);
+      } catch (error) {
+        console.error('Failed to fetch jobs:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchJobs();
+  }, []);
 
   const {
     searchTerm,
@@ -64,14 +79,14 @@ const Jobs = () => {
       {
         label: 'Job Type',
         value: filterType,
-        onChange: (val: string | number) => setFilterType(val as any),
+        onChange: (val: string | number) => setFilterType(val as JobType),
         options: jobTypes,
         icon: Briefcase,
       },
       {
         label: 'Experience Level',
         value: filterLevel,
-        onChange: (val: string | number) => setFilterLevel(val as any),
+        onChange: (val: string | number) => setFilterLevel(val as JobLevel),
         options: jobLevels,
         icon: TrendingUp,
       },
@@ -95,8 +110,7 @@ const Jobs = () => {
     setOpenDialog(true);
   };
 
-
-  if (isLoading) return <Loading />
+  if (isLoading) return <Loading />;
 
   return (
     <Box

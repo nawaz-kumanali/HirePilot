@@ -3,6 +3,7 @@ import { Mail, Lock, Eye, EyeOff, User, Phone, CheckCircle, AlertCircle } from '
 import { Link, useNavigate } from 'react-router-dom';
 import { authActions } from '../../store/auth/auth.slice';
 import { useAppDispatch } from '../../store/hooks';
+import { AUTH_SERVICE } from '../../api/services/authApi';
 import {
   Box,
   TextField,
@@ -111,25 +112,33 @@ const SignUp = () => {
     setIsLoading(true);
     setErrors({});
 
-    setTimeout(() => {
-      setSuccessMessage(
-        `Welcome ${formData.firstName}! Your account has been created successfully.`
-      );
-      setFormData({
-        firstName: '',
-        lastName: '',
-        email: '',
-        phone: '',
-        password: '',
-        confirmPassword: '',
+    AUTH_SERVICE.register(formData)
+      .then((res) => {
+        console.log('Registration successful:', res);
+        setSuccessMessage(
+          `Welcome ${formData.firstName}! Your account has been created successfully.`
+        );
+        setFormData({
+          firstName: '',
+          lastName: '',
+          email: '',
+          phone: '',
+          password: '',
+          confirmPassword: '',
+        });
+        setAgreedToTerms(false);
+        setPasswordStrength('');
+        setTimeout(() => setSuccessMessage(''), 3000);
+        dispatch(authActions.login());
+        navigate("/");
+      })
+      .catch((err) => {
+        console.error('Registration failed:', err);
+        setErrors({ submit: err.message || 'Registration failed. Please try again.' });
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
-      setAgreedToTerms(false);
-      setPasswordStrength('');
-      setIsLoading(false);
-      setTimeout(() => setSuccessMessage(''), 3000);
-      dispatch(authActions.login())
-      navigate("/dashboard")
-    }, 1500);
   };
 
   const handleAuthSubmit = () => {
@@ -165,10 +174,11 @@ const SignUp = () => {
       setPasswordStrength(getPasswordStrength(value));
     }
 
-    if (errors[name]) {
+    if (errors[name] || errors.submit) {
       setErrors(prev => ({
         ...prev,
         [name]: undefined,
+        submit: undefined,
       }));
     }
   };
@@ -234,6 +244,16 @@ const SignUp = () => {
               sx={{ mb: 3 }}
             >
               {successMessage}
+            </Alert>
+          )}
+
+          {/* Error Message */}
+          {errors.submit && (
+            <Alert
+              severity="error"
+              sx={{ mb: 3, borderRadius: 1.5 }}
+            >
+              {errors.submit}
             </Alert>
           )}
 

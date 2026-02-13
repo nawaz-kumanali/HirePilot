@@ -19,7 +19,7 @@ const Notifications: React.FC = () => {
   const dispatch = useAppDispatch();
 
   const filteredNotifications = useMemo(() => {
-    let filtered = filter === 'all' ? notifications : notifications.filter(n => !n.isRead);
+    let filtered = filter === 'all' ? notifications : notifications.filter((n: Notification) => !n.isRead);
 
     if (sortBy === 'unread') {
       filtered = [...filtered].sort((_a, b) => (b.isRead ? -1 : 1));
@@ -27,7 +27,7 @@ const Notifications: React.FC = () => {
     return filtered;
   }, [notifications, filter, sortBy]);
 
-  const unreadCount = useMemo(() => notifications.filter(n => !n.isRead).length, [notifications]);
+  const unreadCount = useMemo(() => notifications.filter((n: Notification) => !n.isRead).length, [notifications]);
 
   const stats = useMemo(() => ({
     total: notifications.length,
@@ -43,7 +43,7 @@ const Notifications: React.FC = () => {
   };
 
   const deleteNotification = (id: string): void => {
-    const target = notifications.find(n => n.id === id);
+    const target = notifications.find((n: Notification) => n.id === id);
     if (target) {
       setLastDeleted(target);
       setShowUndo(true);
@@ -221,7 +221,7 @@ const Notifications: React.FC = () => {
             />
           ) : (
             <Stack spacing={0}>
-              {filteredNotifications.map((n) => (
+              {filteredNotifications.map((n: Notification) => (
                 <NotificationItem
                   key={n.id}
                   n={n}

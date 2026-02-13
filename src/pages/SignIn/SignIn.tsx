@@ -17,6 +17,7 @@ import {
   useTheme,
   alpha
 } from '@mui/material';
+import { AUTH_SERVICE } from '../../api/services/authApi';
 
 const SignIn = () => {
   const [email, setEmail] = useState('');
@@ -48,6 +49,7 @@ const SignIn = () => {
     return newErrors;
   };
 
+
   const handleSubmit = (e: { preventDefault: () => void; }) => {
     e.preventDefault();
     const newErrors = validateForm();
@@ -60,15 +62,22 @@ const SignIn = () => {
     setIsLoading(true);
     setErrors({});
 
-    setTimeout(() => {
+    AUTH_SERVICE.login({ email, password }).then((res) => {
+      console.log(res)
       setSuccessMessage(`Welcome back! Signed in as ${email}`);
       setEmail('');
       setPassword('');
-      setIsLoading(false);
       setTimeout(() => setSuccessMessage(''), 3000);
       dispatch(authActions.login())
-      navigate("/dashboard")
-    }, 1500);
+      navigate("/")
+    }).catch((err) => {
+      console.error('Login error:', err);
+      setErrors({ submit: err.message || 'Invalid email or password' });
+    }).finally(() => {
+      setIsLoading(false);
+    })
+
+
   };
 
   const handleAuthSubmit = () => {
@@ -82,18 +91,22 @@ const SignIn = () => {
       setIsLoading(false);
       setTimeout(() => setSuccessMessage(''), 3000);
       dispatch(authActions.login())
-      navigate("/dashboard")
+      navigate("/")
     }, 500);
   };
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setEmail(e.target.value);
-    if (errors.email) setErrors({ ...errors, email: undefined });
+    if (errors.email || errors.submit) {
+      setErrors({ ...errors, email: undefined, submit: undefined });
+    }
   };
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setPassword(e.target.value);
-    if (errors.password) setErrors({ ...errors, password: undefined });
+    if (errors.password || errors.submit) {
+      setErrors({ ...errors, password: undefined, submit: undefined });
+    }
   };
 
   return (
@@ -145,6 +158,16 @@ const SignIn = () => {
               sx={{ mb: 3 }}
             >
               {successMessage}
+            </Alert>
+          )}
+
+          {/* Error Message */}
+          {errors.submit && (
+            <Alert
+              severity="error"
+              sx={{ mb: 3, borderRadius: 1.5 }}
+            >
+              {errors.submit}
             </Alert>
           )}
 
