@@ -14,6 +14,7 @@ import Messages from "../pages/Messages/Messages";
 import AboutUs from "../pages/AboutUs/AboutUs";
 import PrivacyPolicy from "../pages/PrivacyPolicy/PrivacyPolicy";
 import TermsConditions from "../pages/TermsConditions/TermsConditions";
+import TrainingSession from "../pages/Interview/TrainingSession/TrainingSession";
 
 import MainLayout from "../Layout/MainLayout/MainLayout";
 
@@ -78,9 +79,15 @@ export const router = createBrowserRouter([
           },
         ]
       },
-      // Auth routes (guest only) - currently these also use the layout in App.tsx
-      // If they should NOT use the layout, they should be outside MainLayout.
-      // Based on the current App.tsx, they WERE using Navbar/Footer.
+      {
+        path: "/live-interview",
+        element: (
+          <ProtectedRoute>
+            <TrainingSession />
+          </ProtectedRoute>
+        ),
+      },
+      // Auth routes (guest only)
       {
         path: "/signup",
         element: (

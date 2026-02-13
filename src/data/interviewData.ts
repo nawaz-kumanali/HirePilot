@@ -1,7 +1,7 @@
 export const upcomingInterviews = [
   {
     id: 1,
-    title: 'Full Stack Developer Interview',
+    title: 'Full Stack Developer',
     company: 'Tech Corp',
     position: 'Senior Full Stack Developer',
     date: 'Dec 28, 2025',
@@ -14,7 +14,7 @@ export const upcomingInterviews = [
   },
   {
     id: 2,
-    title: 'Frontend Engineering Interview',
+    title: 'Frontend Engineering',
     company: 'Design Studio',
     position: 'Frontend Engineer',
     date: 'Dec 30, 2025',
@@ -27,7 +27,7 @@ export const upcomingInterviews = [
   },
   {
     id: 3,
-    title: 'Backend Developer Interview',
+    title: 'Backend Developer',
     company: 'Cloud Systems',
     position: 'Backend Engineer',
     date: 'Jan 5, 2026',
@@ -43,7 +43,7 @@ export const upcomingInterviews = [
 export const completedInterviews = [
   {
     id: 4,
-    title: 'Backend Developer Interview',
+    title: 'Backend Developer',
     company: 'Cloud Systems',
     position: 'Backend Engineer',
     date: 'Dec 20, 2025',
@@ -58,7 +58,7 @@ export const completedInterviews = [
   },
   {
     id: 5,
-    title: 'Frontend Developer Interview',
+    title: 'Frontend Developer',
     company: 'Web Solutions Inc',
     position: 'Frontend Developer',
     date: 'Dec 15, 2025',
@@ -73,7 +73,7 @@ export const completedInterviews = [
   },
   {
     id: 6,
-    title: 'Full Stack Developer Interview',
+    title: 'Full Stack Developer',
     company: 'StartUp Labs',
     position: 'Full Stack Developer',
     date: 'Dec 10, 2025',

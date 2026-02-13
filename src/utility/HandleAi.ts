@@ -3,7 +3,7 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 
 if (!API_KEY) {
-  console.error("API Key is missing! Check Vercel Env Variables.");
+    console.error("API Key is missing! Check Vercel Env Variables.");
 }
 
 const genAI = new GoogleGenerativeAI(API_KEY);
@@ -34,24 +34,45 @@ export const getAiResponse = async (prompt: string) => {
     }
 }
 
+interface ChatEntry {
+    role: "user" | "model";
+    parts: { text: string }[];
+}
+
 export const getAiStream = async (userInput: string, history: any[]) => {
-
-
     try {
         const model = genAI.getGenerativeModel({
             model: MODEL_ID,
             systemInstruction: "You are a Senior Recruiter. Give 1-2 sentences of feedback, then ask exactly one follow-up question."
         });
 
-        const sanitizedHistory = history.map(h => {
-            if (h.parts) return h;
-            return {
-                role: h.role === 'ai' ? 'model' : 'user',
-                parts: [{ text: h.content }]
-            };
+        // 1. Sanitize and consolidate history (Gemini requires alternating roles: user -> model -> user)
+        const chatHistory: ChatEntry[] = [];
+
+        history.forEach(h => {
+            const role = h.role === 'ai' ? 'model' : 'user';
+            const text = h.content || h.parts?.[0]?.text || "";
+
+            if (chatHistory.length > 0 && chatHistory[chatHistory.length - 1].role === role) {
+                // Combine consecutive messages with same role
+                chatHistory[chatHistory.length - 1].parts[0].text += `\n\n${text}`;
+            } else {
+                chatHistory.push({
+                    role,
+                    parts: [{ text }]
+                });
+            }
         });
 
-        const chat = model.startChat({ history: sanitizedHistory });
+        // 2. Ensure history starts with 'user'
+        if (chatHistory.length > 0 && chatHistory[0].role !== 'user') {
+            chatHistory.unshift({
+                role: 'user',
+                parts: [{ text: "Start the interview." }]
+            });
+        }
+
+        const chat = model.startChat({ history: chatHistory });
         const result = await chat.sendMessageStream(userInput);
         return result.stream;
     } catch (error: any) {

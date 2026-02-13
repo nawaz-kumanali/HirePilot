@@ -53,11 +53,14 @@ export const useMediaStream = (active: boolean) => {
     }, []);
 
     useEffect(() => {
-        if (active) {
-            startStream();
-        } else {
-            stopStream();
-        }
+        const handleStream = async () => {
+            if (active) {
+                await startStream();
+            } else {
+                stopStream();
+            }
+        };
+        handleStream();
         return () => {
             stopStream();
         };

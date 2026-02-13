@@ -1,5 +1,9 @@
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useState, useCallback } from 'react';
 import { Box } from '@mui/material';
+import { useLocation, useNavigate } from 'react-router-dom';
+
+import { useAppDispatch } from '../../../store/hooks';
+import { saveInterviewResult } from '../../../store/Interview/interview.slice';
 
 import { generateAIQuestion, getPerformanceReport, generateRealTimeInsight } from '../../../utility/aiHelpers';
 import { getAiStream } from '../../../utility/HandleAi';
@@ -20,29 +24,22 @@ interface Message {
   role: 'user' | 'ai';
   content: string;
   timestamp: Date;
+  hidden?: boolean;
 }
 
-interface TrainingSessionProps {
-  session: {
-    isActive: boolean;
-    interview: {
-      position: string;
-      company: string;
-      topics: string[];
-    };
-    messages: Message[];
-  };
-  onUpdate: (messages: Message[], isAiThinking: boolean) => void;
-  onFinish: (report: any) => void;
-  onClose: () => void;
-}
+const TrainingSession = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const interview = location.state?.interview;
 
-const TrainingSession = ({ session, onUpdate, onFinish, onClose }: TrainingSessionProps) => {
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [isAiThinking, setIsAiThinking] = useState(false);
   const [userInput, setUserInput] = useState("");
   const [isFinishing, setIsFinishing] = useState(false);
   const [isLocalLoading, setIsLocalLoading] = useState(false);
   const [timeLeft, setTimeLeft] = useState(1800); // 30 mins
-  const [report, setReport] = useState<any>(null);
+  const [report, setReport] = useState<Record<string, unknown> | null>(null);
   const [isAudioEnabled, setIsAudioEnabled] = useState(true);
   const [isListening, setIsListening] = useState(false);
 
@@ -62,7 +59,14 @@ const TrainingSession = ({ session, onUpdate, onFinish, onClose }: TrainingSessi
     toggleMute,
     toggleVideo,
     stream
-  } = useMediaStream(session.isActive);
+  } = useMediaStream(!!interview);
+
+  // Redirect if no interview data
+  useEffect(() => {
+    if (!interview) {
+      navigate('/interview');
+    }
+  }, [interview, navigate]);
 
   // Sync video ref with stream
   useEffect(() => {
@@ -72,28 +76,29 @@ const TrainingSession = ({ session, onUpdate, onFinish, onClose }: TrainingSessi
   }, [stream]);
 
   useEffect(() => {
-    let timer: any;
-    if (session.isActive && timeLeft > 0) {
+    let timer: ReturnType<typeof setInterval>;
+    if (interview && timeLeft > 0) {
       timer = setInterval(() => setTimeLeft(prev => prev - 1), 1000);
     }
-    return () => clearInterval(timer);
-  }, [session.isActive, timeLeft]);
+    return () => clearInterval(timer!);
+  }, [interview, timeLeft]);
 
   const handleSendMessage = async () => {
     const trimmedInput = userInput.trim();
     if (!trimmedInput) return;
 
     const userMsg: Message = { id: `user-${Date.now()}`, role: 'user', content: trimmedInput, timestamp: new Date() };
-    const currentMessages = [...session.messages, userMsg];
+    const currentMessages = [...messages, userMsg];
 
     setUserInput("");
     setIsLocalLoading(true);
-    onUpdate(currentMessages, true);
+    setIsAiThinking(true);
+    setMessages(currentMessages);
 
     const aiMsgId = `ai-${Date.now()}`;
     try {
       // 1. Get real-time insight while AI is thinking
-      const insightText = await generateRealTimeInsight(trimmedInput, session.interview.position);
+      const insightText = await generateRealTimeInsight(trimmedInput, interview.position);
       if (insightText) {
         setInsight(insightText);
         setIsInsightVisible(true);
@@ -101,105 +106,113 @@ const TrainingSession = ({ session, onUpdate, onFinish, onClose }: TrainingSessi
       }
 
       // 2. Start Message Stream
-      const chatHistory = session.messages.map(m => ({
+      const chatHistory = messages.map(m => ({
         role: m.role === 'ai' ? 'model' : 'user',
         parts: [{ text: m.content }]
       }));
 
-      const stream = await getAiStream(trimmedInput, chatHistory);
+      const streamRes = await getAiStream(trimmedInput, chatHistory);
       let accumulatedText = "";
 
-      onUpdate([...currentMessages, { id: aiMsgId, role: 'ai', content: "", timestamp: new Date() }], true);
+      setMessages([...currentMessages, { id: aiMsgId, role: 'ai', content: "", timestamp: new Date() }]);
 
       let lastUpdateTime = Date.now();
       const UPDATE_INTERVAL = 100;
 
-      for await (const chunk of stream) {
+      for await (const chunk of streamRes) {
         const chunkText = chunk.text();
         accumulatedText += chunkText;
 
         const now = Date.now();
         if (now - lastUpdateTime > UPDATE_INTERVAL) {
-          onUpdate(
-            currentMessages.map(m => m.id === aiMsgId ? { ...m, content: accumulatedText } : m),
-            true
+          setMessages(prev =>
+            prev.map(m => m.id === aiMsgId ? { ...m, content: accumulatedText } : m)
           );
           lastUpdateTime = now;
         }
       }
 
-      onUpdate(
-        currentMessages.map(m => m.id === aiMsgId ? { ...m, content: accumulatedText } : m),
-        false
+      setMessages(prev =>
+        prev.map(m => m.id === aiMsgId ? { ...m, content: accumulatedText } : m)
       );
+      setIsAiThinking(false);
       setIsLocalLoading(false);
       speak(accumulatedText);
 
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : "AI Connection Issue";
       console.error("Stream Error:", error);
       setSystemError({
         title: "AI Connection Issue",
-        message: error.message || "We're having trouble connecting to the AI. This usually happens due to rate limits or temporary service interruptions. Please try again in 1 minute."
+        message: errorMessage || "We're having trouble connecting to the AI. This usually happens due to rate limits or temporary service interruptions. Please try again in 1 minute."
       });
       setIsLocalLoading(false);
+      setIsAiThinking(false);
     }
   };
 
   const handleFinishInterview = async () => {
     setIsFinishing(true);
     try {
-      const finalReport = await getPerformanceReport(session.messages, session.interview.position);
-      setReport(finalReport);
+      const finalReport = await getPerformanceReport(messages, interview.position);
+      const reportWithData = {
+        ...finalReport,
+        position: interview.position,
+        company: interview.company,
+        topics: interview.topics
+      };
 
-      if (onFinish) {
-        onFinish({
-          ...finalReport,
-          position: session.interview.position,
-          company: session.interview.company,
-          date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
-          messages: session.messages
-        });
-      }
-    } catch (error: any) {
+      setReport(reportWithData);
+      dispatch(saveInterviewResult(reportWithData));
+
+    } catch (error: unknown) {
       console.error("Finish Error:", error);
-      onClose();
+      navigate('/interview');
     } finally {
       setIsFinishing(false);
     }
   };
 
-  const initializeSession = async () => {
-    if (session.messages.length > 0) return;
+  const initializeSession = useCallback(async () => {
+    if (messages.length > 0 || !interview) return;
 
-    const introText = `Welcome! I'm your AI Interviewer. We are going to practice for the ${session.interview.position} role at ${session.interview.company}. I'll focus on: ${session.interview.topics.join(', ')}.`;
-    const intro: Message = { id: 'intro', role: 'ai', content: introText, timestamp: new Date() };
+    // 1. Seed message to satisfy Gemini's requirement for first message being from 'user'
+    const seed: Message = {
+      id: 'seed',
+      role: 'user',
+      content: "Let's start the interview simulation.",
+      timestamp: new Date(),
+      hidden: true
+    };
 
     try {
-      speak(introText);
-      const question = await generateAIQuestion(session);
-      const firstQuestion: Message = {
+      const question = await generateAIQuestion({ interview, messages: [] });
+      const combinedIntro = `Welcome! I'm your AI Interviewer. We are going to practice for the ${interview.position} role at ${interview.company}. I'll focus on: ${interview.topics.join(', ')}.\n\n${question}`;
+
+      const firstAiMsg: Message = {
         id: `msg-${Date.now()}`,
         role: 'ai',
-        content: question,
+        content: combinedIntro,
         timestamp: new Date(),
       };
-      onUpdate([intro, firstQuestion], false);
-      setTimeout(() => speak(question), 1000);
-    } catch (error: any) {
+
+      setMessages([seed, firstAiMsg]);
+      speak(combinedIntro);
+    } catch (error: unknown) {
       console.error("Initialization error:", error);
       setSystemError({
         title: "Simulation Error",
         message: "Failed to initialize the AI interviewer. This might be a temporary connectivity issue. Please try again later."
       });
     }
-  };
+  }, [interview, messages.length, speak]);
 
   useEffect(() => {
-    if (session.isActive && session.messages.length === 0 && !initializationStarted.current) {
+    if (interview && messages.length === 0 && !initializationStarted.current) {
       initializationStarted.current = true;
       initializeSession();
     }
-  }, [session.isActive, session.messages.length]);
+  }, [interview, messages.length, initializeSession]);
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -207,20 +220,20 @@ const TrainingSession = ({ session, onUpdate, onFinish, onClose }: TrainingSessi
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
-  if (!session.isActive) return null;
+  if (!interview) return null;
 
   return (
     <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', bgcolor: 'background.default' }}>
       <Box sx={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
         <SessionHeader
-          position={session.interview.position}
-          company={session.interview.company}
+          position={interview.position}
+          company={interview.company}
           timeLeft={timeLeft}
           formatTime={formatTime}
           onFinish={handleFinishInterview}
-          onClose={onClose}
+          onClose={() => navigate('/interview')}
           isFinishing={isFinishing}
-          canFinish={session.messages.length > 0}
+          canFinish={messages.length > 0}
         />
 
         <VideoGrid
@@ -228,7 +241,7 @@ const TrainingSession = ({ session, onUpdate, onFinish, onClose }: TrainingSessi
           isLoading={isLocalLoading}
           isInsightVisible={isInsightVisible}
           insight={insight}
-          lastAiMessage={session.messages.filter(m => m.role === 'ai').pop()?.content}
+          lastAiMessage={messages.filter(m => m.role === 'ai' && !m.hidden).pop()?.content}
           videoRef={videoRef}
           isVideoOff={isVideoOff}
           isMuted={isMuted}
@@ -246,21 +259,23 @@ const TrainingSession = ({ session, onUpdate, onFinish, onClose }: TrainingSessi
           userInput={userInput}
           setUserInput={setUserInput}
           onSendMessage={handleSendMessage}
-          isLoading={isLocalLoading}
+          isLoading={isLocalLoading || isAiThinking}
         />
       </Box>
 
-      <PerformanceReport
-        report={report}
-        position={session.interview.position}
-        onClose={onClose}
-      />
+      {report && (
+        <PerformanceReport
+          report={report}
+          position={interview.position}
+          onClose={() => navigate('/interview')}
+        />
+      )}
 
       {systemError && (
         <ErrorOverlay
           error={systemError}
           onRetry={() => setSystemError(null)}
-          onClose={onClose}
+          onClose={() => navigate('/interview')}
         />
       )}
     </Box>

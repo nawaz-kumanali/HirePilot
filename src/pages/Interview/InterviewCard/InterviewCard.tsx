@@ -62,7 +62,7 @@ const InterviewCard = ({ interview, onStartTraining }: InterviewCardProps) => {
             </Box>
 
             <Typography variant="h6" fontWeight={800} gutterBottom sx={{ fontSize: '1.2rem', mb: 0.5 }}>
-                {position} Interview
+                {position}
             </Typography>
             <Typography variant="body2" color="text.secondary" fontWeight={500} sx={{ mb: 2, fontSize: '0.9rem' }}>
                 {company}

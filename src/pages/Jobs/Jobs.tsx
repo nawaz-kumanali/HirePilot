@@ -89,7 +89,7 @@ const Jobs = () => {
   };
 
 
-  if(isLoading) return <Loading />
+  if (isLoading) return <Loading />
 
   return (
     <Box
@@ -107,8 +107,8 @@ const Jobs = () => {
         }
       }}
     >
-      <Box  sx={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', pr: { xs: 2, md: 2, lg: 2 }, pl: { xs: 2, md: 0, lg: 0 }}}>
-        <Box component="header" sx={{ textAlign: 'center', py: { xs: 3, md: 5 }}}>
+      <Box sx={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', pr: { xs: 2, md: 2, lg: 2 }, pl: { xs: 2, md: 0, lg: 0 } }}>
+        <Box component="header" sx={{ textAlign: 'center', py: { xs: 3, md: 5 } }}>
           <VisualHeader
             badge='New opportunities added today'
             title='Find Your'
@@ -132,12 +132,12 @@ const Jobs = () => {
             onMobileClose={() => setMobileFiltersOpen(false)}
           />
 
-          <Box component="section" sx={{ display: 'flex', flexDirection: 'column', gap: 3.5, width: '100%'}}>
+          <Box component="section" sx={{ display: 'flex', flexDirection: 'column', gap: 3.5, width: '100%' }}>
             <Box>
               {paginatedJobs.length > 0 ? (
                 <>
-                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2  }}>
-                    {paginatedJobs.map((job: any) => (
+                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                    {paginatedJobs.map((job: Job) => (
                       <JobCard
                         key={job.id}
                         job={job}

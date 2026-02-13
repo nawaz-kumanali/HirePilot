@@ -126,7 +126,7 @@ const VideoGrid = ({
                 )}
 
                 {/* Subtitles */}
-                {lastAiMessage && (
+                {(lastAiMessage || isLoading) && (
                     <Box
                         sx={{
                             position: 'absolute',
@@ -139,8 +139,8 @@ const VideoGrid = ({
                             textAlign: 'center',
                         }}
                     >
-                        <Typography variant="body2" fontWeight={600}>
-                            {lastAiMessage}
+                        <Typography variant="body2" fontWeight={600} color={isLoading ? 'primary.main' : 'text.primary'}>
+                            {isLoading ? "AI is transcribing your response..." : lastAiMessage}
                         </Typography>
                     </Box>
                 )}
