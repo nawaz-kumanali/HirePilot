@@ -3,7 +3,8 @@ import { Bell } from "lucide-react";
 import { IconButton, Badge, Box } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import NotificationsBadge from "../../NotificationsBadge/NotificationsBadge";
-import { fetchNotifications } from "../../../store/Notification/notification.slice";
+import { notificationActions } from "../../../store/Notification/notification.slice";
+import { NOTIFICATION_SERVICE } from "../../../api/services/notificationApi";
 
 const NotificationSection = () => {
     const [isNotificationOpen, setIsNotificationOpen] = useState(false);
@@ -14,7 +15,15 @@ const NotificationSection = () => {
 
     useEffect(() => {
         if (!hasFetched) {
-            dispatch(fetchNotifications());
+            dispatch(notificationActions.setLoading(true));
+            NOTIFICATION_SERVICE.fetchNotifications().then(data => {
+                dispatch(notificationActions.setNotifications(data));
+            }).catch(err => {
+                console.error('Fetch error:', err);
+                dispatch(notificationActions.setError(err.message));
+            }).finally(() => {
+                dispatch(notificationActions.setLoading(false));
+            });
         }
     }, [dispatch, hasFetched]);
 

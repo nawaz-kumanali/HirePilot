@@ -1,9 +1,10 @@
-import React, { Fragment, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { X } from 'lucide-react';
-import { Box, Paper, Typography, IconButton, List, ListItem, ListItemButton, Divider, useTheme, alpha, Button, Stack, CircularProgress } from '@mui/material';
+import React, { useState, useEffect, Fragment } from 'react';
+import { notificationActions } from '../../store/Notification/notification.slice';
+import { NOTIFICATION_SERVICE } from '../../api/services/notificationApi';
+import { alpha, Box, Button, CircularProgress, Divider, IconButton, List, ListItem, ListItemButton, Paper, Stack, Typography, useTheme } from '@mui/material';
+import { Link as RouterLink } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { notificationActions, fetchNotifications } from '../../store/Notification/notification.slice';
+import { X } from 'lucide-react';
 
 interface NotificationsBadgeProps {
     setIsNotificationOpen: (value: boolean) => void;
@@ -12,21 +13,37 @@ interface NotificationsBadgeProps {
 const NotificationsBadge: React.FC<NotificationsBadgeProps> = ({ setIsNotificationOpen }) => {
     const theme = useTheme();
     const { notifications, loading, hasFetched } = useAppSelector(state => state.notification);
+    const [actionLoading, setActionLoading] = useState(false);
     const dispatch = useAppDispatch();
 
     useEffect(() => {
         // Only fetch if we haven't fetched yet
         if (!hasFetched) {
-            dispatch(fetchNotifications());
+            dispatch(notificationActions.setLoading(true));
+            NOTIFICATION_SERVICE.fetchNotifications().then(data => {
+                dispatch(notificationActions.setNotifications(data));
+            }).catch(err => {
+                console.error('Fetch error:', err);
+                dispatch(notificationActions.setError(err.message));
+            }).finally(() => {
+                dispatch(notificationActions.setLoading(false));
+            });
         }
     }, [dispatch, hasFetched]);
 
     const handleClearAll = () => {
-        dispatch(notificationActions.clearNotification());
+        setActionLoading(true);
+        NOTIFICATION_SERVICE.clearAll().then(() => {
+            dispatch(notificationActions.clearNotification());
+        }).finally(() => {
+            setActionLoading(false);
+        });
     };
 
     const handleMarkAsRead = (id: string) => {
-        dispatch(notificationActions.markAsRead(id));
+        NOTIFICATION_SERVICE.markAsRead(id).then(() => {
+            dispatch(notificationActions.markAsRead(id));
+        });
     };
 
 
@@ -51,8 +68,13 @@ const NotificationsBadge: React.FC<NotificationsBadgeProps> = ({ setIsNotificati
                 <Typography variant="subtitle1" fontWeight={800}>Notifications</Typography>
                 <Stack direction="row" spacing={1}>
                     {notifications.length > 0 && (
-                        <Button size="small" onClick={handleClearAll} sx={{ fontSize: '0.75rem', textTransform: 'none' }}>
-                            Clear All
+                        <Button
+                            size="small"
+                            onClick={handleClearAll}
+                            disabled={actionLoading}
+                            sx={{ fontSize: '0.75rem', textTransform: 'none' }}
+                        >
+                            {actionLoading ? 'Clearing...' : 'Clear All'}
                         </Button>
                     )}
                     <IconButton
@@ -114,7 +136,7 @@ const NotificationsBadge: React.FC<NotificationsBadgeProps> = ({ setIsNotificati
 
             <Box sx={{ p: 1.5, borderTop: '1px solid', borderColor: 'divider', bgcolor: alpha(theme.palette.primary.main, 0.02) }}>
                 <Button
-                    component={Link}
+                    component={RouterLink}
                     to="/notifications"
                     fullWidth
                     variant="text"

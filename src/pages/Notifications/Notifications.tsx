@@ -6,13 +6,15 @@ import EmptyState from '../../components/EmptyState/EmptyState';
 import NotificationItem from './NotificationItem/NotificationItem';
 import { Box, Container, Stack, Typography, Button, Select, MenuItem, useTheme, alpha, Snackbar, Alert, Chip, CircularProgress } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { notificationActions, fetchNotifications } from '../../store/Notification/notification.slice';
+import { notificationActions } from '../../store/Notification/notification.slice';
+import { NOTIFICATION_SERVICE } from '../../api/services/notificationApi';
 
 const Notifications: React.FC = () => {
   const [filter, setFilter] = useState<'all' | 'unread'>('all');
   const [lastDeleted, setLastDeleted] = useState<Notification | null>(null);
   const [showUndo, setShowUndo] = useState(false);
   const [sortBy, setSortBy] = useState<'recent' | 'unread'>('recent');
+  const [actionLoading, setActionLoading] = useState(false);
   const theme = useTheme();
 
   const { notifications, loading, hasFetched } = useAppSelector(state => state.notification);
@@ -20,7 +22,15 @@ const Notifications: React.FC = () => {
 
   useEffect(() => {
     if (!hasFetched) {
-      dispatch(fetchNotifications());
+      dispatch(notificationActions.setLoading(true));
+      NOTIFICATION_SERVICE.fetchNotifications().then(data => {
+        dispatch(notificationActions.setNotifications(data));
+      }).catch(err => {
+        console.error('Fetch error:', err);
+        dispatch(notificationActions.setError(err.message));
+      }).finally(() => {
+        dispatch(notificationActions.setLoading(false));
+      });
     }
   }, [dispatch, hasFetched]);
 
@@ -40,20 +50,29 @@ const Notifications: React.FC = () => {
     unread: unreadCount,
   }), [notifications, unreadCount]);
 
-  const markAsRead = (id: string): void => {
-    dispatch(notificationActions.markAsRead(id));
+  const handleMarkAsRead = (id: string): void => {
+    NOTIFICATION_SERVICE.markAsRead(id).then(() => {
+      dispatch(notificationActions.markAsRead(id));
+    });
   };
 
-  const markAllAsRead = (): void => {
-    dispatch(notificationActions.markAllAsRead());
+  const handleMarkAllAsRead = (): void => {
+    setActionLoading(true);
+    NOTIFICATION_SERVICE.markAllAsRead().then(() => {
+      dispatch(notificationActions.markAllAsRead());
+    }).finally(() => {
+      setActionLoading(false);
+    });
   };
 
-  const deleteNotification = (id: string): void => {
+  const handleDeleteNotification = (id: string): void => {
     const target = notifications.find((n: Notification) => n.id === id);
     if (target) {
       setLastDeleted(target);
       setShowUndo(true);
-      dispatch(notificationActions.deleteNotification(id));
+      NOTIFICATION_SERVICE.deleteNotification(id).then(() => {
+        dispatch(notificationActions.deleteNotification(id));
+      });
     }
   };
 
@@ -66,7 +85,12 @@ const Notifications: React.FC = () => {
   };
 
   const clearAll = (): void => {
-    dispatch(notificationActions.clearNotification());
+    setActionLoading(true);
+    NOTIFICATION_SERVICE.clearAll().then(() => {
+      dispatch(notificationActions.clearNotification());
+    }).finally(() => {
+      setActionLoading(false);
+    });
   };
 
   useEffect(() => {
@@ -192,8 +216,8 @@ const Notifications: React.FC = () => {
 
             <Button
               startIcon={<CheckCircle2 size={16} />}
-              onClick={markAllAsRead}
-              disabled={unreadCount === 0}
+              onClick={handleMarkAllAsRead}
+              disabled={unreadCount === 0 || actionLoading}
               sx={{
                 color: 'text.secondary',
                 fontWeight: 600,
@@ -206,9 +230,9 @@ const Notifications: React.FC = () => {
             </Button>
 
             <Button
-              startIcon={<Trash2 size={16} />}
+              startIcon={actionLoading ? <CircularProgress size={16} color="inherit" /> : <Trash2 size={16} />}
               onClick={clearAll}
-              disabled={notifications.length === 0}
+              disabled={notifications.length === 0 || actionLoading}
               sx={{
                 color: 'error.main',
                 fontWeight: 600,
@@ -217,7 +241,7 @@ const Notifications: React.FC = () => {
                 '&:hover': { bgcolor: alpha(theme.palette.error.main, 0.1) }
               }}
             >
-              Clear all
+              {actionLoading ? 'Clearing...' : 'Clear all'}
             </Button>
           </Stack>
         </Stack>
@@ -240,8 +264,8 @@ const Notifications: React.FC = () => {
                   key={n.id}
                   n={n}
                   getIcon={getIcon}
-                  onDelete={deleteNotification}
-                  onRead={markAsRead}
+                  onDelete={handleDeleteNotification}
+                  onRead={handleMarkAsRead}
                 />
               ))}
             </Stack>
