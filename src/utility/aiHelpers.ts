@@ -15,9 +15,13 @@ export const generateAIQuestion = async (session: InterviewSession): Promise<str
   const { interview, messages } = session;
   const history = messages.map((m: Message) => `${m.role.toUpperCase()}: ${m.content}`).join('\n');
 
+  const position = (interview as any).position || (interview as any).title || "Candidate";
+  const company = (interview as any).company || (interview as any).category || "Employer";
+  const topics = (interview as any).topics || [(interview as any).category || (interview as any).title || "General"];
+
   const prompt = `
-        You are an expert interviewer for the position of ${interview.position} at ${interview.company}.
-        The focus areas for this interview are: ${interview.topics.join(', ')}.
+        You are an expert interviewer for the position of ${position} at ${company}.
+        The focus areas for this interview are: ${topics.join(', ')}.
         
         Current Interview History:
         ${history}

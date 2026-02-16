@@ -102,7 +102,8 @@ const TrainingSession = () => {
     const aiMsgId = `ai-${Date.now()}`;
     try {
       // 1. Get real-time insight while AI is thinking
-      const insightText = await generateRealTimeInsight(trimmedInput, interview.position);
+      const position = interview.position || interview.title || "Candidate";
+      const insightText = await generateRealTimeInsight(trimmedInput, position);
       if (insightText) {
         setInsight(insightText);
         setIsInsightVisible(true);
@@ -153,12 +154,12 @@ const TrainingSession = () => {
   const handleFinishInterview = async () => {
     setIsFinishing(true);
     try {
-      const finalReport = await getPerformanceReport(messages, interview.position);
+      const finalReport = await getPerformanceReport(messages, interview.position || interview.title || "Candidate");
       const reportWithData = {
         ...finalReport,
-        position: interview.position,
-        company: interview.company,
-        topics: interview.topics
+        position: interview.position || interview.title || "Candidate",
+        company: interview.company || interview.category || "Employer",
+        topics: interview.topics || [interview.category || "General"]
       };
 
       setReport(reportWithData);
@@ -186,7 +187,11 @@ const TrainingSession = () => {
 
     try {
       const question = await generateAIQuestion({ interview, messages: [] });
-      const combinedIntro = `Welcome! I'm your AI Interviewer. We are going to practice for the ${interview.position} role at ${interview.company}. I'll focus on: ${interview.topics.join(', ')}.\n\n${question}`;
+      const pos = interview.position || interview.title || "Candidate";
+      const comp = interview.company || interview.category || "Employer";
+      const topicsList = interview.topics || [interview.category || "General"];
+
+      const combinedIntro = `Welcome! I'm your AI Interviewer. We are going to practice for the ${pos} role at ${comp}. I'll focus on: ${topicsList.join(', ')}.\n\n${question}`;
 
       const firstAiMsg: Message = {
         id: `msg-${Date.now()}`,

@@ -7,7 +7,7 @@ import PracticeTopicsTab from './PracticeTopicsTab/PracticeTopicsTab';
 import { useAppSelector } from '../../store/hooks';
 import type { RootState } from '../../store/rootReducer';
 import { Box, Container, useTheme, alpha } from '@mui/material';
-import type { TrainingInterview, CompletedInterview } from '../../types/interview';
+import type { CompletedInterview, PrepTopic } from '../../types/interview';
 
 /**
  * Main Hub for all interview preparation activities.
@@ -28,7 +28,7 @@ const Interview = () => {
     prepTopics: prepTopicsList
   } = useAppSelector((state: RootState) => state.interview);
 
-  const handleStartTraining = useCallback((interview: TrainingInterview) => {
+  const handleStartTraining = useCallback((interview: PrepTopic) => {
     navigate('/live-interview', { state: { interview } });
   }, [navigate]);
 
@@ -36,9 +36,10 @@ const Interview = () => {
     if (location.state?.job) {
       const job = location.state.job;
       handleStartTraining({
-        position: job.title,
-        company: job.company,
-        topics: job.tags || []
+        id: job.id,
+        title: job.title,
+        category: job.category || job.company || 'Job Application',
+        difficulty: job.difficulty || job.level || 'Medium'
       });
       window.history.replaceState({}, document.title);
     }

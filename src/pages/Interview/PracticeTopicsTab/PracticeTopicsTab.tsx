@@ -1,19 +1,11 @@
 import { Box } from '@mui/material';
 import InterviewCard from '../InterviewCard/InterviewCard';
+import type { PrepTopic } from '../../../types/interview';
 
-interface PracticeTopic {
-  id: number;
-  title: string;
-  category: string;
-  completed: number;
-  total: number;
-  difficulty: string;
-  duration: string;
-}
 
 interface PracticeTopicsTabProps {
-  topics: PracticeTopic[];
-  onStartTraining: (interview: { position: string; company: string; topics: string[] }) => void;
+  topics: PrepTopic[];
+  onStartTraining: (interview: PrepTopic) => void;
 }
 
 const PracticeTopicsTab = ({ topics, onStartTraining }: PracticeTopicsTabProps) => {
@@ -31,19 +23,14 @@ const PracticeTopicsTab = ({ topics, onStartTraining }: PracticeTopicsTabProps) 
           interview={{
             id: topic.id,
             title: topic.title,
-            position: topic.title,
-            company: topic.category,
-            date: 'Available Anytime',
-            time: 'Self-paced',
-            duration: topic.duration,
             difficulty: topic.difficulty,
-            topics: [topic.category],
-            interviewer: 'AI'
+            category: topic.category,
           }}
           onStartTraining={(interview) => onStartTraining({
-            position: interview.position,
-            company: interview.company,
-            topics: interview.topics
+            id: interview.id,
+            title: interview.title,
+            category: interview.category,
+            difficulty: interview.difficulty
           })}
         />
       ))}

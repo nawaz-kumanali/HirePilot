@@ -13,6 +13,8 @@ export interface Interview extends TrainingInterview {
     interviewer: string;
     status?: string;
     difficulty: string;
+    score?: number;
+    feedback?: string;
 }
 
 export interface CompletedInterview extends Interview {
@@ -45,8 +47,5 @@ export interface PrepTopic {
     id: number;
     title: string;
     category: string;
-    completed: number;
-    total: number;
     difficulty: string;
-    duration: string;
 }

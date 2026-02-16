@@ -1,4 +1,6 @@
-export const completedInterviews = [
+import type { CompletedInterview, PrepTopic } from "../types/interview";
+
+export const completedInterviews: CompletedInterview[] = [
   {
     id: 4,
     title: 'Backend Developer',
@@ -46,7 +48,7 @@ export const completedInterviews = [
   },
 ];
 
-export const prepTopics = [
+export const prepTopics: PrepTopic[] = [
   {
     id: 1,
     title: 'System Design Fundamentals',

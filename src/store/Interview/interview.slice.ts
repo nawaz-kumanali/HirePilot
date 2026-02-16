@@ -1,29 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { completedInterviews, prepTopics } from '../../data/interviewData';
+import type { CompletedInterview, Interview, PrepTopic } from '../../types/interview';
 
-interface Interview {
-    id: number;
-    title: string;
-    company: string;
-    position: string;
-    date: string;
-    time: string;
-    duration: string;
-    interviewer: string;
-    status: 'scheduled' | 'pending' | 'completed';
-    difficulty: 'Easy' | 'Medium' | 'Hard';
-    topics: string[];
-    score?: number;
-    feedback?: string;
-}
-
-interface PrepTopic {
-    id: number;
-    title: string;
-    category: string;
-    difficulty: string;
-}
 
 /**
  * Represents the state structure for interviews in the Redux store.
@@ -36,7 +15,7 @@ interface InterviewState {
 }
 
 const initialState: InterviewState = {
-    completedInterviews: completedInterviews as unknown as Interview[],
+    completedInterviews: completedInterviews as unknown as CompletedInterview[],
     prepTopics: prepTopics,
 };
 

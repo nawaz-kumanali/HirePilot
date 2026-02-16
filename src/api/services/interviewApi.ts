@@ -1,5 +1,5 @@
 import { delay } from "../mockUtils";
-import { upcomingInterviews, completedInterviews } from "../../data/interviewData";
+import { completedInterviews } from "../../data/interviewData";
 // import { API } from "../API";
 // import { endpoints } from "../globalEndpoint";
 
@@ -14,7 +14,6 @@ export const INTERVIEW_SERVICE = {
         // Mock Implementation
         await delay(1200);
         return {
-            upcoming: upcomingInterviews,
             completed: completedInterviews
         };
     },
@@ -27,8 +26,6 @@ export const INTERVIEW_SERVICE = {
 
         // Mock Implementation
         await delay(500);
-        const upcoming = upcomingInterviews.find(i => i.id.toString() === id.toString());
-        if (upcoming) return upcoming;
         return completedInterviews.find(i => i.id.toString() === id.toString());
     },
     createInterview: async (interview: Record<string, unknown>) => {

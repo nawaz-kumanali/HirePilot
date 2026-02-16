@@ -1,13 +1,13 @@
-import { Calendar, Clock, ArrowRight, Gauge } from 'lucide-react';
-import type { Interview } from '../../../types/interview';
+import {ArrowRight, Gauge } from 'lucide-react';
+import type { PrepTopic } from '../../../types/interview';
 import { Box, Typography, Button, Stack, useTheme, alpha } from '@mui/material';
 import Card from '../../../components/Card/Card';
 
 interface InterviewCardProps {
     /** The interview data to display. */
-    interview: Interview;
+    interview: PrepTopic;
     /** Callback to start the training simulation. */
-    onStartTraining: (interview: Interview) => void;
+    onStartTraining: (interview: PrepTopic) => void;
 }
 
 /**
@@ -18,7 +18,7 @@ interface InterviewCardProps {
  * to start/resume training.
  */
 const InterviewCard = ({ interview, onStartTraining }: InterviewCardProps) => {
-    const { position, date, time, difficulty, topics } = interview;
+    const { id, title, difficulty, category } = interview;
     const theme = useTheme();
 
     return (
@@ -62,19 +62,11 @@ const InterviewCard = ({ interview, onStartTraining }: InterviewCardProps) => {
                         minHeight: '2.6rem' // Exactly 2 lines
                     }}
                 >
-                    {position}
+                    {title}
                 </Typography>
             </Stack>
 
             <Stack direction="row" spacing={2} sx={{ mb: 2, pb: 1.5, borderBottom: '1px solid', borderColor: alpha(theme.palette.divider, 0.05) }}>
-                <Stack direction="row" alignItems="center" spacing={0.75} sx={{ fontSize: '0.75rem', color: 'text.secondary', fontWeight: 600 }}>
-                    <Calendar size={14} color={theme.palette.primary.main} />
-                    <span>{date}</span>
-                </Stack>
-                <Stack direction="row" alignItems="center" spacing={0.75} sx={{ fontSize: '0.75rem', color: 'text.secondary', fontWeight: 600 }}>
-                    <Clock size={14} color={theme.palette.primary.main} />
-                    <span>{time}</span>
-                </Stack>
                 <Stack direction="row" alignItems="center" spacing={0.75} sx={{ fontSize: '0.75rem', color: 'text.secondary', fontWeight: 600 }}>
                     <Gauge size={14} color={theme.palette.primary.main} />
                     <span>{difficulty}</span>
@@ -92,23 +84,21 @@ const InterviewCard = ({ interview, onStartTraining }: InterviewCardProps) => {
                     alignContent: 'flex-start'
                 }}
             >
-                {topics.map((topic, idx) => (
-                    <Box
-                        key={idx}
-                        sx={{
-                            bgcolor: alpha(theme.palette.primary.main, 0.05),
-                            color: 'primary.main',
-                            px: 1,
-                            py: 0.4,
-                            borderRadius: 4,
-                            fontSize: '0.65rem',
-                            fontWeight: 700,
-                            border: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
-                        }}
-                    >
-                        {topic}
-                    </Box>
-                ))}
+                <Box
+                    key={id}
+                    sx={{
+                        bgcolor: alpha(theme.palette.primary.main, 0.05),
+                        color: 'primary.main',
+                        px: 1,
+                        py: 0.4,
+                        borderRadius: 4,
+                        fontSize: '0.65rem',
+                        fontWeight: 700,
+                        border: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
+                    }}
+                >
+                    {category}
+                </Box>
             </Box>
 
             <Button
