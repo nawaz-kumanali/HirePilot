@@ -4,9 +4,9 @@ import VisualHeader from '../../components/VisualHeader/VisualHeader';
 import type { Notification } from '../../data/notificationsData';
 import EmptyState from '../../components/EmptyState/EmptyState';
 import NotificationItem from './NotificationItem/NotificationItem';
-import { Box, Container, Stack, Typography, Button, Select, MenuItem, useTheme, alpha, Snackbar, Alert, Chip } from '@mui/material';
+import { Box, Container, Stack, Typography, Button, Select, MenuItem, useTheme, alpha, Snackbar, Alert, Chip, CircularProgress } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { notificationActions } from '../../store/Notification/notification.slice';
+import { notificationActions, fetchNotifications } from '../../store/Notification/notification.slice';
 
 const Notifications: React.FC = () => {
   const [filter, setFilter] = useState<'all' | 'unread'>('all');
@@ -15,8 +15,14 @@ const Notifications: React.FC = () => {
   const [sortBy, setSortBy] = useState<'recent' | 'unread'>('recent');
   const theme = useTheme();
 
-  const notifications = useAppSelector(state => state.notification.notifications);
+  const { notifications, loading, hasFetched } = useAppSelector(state => state.notification);
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    if (!hasFetched) {
+      dispatch(fetchNotifications());
+    }
+  }, [dispatch, hasFetched]);
 
   const filteredNotifications = useMemo(() => {
     let filtered = filter === 'all' ? notifications : notifications.filter((n: Notification) => !n.isRead);
@@ -85,8 +91,8 @@ const Notifications: React.FC = () => {
       {/* Decorative Background */}
       <Box sx={{
         position: 'absolute',
-        width: 600,
-        height: 600,
+        width: { xs: 400, md: 600, lg: 800 },
+        height: { xs: 400, md: 600, lg: 800 },
         filter: 'blur(120px)',
         zIndex: 0,
         opacity: 0.1,
@@ -98,8 +104,8 @@ const Notifications: React.FC = () => {
       }} />
       <Box sx={{
         position: 'absolute',
-        width: 500,
-        height: 500,
+        width: { xs: 300, md: 500 },
+        height: { xs: 300, md: 500 },
         filter: 'blur(120px)',
         zIndex: 0,
         opacity: 0.1,
@@ -110,10 +116,14 @@ const Notifications: React.FC = () => {
         pointerEvents: 'none',
       }} />
 
-      <Container maxWidth="md" sx={{ position: 'relative', zIndex: 1 }}>
+      <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1 }}>
         <Box sx={{ mb: 6 }}>
           <VisualHeader
-            badge={`Activity Feed • ${stats.unread} New`}
+            badge={
+              stats.unread > 0
+                ? `Activity Feed • ${stats.unread} New`
+                : "Activity Feed"
+            }
             title="Stay Updated"
             gradient_title="with Alerts"
             subtitle="Manage your notifications and track job updates in one place."
@@ -214,7 +224,11 @@ const Notifications: React.FC = () => {
 
         {/* Notifications List */}
         <Box sx={{ minHeight: 400 }}>
-          {filteredNotifications.length === 0 ? (
+          {loading ? (
+            <Box sx={{ display: 'flex', justifyContent: 'center', py: 10 }}>
+              <CircularProgress />
+            </Box>
+          ) : filteredNotifications.length === 0 ? (
             <EmptyState
               title="No notifications yet"
               description={filter === 'unread' ? "You've read everything! Check 'All' for history." : "We'll notify you here when there's activity."}

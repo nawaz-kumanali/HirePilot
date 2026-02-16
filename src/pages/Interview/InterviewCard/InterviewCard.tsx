@@ -1,5 +1,4 @@
-import { Calendar, Clock, ArrowRight } from 'lucide-react';
-import Badge from '../../../components/Badge/Badge';
+import { Calendar, Clock, ArrowRight, Gauge } from 'lucide-react';
 import type { Interview } from '../../../types/interview';
 import { Box, Typography, Button, Stack, useTheme, alpha } from '@mui/material';
 import Card from '../../../components/Card/Card';
@@ -19,13 +18,16 @@ interface InterviewCardProps {
  * to start/resume training.
  */
 const InterviewCard = ({ interview, onStartTraining }: InterviewCardProps) => {
-    const { company, position, date, time, duration, status, difficulty, topics } = interview;
+    const { position, date, time, difficulty, topics } = interview;
     const theme = useTheme();
 
     return (
         <Card
             sx={{
-                p: 3.5,
+                p: 2.5,
+                height: '100%',
+                display: 'flex',
+                flexDirection: 'column',
                 '&::before': {
                     content: '""',
                     position: 'absolute',
@@ -44,78 +46,64 @@ const InterviewCard = ({ interview, onStartTraining }: InterviewCardProps) => {
                 }
             }}
         >
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2, gap: 1.5 }}>
-                <Stack direction="row" spacing={1}>
-                    <Badge variant={status === 'upcoming' ? 'info' : 'success'} className={status}>
-                        {status}
-                    </Badge>
-                    <Badge variant="secondary" className={difficulty.toLowerCase()}>
-                        {difficulty}
-                    </Badge>
-                </Stack>
-                <Box
+            <Stack direction="row" justifyContent="space-between" alignItems="flex-start" sx={{ mb: 1 }}>
+                <Typography
+                    variant="h6"
+                    fontWeight={800}
                     sx={{
-                        bgcolor: alpha(theme.palette.background.paper, 0.8),
-                        border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
-                        color: 'primary.main',
-                        px: 1.5,
-                        py: 0.75,
-                        borderRadius: 1,
-                        fontSize: '0.75rem',
-                        fontWeight: 700,
-                        whiteSpace: 'nowrap',
+                        fontSize: '1rem',
+                        lineHeight: 1.3,
+                        flex: 1,
+                        mr: 1,
+                        display: '-webkit-box',
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: 'vertical',
+                        overflow: 'hidden',
+                        minHeight: '2.6rem' // Exactly 2 lines
                     }}
                 >
-                    {company}
-                </Box>
-            </Box>
+                    {position}
+                </Typography>
+            </Stack>
 
-            <Typography variant="h6" fontWeight={800} gutterBottom sx={{ fontSize: '1.2rem', mb: 0.5 }}>
-                {position}
-            </Typography>
-            <Typography variant="body2" color="text.secondary" fontWeight={500} sx={{ mb: 2, fontSize: '0.9rem' }}>
-                {company}
-            </Typography>
-
-            <Stack spacing={1.25} sx={{ mb: 2.5 }}>
-                <Stack direction="row" alignItems="center" spacing={1.25} sx={{ fontSize: '0.9rem', color: 'text.secondary', fontWeight: 500 }}>
-                    <Calendar size={16} color={theme.palette.primary.main} />
+            <Stack direction="row" spacing={2} sx={{ mb: 2, pb: 1.5, borderBottom: '1px solid', borderColor: alpha(theme.palette.divider, 0.05) }}>
+                <Stack direction="row" alignItems="center" spacing={0.75} sx={{ fontSize: '0.75rem', color: 'text.secondary', fontWeight: 600 }}>
+                    <Calendar size={14} color={theme.palette.primary.main} />
                     <span>{date}</span>
                 </Stack>
-                <Stack direction="row" alignItems="center" spacing={1.25} sx={{ fontSize: '0.9rem', color: 'text.secondary', fontWeight: 500 }}>
-                    <Clock size={16} color={theme.palette.primary.main} />
-                    <span>{time} • {duration}</span>
+                <Stack direction="row" alignItems="center" spacing={0.75} sx={{ fontSize: '0.75rem', color: 'text.secondary', fontWeight: 600 }}>
+                    <Clock size={14} color={theme.palette.primary.main} />
+                    <span>{time}</span>
                 </Stack>
+                <Stack direction="row" alignItems="center" spacing={0.75} sx={{ fontSize: '0.75rem', color: 'text.secondary', fontWeight: 600 }}>
+                    <Gauge size={14} color={theme.palette.primary.main} />
+                    <span>{difficulty}</span>
+                </Stack>
+
             </Stack>
 
             <Box
                 sx={{
                     display: 'flex',
                     flexWrap: 'wrap',
-                    gap: 1,
-                    mb: 2.5,
-                    pb: 2.5,
-                    borderBottom: '1px solid',
-                    borderColor: 'divider',
+                    gap: 0.75,
+                    height: '52px', // Consistency for topics section (approx 2 rows)
+                    overflow: 'hidden',
+                    alignContent: 'flex-start'
                 }}
             >
                 {topics.map((topic, idx) => (
                     <Box
                         key={idx}
                         sx={{
-                            bgcolor: alpha(theme.palette.background.paper, 0.5),
+                            bgcolor: alpha(theme.palette.primary.main, 0.05),
                             color: 'primary.main',
-                            px: 1.5,
-                            py: 0.75,
-                            borderRadius: 5,
-                            fontSize: '0.8rem',
-                            fontWeight: 600,
-                            border: `1px solid ${alpha(theme.palette.primary.main, 0.2)}`,
-                            transition: 'all 0.3s ease',
-                            '&:hover': {
-                                bgcolor: alpha(theme.palette.primary.main, 0.1),
-                                borderColor: alpha(theme.palette.primary.main, 0.3),
-                            }
+                            px: 1,
+                            py: 0.4,
+                            borderRadius: 4,
+                            fontSize: '0.65rem',
+                            fontWeight: 700,
+                            border: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
                         }}
                     >
                         {topic}
@@ -132,18 +120,15 @@ const InterviewCard = ({ interview, onStartTraining }: InterviewCardProps) => {
                     mt: 'auto',
                     background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
                     color: 'common.white',
-                    py: 1.75,
-                    borderRadius: 3,
+                    py: 1.25,
+                    borderRadius: 2.5,
                     fontWeight: 700,
                     textTransform: 'none',
-                    fontSize: '0.95rem',
+                    fontSize: '0.85rem',
                     boxShadow: 'none',
                     '&:hover': {
-                        transform: 'translateY(-2px)',
-                        boxShadow: `0 12px 24px ${alpha(theme.palette.primary.main, 0.3)}`,
-                    },
-                    '&:active': {
-                        transform: 'translateY(0)',
+                        transform: 'translateY(-1px)',
+                        boxShadow: `0 8px 16px ${alpha(theme.palette.primary.main, 0.2)}`,
                     }
                 }}
             >

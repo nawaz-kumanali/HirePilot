@@ -28,17 +28,16 @@ export const currentUser: CurrentUserState = {
         }
     ],
     skills: [
-        { name: 'React', level: 'Expert', category: 'Frontend' },
-        { name: 'TypeScript', level: 'Expert', category: 'Language' },
-        { name: 'Node.js', level: 'Advanced', category: 'Backend' },
-        { name: 'PostgreSQL', level: 'Advanced', category: 'Database' },
-        { name: 'AWS', level: 'Intermediate', category: 'DevOps' },
-        { name: 'System Design', level: 'Advanced', category: 'Architecture' },
+        { name: 'React', category: 'Frontend' },
+        { name: 'TypeScript', category: 'Language' },
+        { name: 'Node.js', category: 'Backend' },
+        { name: 'PostgreSQL', category: 'Database' },
+        { name: 'AWS', category: 'DevOps' },
+        { name: 'System Design', category: 'Architecture' },
     ],
     readiness: [
         { label: 'Technical Depth', score: 85, icon: 'Zap', color: '#6366f1' },
         { label: 'Communication', score: 92, icon: 'Activity', color: '#10b981' },
-        { label: 'System Design', score: 65, icon: 'Shield', color: '#f59e0b' },
         { label: 'Behavioral', score: 88, icon: 'Target', color: '#ec4899' },
     ],
     interviewsCount: 12,

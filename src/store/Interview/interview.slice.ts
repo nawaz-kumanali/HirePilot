@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import { upcomingInterviews, completedInterviews, prepTopics } from '../../data/interviewData';
+import { completedInterviews, prepTopics } from '../../data/interviewData';
 
 interface Interview {
     id: number;
@@ -22,18 +22,13 @@ interface PrepTopic {
     id: number;
     title: string;
     category: string;
-    completed: number;
-    total: number;
     difficulty: string;
-    duration: string;
 }
 
 /**
  * Represents the state structure for interviews in the Redux store.
  */
 interface InterviewState {
-    /** List of upcoming, scheduled interviews. */
-    upcomingInterviews: Interview[];
     /** List of completed interviews with scores and feedback. */
     completedInterviews: Interview[];
     /** List of topics for practice, with completion progress. */
@@ -41,7 +36,6 @@ interface InterviewState {
 }
 
 const initialState: InterviewState = {
-    upcomingInterviews: upcomingInterviews as unknown as Interview[],
     completedInterviews: completedInterviews as unknown as Interview[],
     prepTopics: prepTopics,
 };
@@ -80,36 +74,10 @@ const interviewSlice = createSlice({
                 feedback: (report.feedback as string) || '',
             };
             state.completedInterviews = [newCompletedInterview, ...state.completedInterviews];
+        },
 
-            // Update prep topics progress if applicable
-            const reportTopics = report.topics as string[] | undefined;
-            if (Array.isArray(reportTopics)) {
-                state.prepTopics = state.prepTopics.map(topic => {
-                    const matchesData = reportTopics.some((t: string) =>
-                        topic.title.toLowerCase().includes(t.toLowerCase()) ||
-                        topic.category.toLowerCase().includes(t.toLowerCase())
-                    );
-                    if (matchesData && topic.completed < topic.total) {
-                        return { ...topic, completed: topic.completed + 1 };
-                    }
-                    return topic;
-                });
-            }
-        },
-        /**
-         * Adds a new interview to the upcoming schedule.
-         */
-        scheduleInterview: (state, action: PayloadAction<Interview>) => {
-            state.upcomingInterviews = [action.payload, ...state.upcomingInterviews];
-        },
-        /**
-         * Removes an interview from the upcoming schedule by ID.
-         */
-        cancelInterview: (state, action: PayloadAction<number>) => {
-            state.upcomingInterviews = state.upcomingInterviews.filter(i => i.id !== action.payload);
-        }
     },
 });
 
-export const { saveInterviewResult, scheduleInterview, cancelInterview } = interviewSlice.actions;
+export const { saveInterviewResult } = interviewSlice.actions;
 export default interviewSlice.reducer;

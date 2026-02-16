@@ -1,21 +1,19 @@
-import { MapPin, Edit, LogOut, Github, Linkedin, Twitter, Globe, Copy, Check, Mail, Phone, Camera } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { MapPin, Edit, LogOut, Mail, Phone, Camera } from 'lucide-react';
 import Badge from '../../../components/Badge/Badge';
 import Button from '../../../components/Button/Button';
 import ProgressBar from '../../../components/ProgressBar/ProgressBar';
 import Card from '../../../components/Card/Card';
 import profileImg from '../../../assets/Nawaz_profile_IMG.jpg';
-import { Box, Stack, Typography, IconButton, Avatar, Divider, useTheme, alpha } from '@mui/material';
+import { Box, Stack, Typography, IconButton, Avatar, Divider, useTheme } from '@mui/material';
 
 import type { CurrentUserState } from '../../../store/CurrentUser/currentuser.types';
+import SocialCard from '../SocialCard/SocialCard';
 
 interface ProfileSidebarProps {
     profileData: CurrentUserState;
     profileCompletion: number;
     isEditing: boolean;
-    copiedLink: boolean;
     onEditClick: () => void;
-    onCopyClick: () => void;
     onLogoutClick: () => void;
     onImageClick: () => void;
 }
@@ -23,9 +21,7 @@ interface ProfileSidebarProps {
 const ProfileSidebar = ({
     profileData,
     profileCompletion,
-    copiedLink,
     onEditClick,
-    onCopyClick,
     onLogoutClick,
     onImageClick
 }: ProfileSidebarProps) => {
@@ -68,8 +64,8 @@ const ProfileSidebar = ({
                         <Box
                             sx={{
                                 position: 'absolute',
-                                bottom: 8,
-                                right: -4,
+                                top: 10,
+                                right: 10,
                                 width: 16,
                                 height: 16,
                                 borderRadius: '50%',
@@ -135,6 +131,8 @@ const ProfileSidebar = ({
                             </Typography>
                         </Stack>
                     )}
+                    {/* Social Card */}
+                    <SocialCard profileData={profileData} />
                 </Stack>
 
                 {/* Actions */}
@@ -142,52 +140,13 @@ const ProfileSidebar = ({
                     <Button variant="secondary" iconLeft={<Edit size={16} />} onClick={onEditClick} fullWidth>
                         Edit Profile
                     </Button>
-                    <Button variant="secondary" iconLeft={copiedLink ? <Check size={16} /> : <Copy size={16} />} onClick={onCopyClick} fullWidth>
-                        Share Portfolio
-                    </Button>
                     <Button variant="danger" iconLeft={<LogOut size={16} />} onClick={onLogoutClick} fullWidth>
                         Logout
                     </Button>
                 </Stack>
             </Card>
 
-            {/* Social Card */}
-            <Card>
-                <Typography variant="h6" fontWeight={700} sx={{ mb: 2 }}>
-                    Connect Everywhere
-                </Typography>
-                <Box
-                    sx={{
-                        display: 'grid',
-                        gridTemplateColumns: 'repeat(4, 1fr)',
-                        gap: 1.5,
-                    }}
-                >
-                    {[
-                        { icon: Github, link: profileData.github, color: '#333' },
-                        { icon: Linkedin, link: profileData.linkedin, color: '#0077b5' },
-                        { icon: Twitter, link: profileData.twitter, color: '#1da1f2' },
-                        { icon: Globe, link: profileData.website, color: theme.palette.primary.main },
-                    ].map(({ icon: Icon, link, color }, i) => (
-                        <IconButton
-                            key={i}
-                            component={Link}
-                            to={link || '#'}
-                            target="_blank"
-                            sx={{
-                                bgcolor: alpha(color, 0.1),
-                                color: color,
-                                '&:hover': {
-                                    bgcolor: color,
-                                    color: 'white',
-                                },
-                            }}
-                        >
-                            <Icon size={20} />
-                        </IconButton>
-                    ))}
-                </Box>
-            </Card>
+
         </Box>
     );
 };

@@ -11,7 +11,7 @@ export interface Interview extends TrainingInterview {
     time: string;
     duration: string;
     interviewer: string;
-    status: string;
+    status?: string;
     difficulty: string;
 }
 

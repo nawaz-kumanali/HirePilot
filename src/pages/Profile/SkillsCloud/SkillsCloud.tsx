@@ -17,19 +17,6 @@ interface SkillsCloudProps {
 const SkillsCloud: React.FC<SkillsCloudProps> = ({ skills }) => {
     const theme = useTheme();
 
-    const getLevelColor = (level: string) => {
-        switch (level) {
-            case 'Expert':
-                return theme.palette.success.main;
-            case 'Advanced':
-                return theme.palette.info.main;
-            case 'Intermediate':
-                return theme.palette.warning.main;
-            default:
-                return theme.palette.text.secondary;
-        }
-    };
-
     return (
         <Card
             sx={{
@@ -57,19 +44,9 @@ const SkillsCloud: React.FC<SkillsCloudProps> = ({ skills }) => {
                         key={i}
                         label={
                             <Stack direction="row" spacing={1} alignItems="center">
-                                <Box
-                                    sx={{
-                                        width: 6,
-                                        height: 6,
-                                        borderRadius: '50%',
-                                        bgcolor: getLevelColor(skill.level),
-                                    }}
-                                />
+
                                 <Typography variant="body2" fontWeight={600}>
                                     {skill.name}
-                                </Typography>
-                                <Typography variant="caption" color="text.secondary" fontWeight={500}>
-                                    {skill.level}
                                 </Typography>
                             </Stack>
                         }
@@ -80,10 +57,6 @@ const SkillsCloud: React.FC<SkillsCloudProps> = ({ skills }) => {
                             bgcolor: alpha(theme.palette.background.default, 0.5),
                             border: `1px solid ${theme.palette.divider}`,
                             borderRadius: 2,
-                            '&:hover': {
-                                bgcolor: alpha(theme.palette.primary.main, 0.05),
-                                borderColor: 'primary.main',
-                            },
                         }}
                     />
                 ))}

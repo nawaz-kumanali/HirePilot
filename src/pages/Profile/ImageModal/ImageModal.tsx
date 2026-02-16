@@ -1,4 +1,4 @@
-import { X, Camera, Github } from 'lucide-react';
+import { X, Camera } from 'lucide-react';
 import { Dialog, DialogTitle, DialogContent, Box, IconButton, Button, Stack, useTheme, alpha } from '@mui/material';
 
 interface ImageModalProps {
@@ -44,20 +44,6 @@ const ImageModal = ({ onClose }: ImageModalProps) => {
                         }}
                     >
                         Upload Photo
-                    </Button>
-                    <Button
-                        variant="outlined"
-                        fullWidth
-                        startIcon={<Github size={20} />}
-                        sx={{
-                            py: 2,
-                            justifyContent: 'flex-start',
-                            borderRadius: 2,
-                            textTransform: 'none',
-                            fontWeight: 600,
-                        }}
-                    >
-                        Import from GitHub
                     </Button>
                 </Stack>
             </DialogContent>

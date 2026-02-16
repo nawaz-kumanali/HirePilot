@@ -1,6 +1,6 @@
 import { Paper, Box, Avatar, Typography, Divider, Stack, Button } from "@mui/material";
 import { Link } from "react-router-dom";
-import { Home, Zap, MessageSquare, LogOut } from "lucide-react";
+import { Home, LogOut } from "lucide-react";
 import profileImg from '../../../assets/Nawaz_profile_IMG.jpg'
 import type { CurrentUserState } from "../../../store/CurrentUser/currentuser.types";
 
@@ -39,12 +39,12 @@ const UserMenu: React.FC<UserMenuProps> = ({currentUser, handleLogout, handleUse
                 <Button component={Link} to="/profile" onClick={handleUserMenuStatus} startIcon={<Home size={16} />} fullWidth sx={{ justifyContent: 'flex-start', color: 'text.primary' }}>
                     My Profile
                 </Button>
-                <Button component={Link} to="/interview" onClick={handleUserMenuStatus} startIcon={<Zap size={16} />} fullWidth sx={{ justifyContent: 'flex-start', color: 'text.primary' }}>
+                {/* <Button component={Link} to="/interview" onClick={handleUserMenuStatus} startIcon={<Zap size={16} />} fullWidth sx={{ justifyContent: 'flex-start', color: 'text.primary' }}>
                     My Interviews
                 </Button>
                 <Button component={Link} to="/messages" onClick={handleUserMenuStatus} startIcon={<MessageSquare size={16} />} fullWidth sx={{ justifyContent: 'flex-start', color: 'text.primary' }}>
                     Messages
-                </Button>
+                </Button> */}
                 <Divider sx={{ my: 1 }} />
                 <Button onClick={handleLogout} startIcon={<LogOut size={16} />} fullWidth sx={{ justifyContent: 'flex-start', color: 'error.main' }}>
                     Sign Out

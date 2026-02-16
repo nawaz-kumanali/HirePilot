@@ -2,7 +2,6 @@ import { useState, useEffect, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import VisualHeader from '../../components/VisualHeader/VisualHeader';
 import InterviewTabNav from './InterviewTabNav/InterviewTabNav';
-import UpcomingInterviewsTab from './UpcomingInterviewsTab/UpcomingInterviewsTab';
 import CompletedInterviewsTab from './CompletedInterviewsTab/CompletedInterviewsTab';
 import PracticeTopicsTab from './PracticeTopicsTab/PracticeTopicsTab';
 import { useAppSelector } from '../../store/hooks';
@@ -25,7 +24,6 @@ const Interview = () => {
   const theme = useTheme();
 
   const {
-    upcomingInterviews: upcomingInterviewsList,
     completedInterviews: completedInterviewsList,
     prepTopics: prepTopicsList
   } = useAppSelector((state: RootState) => state.interview);
@@ -76,20 +74,14 @@ const Interview = () => {
 
         <Box sx={{ mt: 4 }}>
           {activeTab === 0 && (
-            <UpcomingInterviewsTab
-              interviews={upcomingInterviewsList}
+            <PracticeTopicsTab
+              topics={prepTopicsList}
               onStartTraining={handleStartTraining}
             />
           )}
           {activeTab === 1 && (
             <CompletedInterviewsTab
               interviews={completedInterviewsList as unknown as CompletedInterview[]}
-            />
-          )}
-          {activeTab === 2 && (
-            <PracticeTopicsTab
-              topics={prepTopicsList}
-              onStartTraining={handleStartTraining}
             />
           )}
         </Box>

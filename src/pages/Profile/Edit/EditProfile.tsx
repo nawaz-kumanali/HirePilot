@@ -10,9 +10,6 @@ import {
     TextField,
     Button,
     IconButton,
-    Select,
-    MenuItem,
-    FormControl,
     Stack,
     Divider,
     useTheme,
@@ -267,7 +264,7 @@ const EditProfile: React.FC<EditProfileProps> = ({ profileData, setIsEditing }) 
                     </Button>
                 </Stack>
 
-                <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)' }, gap: 2 }}>
+                <Box sx={{ display: 'grid', gridTemplateColumns: { xs: 'repeat(2, 1fr)', sm: 'repeat(4, 1fr)', md: 'repeat(4, 1fr)' }, gap: 2 }}>
                     {editData.skills.map((skill, i) => (
                         <Card
                             key={i}
@@ -287,17 +284,6 @@ const EditProfile: React.FC<EditProfileProps> = ({ profileData, setIsEditing }) 
                                 size="small"
                                 fullWidth
                             />
-                            <FormControl size="small" sx={{ minWidth: 120 }}>
-                                <Select
-                                    value={skill.level}
-                                    onChange={(e) => handleSkillChange(i, 'level', e.target.value)}
-                                >
-                                    <MenuItem value="Beginner">Beginner</MenuItem>
-                                    <MenuItem value="Intermediate">Intermediate</MenuItem>
-                                    <MenuItem value="Advanced">Advanced</MenuItem>
-                                    <MenuItem value="Expert">Expert</MenuItem>
-                                </Select>
-                            </FormControl>
                             <IconButton size="small" onClick={() => removeSkill(i)}>
                                 <X size={14} />
                             </IconButton>

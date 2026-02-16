@@ -42,7 +42,7 @@ export const AUTH_SERVICE = {
             token: 'mock-jwt-token'
         };
     },
-    getUser: async () => {
+    getCurrentUser: async () => {
         // Real API Call (Commented out)
         /*
         const response = await API.get(endpoints.currentUser);

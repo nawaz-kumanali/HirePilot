@@ -1,7 +1,6 @@
 import React from 'react';
 import { Rocket, Activity, Zap, Shield, Target, type LucideIcon } from 'lucide-react';
 import type { ReadinessMetric } from '../../../store/CurrentUser/currentuser.types';
-import ProgressBar from '../../../components/ProgressBar/ProgressBar';
 import { Card, Box, Stack, Typography, useTheme, alpha } from '@mui/material';
 
 interface ReadinessSectionProps {
@@ -45,7 +44,7 @@ const ReadinessSection: React.FC<ReadinessSectionProps> = ({ readiness }) => {
             <Box
                 sx={{
                     display: 'grid',
-                    gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)' },
+                    gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' },
                     gap: 3,
                 }}
             >
@@ -59,14 +58,9 @@ const ReadinessSection: React.FC<ReadinessSectionProps> = ({ readiness }) => {
                                 borderRadius: 2,
                                 border: `1px solid ${theme.palette.divider}`,
                                 bgcolor: alpha(theme.palette.background.default, 0.3),
-                                transition: 'all 0.3s',
-                                '&:hover': {
-                                    transform: 'translateY(-2px)',
-                                    boxShadow: theme.shadows[4],
-                                },
                             }}
                         >
-                            <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: 2 }}>
+                            <Stack direction="row" spacing={2} alignItems="center">
                                 <Box
                                     sx={{
                                         width: 48,
@@ -90,7 +84,6 @@ const ReadinessSection: React.FC<ReadinessSectionProps> = ({ readiness }) => {
                                     </Typography>
                                 </Box>
                             </Stack>
-                            <ProgressBar progress={m.score} color={m.color} height={8} />
                         </Box>
                     );
                 })}

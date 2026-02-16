@@ -1,13 +1,22 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { Bell } from "lucide-react";
 import { IconButton, Badge, Box } from "@mui/material";
-import { useAppSelector } from "../../../store/hooks";
+import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import NotificationsBadge from "../../NotificationsBadge/NotificationsBadge";
+import { fetchNotifications } from "../../../store/Notification/notification.slice";
 
 const NotificationSection = () => {
     const [isNotificationOpen, setIsNotificationOpen] = useState(false);
     const unreadNotificationCount = useAppSelector(state => state.notification.unreadNotificationCount);
+    const hasFetched = useAppSelector(state => state.notification.hasFetched);
     const notificationRef = useRef<HTMLDivElement>(null);
+    const dispatch = useAppDispatch();
+
+    useEffect(() => {
+        if (!hasFetched) {
+            dispatch(fetchNotifications());
+        }
+    }, [dispatch, hasFetched]);
 
     const toggleNotification = useCallback(() => {
         setIsNotificationOpen(prev => !prev);
@@ -40,7 +49,7 @@ const NotificationSection = () => {
             </IconButton>
 
             {isNotificationOpen && (
-                <Box sx={{ position: 'absolute', top: 50, right: 0, zIndex: 10 }}>
+                <Box sx={{ position: 'absolute', top: 50, right: { xs: -30, sm: 10, md: 0, lg: 0 }, zIndex: 10 }}>
                     <NotificationsBadge setIsNotificationOpen={setIsNotificationOpen} />
                 </Box>
             )}

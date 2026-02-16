@@ -1,8 +1,9 @@
-import React, { useState, Fragment } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { X } from 'lucide-react';
-import { Box, Paper, Typography, IconButton, List, ListItem, ListItemButton, Divider, useTheme, alpha, Button, Stack } from '@mui/material';
-import { mockNotifications, type NotificationItem } from '../../data/notifications';
+import { Box, Paper, Typography, IconButton, List, ListItem, ListItemButton, Divider, useTheme, alpha, Button, Stack, CircularProgress } from '@mui/material';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { notificationActions, fetchNotifications } from '../../store/Notification/notification.slice';
 
 interface NotificationsBadgeProps {
     setIsNotificationOpen: (value: boolean) => void;
@@ -10,14 +11,22 @@ interface NotificationsBadgeProps {
 
 const NotificationsBadge: React.FC<NotificationsBadgeProps> = ({ setIsNotificationOpen }) => {
     const theme = useTheme();
-    const [notifications, setNotifications] = useState<NotificationItem[]>(mockNotifications);
+    const { notifications, loading, hasFetched } = useAppSelector(state => state.notification);
+    const dispatch = useAppDispatch();
+
+    useEffect(() => {
+        // Only fetch if we haven't fetched yet
+        if (!hasFetched) {
+            dispatch(fetchNotifications());
+        }
+    }, [dispatch, hasFetched]);
 
     const handleClearAll = () => {
-        setNotifications([]);
+        dispatch(notificationActions.clearNotification());
     };
 
     const handleMarkAsRead = (id: string) => {
-        setNotifications(prev => prev.map(n => n.id === id ? { ...n, isRead: true } : n));
+        dispatch(notificationActions.markAsRead(id));
     };
 
 
@@ -57,7 +66,12 @@ const NotificationsBadge: React.FC<NotificationsBadgeProps> = ({ setIsNotificati
             </Box>
 
             <List disablePadding sx={{ maxHeight: 400, overflowY: 'auto' }}>
-                {notifications.length > 0 ? (
+                {loading ? (
+                    <Box sx={{ p: 4, display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', gap: 2 }}>
+                        <CircularProgress size={30} thickness={5} />
+                        <Typography variant="caption" color="text.secondary">Loading notifications...</Typography>
+                    </Box>
+                ) : notifications.length > 0 ? (
                     notifications.map((notification, index) => (
                         <Fragment key={notification.id}>
                             <ListItem disablePadding>
@@ -82,7 +96,7 @@ const NotificationsBadge: React.FC<NotificationsBadgeProps> = ({ setIsNotificati
                                         {notification.description}
                                     </Typography>
                                     <Typography variant="caption" color="text.disabled" sx={{ pl: notification.isRead ? 0 : 2.5, mt: 0.5 }}>
-                                        {notification.timestamp}
+                                        {notification.time}
                                     </Typography>
                                 </ListItemButton>
                             </ListItem>

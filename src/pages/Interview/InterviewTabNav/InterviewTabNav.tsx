@@ -1,4 +1,4 @@
-import { Calendar, Award, TrendingUp } from 'lucide-react';
+import { Award, TrendingUp } from 'lucide-react';
 import { Tabs, Tab, Box } from '@mui/material';
 
 interface InterviewTabNavProps {
@@ -9,9 +9,9 @@ interface InterviewTabNavProps {
 const InterviewTabNav = ({ activeTab, setActiveTab }: InterviewTabNavProps) => {
 
   const tabs = [
-    { id: 0, label: 'Upcoming Rounds', icon: Calendar },
+    { id: 0, label: 'Practice Topics', icon: TrendingUp },
     { id: 1, label: 'Past History', icon: Award },
-    { id: 2, label: 'Practice Topics', icon: TrendingUp },
+
   ];
 
   return (
